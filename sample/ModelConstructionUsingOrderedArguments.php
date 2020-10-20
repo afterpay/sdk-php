@@ -26,7 +26,6 @@ $contact = new AfterpayContact(
     'Level 23',
     '2 Southbank Blvd',
     'Southbank',
-    null,
     'VIC',
     '3006',
     'AU',
@@ -36,7 +35,7 @@ $contact = new AfterpayContact(
 echo json_encode($contact) . "\n";
 
 /*=
-{"name":"Joe Consumer","line1":"Level 23","line2":"2 Southbank Blvd","area1":"Southbank","region":"VIC","postcode":"3006","countryCode":"AU","phoneNumber":"0400 000 000"}
+{"name":"Joe Consumer","line1":"Level 23","line2":"2 Southbank Blvd","suburb":"Southbank","state":"VIC","postcode":"3006","countryCode":"AU","phoneNumber":"0400 000 000"}
 =*/
 
 
@@ -108,10 +107,6 @@ if (! $contact->isValid()) {
     <li>postcode:</li>
     <ul>
         <li>Required property missing: Afterpay\SDK\Model\Contact::$postcode</li>
-    </ul>
-    <li>countryCode:</li>
-    <ul>
-        <li>Required property missing: Afterpay\SDK\Model\Contact::$countryCode</li>
     </ul>
 </ul>
 =*/

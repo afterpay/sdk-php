@@ -24,7 +24,7 @@ class ImmediatePaymentCapture extends Request
         parent::__construct(... $args);
 
         $this
-            ->setUri('/v2/payments/capture')
+            ->setUri('/v1/payments/capture')
             ->setHttpMethod('POST')
             ->configureBasicAuth()
         ;

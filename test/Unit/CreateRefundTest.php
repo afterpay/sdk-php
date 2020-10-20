@@ -97,7 +97,7 @@ class CreateRefundTest extends TestCase
 
         $createRefundRequest->setOrderId(-1);
 
-        $this->assertEquals('/v2/payments/1/refund', $createRefundRequest->getUri());
+        $this->assertEquals('/v1/payments/1/refund', $createRefundRequest->getUri());
     }
 
     public function testBigIntegerOrderIdOk()
@@ -106,7 +106,7 @@ class CreateRefundTest extends TestCase
 
         $createRefundRequest->setOrderId(PHP_INT_MAX);
 
-        $this->assertEquals('/v2/payments/9223372036854775807/refund', $createRefundRequest->getUri());
+        $this->assertEquals('/v1/payments/9223372036854775807/refund', $createRefundRequest->getUri());
     }
 
     public function testNumericStringOrderIdOk()
@@ -115,6 +115,6 @@ class CreateRefundTest extends TestCase
 
         $createRefundRequest->setOrderId('123456789');
 
-        $this->assertEquals('/v2/payments/123456789/refund', $createRefundRequest->getUri());
+        $this->assertEquals('/v1/payments/123456789/refund', $createRefundRequest->getUri());
     }
 }

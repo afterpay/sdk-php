@@ -283,7 +283,7 @@ final class PersistentStorage
                         ];
 
                         foreach ($propertyMappings as $responseBodyProperty => $persistentStorageProperty) {
-                            if (property_exists($responseBody, $responseBodyProperty)) {
+                            if (property_exists($responseBody[0], $responseBodyProperty)) {
                                 # The property we're looking for exists in the response.
                                 # For example, the v2 GetConfiguration response has a `maximumAmount` property.
 
@@ -305,8 +305,8 @@ final class PersistentStorage
                                         ");
                                         $update_stmt->bind_param(
                                             "sssss",
-                                            $responseBody->$responseBodyProperty->amount,
-                                            $responseBody->$responseBodyProperty->currency,
+                                            $responseBody[0]->$responseBodyProperty->amount,
+                                            $responseBody[0]->$responseBodyProperty->currency,
                                             $now,
                                             $merchantId,
                                             $persistentStorageProperty
@@ -341,8 +341,8 @@ final class PersistentStorage
                                             "ssssss",
                                             $merchantId,
                                             $persistentStorageProperty,
-                                            $responseBody->$responseBodyProperty->amount,
-                                            $responseBody->$responseBodyProperty->currency,
+                                            $responseBody[0]->$responseBodyProperty->amount,
+                                            $responseBody[0]->$responseBodyProperty->currency,
                                             $now,
                                             $now
                                         );
@@ -357,8 +357,8 @@ final class PersistentStorage
                                     # we'll return this value when we're finished here.
 
                                     $return = new Money([
-                                        'amount' => $responseBody->$responseBodyProperty->amount,
-                                        'currency' => $responseBody->$responseBodyProperty->currency
+                                        'amount' => $responseBody[0]->$responseBodyProperty->amount,
+                                        'currency' => $responseBody[0]->$responseBodyProperty->currency
                                     ]);
                                 }
                             } else {

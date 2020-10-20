@@ -37,7 +37,7 @@ AfterpayModel::setAutomaticValidationEnabled(true);
 
 try {
     $createCheckoutRequest = new AfterpayCreateCheckoutRequest([
-        'amount' => [ '100.00', 'AUD' ],
+        'totalAmount' => [ '100.00', 'AUD' ],
         'consumer' => [
             'phoneNumber' => 0400000000,
             'givenNames' => 'Test',
@@ -83,7 +83,7 @@ $discount
 ;
 
 $createCheckoutRequest = new AfterpayCreateCheckoutRequest([
-    'amount' => [ '10.00', 'AUD' ],
+    'totalAmount' => [ '10.00', 'AUD' ],
     'consumer' => [
         'phoneNumber' => '0400 000 000',
         'givenNames' => 'Test',
@@ -94,8 +94,8 @@ $createCheckoutRequest = new AfterpayCreateCheckoutRequest([
         'name' => 'Joe Consumer',
         'line1' => 'Level 23',
         'line2' => '2 Southbank Blvd',
-        'area1' => 'Southbank',
-        'region' => 'VIC',
+        'suburb' => 'Southbank',
+        'state' => 'VIC',
         'postcode' => '3006',
         'countryCode' => 'AU',
         'phoneNumber' => '0400 000 000'
@@ -104,8 +104,8 @@ $createCheckoutRequest = new AfterpayCreateCheckoutRequest([
         "name" : "Joe Consumer",
         "line1" : "Level 23",
         "line2" : "2 Southbank Blvd",
-        "area1" : "Southbank",
-        "region" : "VIC",
+        "suburb" : "Southbank",
+        "state" : "VIC",
         "postcode" : "3006",
         "countryCode" : "Australia",
         "phoneNumber" : "0400 000 000"
@@ -121,13 +121,7 @@ $createCheckoutRequest = new AfterpayCreateCheckoutRequest([
             'name' => 'T-Shirt - Blue - Size M',
             'sku' => 'TSH0001B1MED',
             'quantity' => 10,
-            'pageUrl' => false,
-            'imageUrl' => 'https://www.example.com/image.jpg',
-            'price' => '10.00',
-            'categories' => [
-                [ 'Clothing', 'T-Shirts', 'Under $25' ],
-                [ 'Sale', 'Clothing' ]
-            ]
+            'price' => '10.00'
         ]),
         array()
     ],
@@ -157,10 +151,6 @@ if (! $createCheckoutRequest->isValid()) {
     </ul>
     <li>items[0]:</li>
     <ul>
-        <li>pageUrl:</li>
-        <ul>
-            <li>Expected string for Afterpay\SDK\Model\Item::$pageUrl; boolean given</li>
-        </ul>
         <li>price:</li>
         <ul>
             <li>Expected Afterpay\SDK\Model\Money for Afterpay\SDK\Model\Item::$price; string given</li>
@@ -171,6 +161,10 @@ if (! $createCheckoutRequest->isValid()) {
         <li>name:</li>
         <ul>
             <li>Required property missing: Afterpay\SDK\Model\Item::$name</li>
+        </ul>
+        <li>quantity:</li>
+        <ul>
+            <li>Required property missing: Afterpay\SDK\Model\Item::$quantity</li>
         </ul>
         <li>price:</li>
         <ul>

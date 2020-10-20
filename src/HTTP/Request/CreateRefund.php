@@ -74,7 +74,7 @@ class CreateRefund extends Request
 
         $this->orderId = $orderId;
 
-        $this->setUri("/v2/payments/{$this->orderId}/refund");
+        $this->setUri("/v1/payments/{$this->orderId}/refund");
 
         return $this;
     }

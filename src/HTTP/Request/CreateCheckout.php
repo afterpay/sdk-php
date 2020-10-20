@@ -17,7 +17,7 @@ class CreateCheckout extends Request
      * @var array $data
      */
     protected $data = [
-        'amount' => [
+        'totalAmount' => [
             'type' => Money::class,
             'required' => true
         ],
@@ -65,7 +65,7 @@ class CreateCheckout extends Request
         parent::__construct(... $args);
 
         $this
-            ->setUri('/v2/checkouts')
+            ->setUri('/v1/orders')
             ->setHttpMethod('POST')
             ->configureBasicAuth()
         ;

@@ -16,11 +16,13 @@ final class Consumer extends Model
         ],
         'givenNames' => [
             'type' => 'string',
-            'length' => 128
+            'length' => 128,
+            'required' => true
         ],
         'surname' => [
             'type' => 'string',
-            'length' => 128
+            'length' => 128,
+            'required' => true
         ],
         'email' => [
             'type' => 'string',

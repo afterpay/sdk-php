@@ -23,22 +23,12 @@ final class Item extends Model
         'quantity' => [
             'type' => 'integer',
             'min' => self::SIGNED_32BIT_INT_MIN,
-            'max' => self::SIGNED_32BIT_INT_MAX
-        ],
-        'pageUrl' => [
-            'type' => 'string',
-            'length' => 2048
-        ],
-        'imageUrl' => [
-            'type' => 'string',
-            'length' => 2048
+            'max' => self::SIGNED_32BIT_INT_MAX,
+            'required' => true
         ],
         'price' => [
             'type' => Money::class,
             'required' => true
-        ],
-        'categories' => [
-            'type' => 'array'
         ]
     ];
 

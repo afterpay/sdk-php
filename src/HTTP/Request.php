@@ -575,6 +575,10 @@ class Request extends HTTP
             ->setRawBody(implode("\n\n", $response_parts))
         ;
 
+        if (method_exists($this->response, 'afterReceive')) {
+            $this->response->afterReceive();
+        }
+
         return $this->response->isSuccessful();
     }
 }

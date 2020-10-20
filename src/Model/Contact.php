@@ -24,15 +24,11 @@ final class Contact extends Model
             'type' => 'string',
             'length' => 128
         ],
-        'area1' => [
+        'suburb' => [
             'type' => 'string',
             'length' => 128
         ],
-        'area2' => [
-            'type' => 'string',
-            'length' => 128
-        ],
-        'region' => [
+        'state' => [
             'type' => 'string',
             'length' => 128
         ],
@@ -43,8 +39,7 @@ final class Contact extends Model
         ],
         'countryCode' => [
             'type' => 'string',
-            'length' => 2,
-            'required' => true
+            'length' => 2
         ],
         'phoneNumber' => [
             'type' => 'string',

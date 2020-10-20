@@ -41,7 +41,7 @@ if (! headers_sent()) {
 
 try {
     $createCheckoutRequest = new AfterpayCreateCheckoutRequest([
-        'amount' => [ '10.00', 'AUD' ],
+        'totalAmount' => [ '10.00', 'AUD' ],
         'consumer' => [
             'phoneNumber' => '0400 000 000',
             'givenNames' => 'Test',
@@ -52,8 +52,8 @@ try {
             'name' => 'Joe Consumer',
             'line1' => 'Level 5',
             'line2' => '406 Collins Street',
-            'area1' => 'Melbourne',
-            'region' => 'VIC',
+            'suburb' => 'Melbourne',
+            'state' => 'VIC',
             'postcode' => '3000',
             'countryCode' => 'AU',
             'phoneNumber' => '0400 000 000'
@@ -62,8 +62,8 @@ try {
             'name' => 'Joe Consumer',
             'line1' => 'Level 5',
             'line2' => '406 Collins Street',
-            'area1' => 'Melbourne',
-            'region' => 'VIC',
+            'suburb' => 'Melbourne',
+            'state' => 'VIC',
             'postcode' => '3000',
             'countryCode' => 'AU',
             'phoneNumber' => '0400 000 000'
@@ -79,13 +79,7 @@ try {
                 'name' => 'T-Shirt - Blue - Size M',
                 'sku' => 'TSH0001B1MED',
                 'quantity' => 10,
-                'pageUrl' => 'https://www.example.com/page.html',
-                'imageUrl' => 'https://www.example.com/image.jpg',
-                'price' => [ '10.00', 'AUD' ],
-                'categories' => [
-                    [ 'Clothing', 'T-Shirts', 'Under $25' ],
-                    [ 'Sale', 'Clothing' ]
-                ]
+                'price' => [ '10.00', 'AUD' ]
             ]
         ],
         'discounts' => [
@@ -124,7 +118,7 @@ try {
 $createCheckoutRequest = new AfterpayCreateCheckoutRequest();
 
 $createCheckoutRequest
-    ->setAmount('10.00', 'AUD')
+    ->setTotalAmount('10.00', 'AUD')
     ->setConsumer([
         'phoneNumber' => '0400 000 000',
         'givenNames' => 'Test',
@@ -135,8 +129,8 @@ $createCheckoutRequest
         'name' => 'Joe Consumer',
         'line1' => 'Level 5',
         'line2' => '406 Collins Street',
-        'area1' => 'Melbourne',
-        'region' => 'VIC',
+        'suburb' => 'Melbourne',
+        'state' => 'VIC',
         'postcode' => '3000',
         'countryCode' => 'AU',
         'phoneNumber' => '0400 000 000'
@@ -145,8 +139,8 @@ $createCheckoutRequest
         'name' => 'Joe Consumer',
         'line1' => 'Level 5',
         'line2' => '406 Collins Street',
-        'area1' => 'Melbourne',
-        'region' => 'VIC',
+        'suburb' => 'Melbourne',
+        'state' => 'VIC',
         'postcode' => '3000',
         'countryCode' => 'AU',
         'phoneNumber' => '0400 000 000'
@@ -162,13 +156,7 @@ $createCheckoutRequest
             'name' => 'T-Shirt - Blue - Size M',
             'sku' => 'TSH0001B1MED',
             'quantity' => 10,
-            'pageUrl' => 'https://www.example.com/page.html',
-            'imageUrl' => 'https://www.example.com/image.jpg',
-            'price' => [ '10.00', 'AUD' ],
-            'categories' => [
-                [ 'Clothing', 'T-Shirts', 'Under $25' ],
-                [ 'Sale', 'Clothing' ]
-            ]
+            'price' => [ '10.00', 'AUD' ]
         ]
     ])
     ->setDiscounts([
@@ -215,7 +203,7 @@ $consumer
 ;
 
 $createCheckoutRequest
-    ->setRequestBody('{"amount":' . json_encode($amount) . ',"consumer":' . json_encode($consumer) . ',"merchant":{"redirectConfirmUrl":"http://localhost","redirectCancelUrl":"http://localhost"}}')
+    ->setRequestBody('{"totalAmount":' . json_encode($amount) . ',"consumer":' . json_encode($consumer) . ',"merchant":{"redirectConfirmUrl":"http://localhost","redirectCancelUrl":"http://localhost"}}')
     ->send()
 ;
 

@@ -27,8 +27,12 @@ $order = null;
 
 if (! empty($_POST)) {
     $createCheckoutRequest = new AfterpayCreateCheckoutRequest([
-        'amount' => [ '200', 'AUD' ],
-        'consumer' => [ 'email' => 'nobody@example.com' ],
+        'totalAmount' => [ '200', 'AUD' ],
+        'consumer' => [
+            'givenNames' => 'Joe',
+            'surname' => 'Consumer',
+            'email' => 'nobody@example.com'
+        ],
         'merchant' => [
             'redirectConfirmUrl' => $_POST['redirectReturnUrl'],
             'redirectCancelUrl' => $_POST['redirectReturnUrl']
@@ -36,7 +40,7 @@ if (! empty($_POST)) {
     ]);
 
     if ($createCheckoutRequest->send()) {
-        header('Location: ' . $createCheckoutRequest->getResponse()->getParsedBody()->redirectCheckoutUrl);
+        header('Location: https://portal.sandbox.afterpay.com/au/checkout/?token=' . $createCheckoutRequest->getResponse()->getParsedBody()->token);
     } else {
         $error = $createCheckoutRequest->getResponse()->getParsedBody();
     }

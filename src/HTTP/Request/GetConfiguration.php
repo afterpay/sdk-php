@@ -11,7 +11,7 @@ class GetConfiguration extends Request
         parent::__construct(... $args);
 
         $this
-            ->setUri('/v2/configuration')
+            ->setUri('/v1/configuration')
             ->configureBasicAuth()
         ;
     }
