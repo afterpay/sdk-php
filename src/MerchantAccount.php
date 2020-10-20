@@ -1,0 +1,257 @@
+<?php
+
+namespace Afterpay\SDK;
+
+use Afterpay\SDK\PersistentStorage;
+use Afterpay\SDK\Model\Money;
+
+final class MerchantAccount
+{
+    public static function generateMockData($countryCode = 'AU', $field = null)
+    {
+        $data = [];
+
+        switch ($countryCode) {
+            case 'CA':
+                $data[ 'currency' ] = 'CAD';
+                $data[ 'phoneNumber' ] = '1 250 555 0199';
+                $data[ 'line1' ] = '111 Wellington St';
+                $data[ 'area1' ] = 'Ottawa';
+                $data[ 'region' ] = 'ON';
+                $data[ 'postcode' ] = 'K1A 0A9';
+                break;
+
+            case 'ES':
+                $data[ 'currency' ] = 'EUR';
+                break;
+
+            case 'FR':
+                $data[ 'currency' ] = 'EUR';
+                break;
+
+            case 'GB':
+            case 'UK':
+                $data[ 'currency' ] = 'GBP';
+                $data[ 'phoneNumber' ] = '07123456789';
+                $data[ 'line1' ] = 'Town Hall';
+                $data[ 'area1' ] = 'Manchester';
+                $data[ 'postcode' ] = 'M60 2LA';
+                break;
+
+            case 'NZ':
+                $data[ 'currency' ] = 'NZD';
+                $data[ 'phoneNumber' ] = '64225840132';
+                $data[ 'line1' ] = '206 Jervois Rd';
+                $data[ 'area1' ] = 'Ponsonby';
+                $data[ 'region' ] = 'Auckland';
+                $data[ 'postcode' ] = '1011';
+                break;
+
+            case 'IT':
+                $data[ 'currency' ] = 'EUR';
+                break;
+
+            case 'US':
+                $data[ 'currency' ] = 'USD';
+                $data[ 'phoneNumber' ] = '12124200917';
+                $data[ 'line1' ] = '222 Kearny Street';
+                $data[ 'area1' ] = 'San Francisco';
+                $data[ 'region' ] = 'CA';
+                $data[ 'postcode' ] = '94108-4509';
+                break;
+
+            case 'AU':
+            default:
+                $data[ 'currency' ] = 'AUD';
+                $data[ 'phoneNumber' ] = '61420200910';
+                $data[ 'line1' ] = 'Level 23';
+                $data[ 'line2' ] = '2 Southbank Boulevard';
+                $data[ 'area1' ] = 'Southbank';
+                $data[ 'region' ] = 'VIC';
+                $data[ 'postcode' ] = '3006';
+        }
+
+        if (! is_null($field)) {
+            return $data[$field];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @var string $merchantId
+     */
+    private $merchantId;
+
+    /**
+     * @var string $secretKey
+     */
+    private $secretKey;
+
+    /**
+     * @var string $countryCode ISO 3166-1 alpha-2 two character country code of the Merchant Account.
+     */
+    private $countryCode;
+
+    /**
+     * @var string $apiEnvironment
+     */
+    private $apiEnvironment = 'sandbox';
+
+    /**
+     * @return string
+     */
+    public function getMerchantId()
+    {
+        return $this->merchantId;
+    }
+
+    /**
+     * @param string $merchantId
+     * @return \Afterpay\SDK\MerchantAccount
+     */
+    public function setMerchantId($merchantId)
+    {
+        $this->merchantId = $merchantId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        return $this->secretKey;
+    }
+
+    /**
+     * @param string $secretKey
+     * @return \Afterpay\SDK\MerchantAccount
+     */
+    public function setSecretKey($secretKey)
+    {
+        $this->secretKey = $secretKey;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
+    }
+
+    /**
+     * @param string $countryCode
+     * @return \Afterpay\SDK\MerchantAccount
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiEnvironment()
+    {
+        return $this->apiEnvironment;
+    }
+
+    /**
+     * @param string $apiEnvironment
+     * @return \Afterpay\SDK\MerchantAccount
+     * @throws \Afterpay\SDK\Exception\InvalidArgumentException
+     */
+    public function setApiEnvironment($apiEnvironment)
+    {
+        /**
+         * @todo Reuse the enumi rules in the Config class instead defining duplicate code here
+         *       and in \Afterpay\SDK\HTTP.
+         */
+        if (! is_string($apiEnvironment)) {
+            throw new InvalidArgumentException("Expected string; " . gettype($apiEnvironment) . ' given');
+        } elseif (! preg_match('/^sandbox|production$/i', $apiEnvironment)) {
+            throw new InvalidArgumentException("Expected 'sandbox' or 'production'; '{$apiEnvironment}' given");
+        }
+
+        $this->apiEnvironment = $apiEnvironment;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getOrderMinimumAsFloat()
+    {
+        /**
+         * @todo introduce an if block here, e.g.:
+         *
+         *           if (PersistentStorage::isConfigured()) {
+         *              $min = PersistentStorage::get('orderMinimum', $this);
+         *           } elseif ($this->isSetup()) {
+         *              # Make the HTTP request...
+         *           } else {
+         *              # Throw an Exception - trying to access config but nothing is configured...
+         *           }
+         */
+        $min = PersistentStorage::get('orderMinimum', $this);
+
+        if ($min instanceof Money) {
+            return (float) $min->getAmount();
+        }
+
+        return -INF;
+    }
+
+    /**
+     * @return float
+     */
+    public function getOrderMaximumAsFloat()
+    {
+        /**
+         * @todo introduce an if block here, e.g.:
+         *
+         *           if (PersistentStorage::isConfigured()) {
+         *              $min = PersistentStorage::get('orderMinimum', $this);
+         *           } elseif ($this->isSetup()) {
+         *              # Make the HTTP request...
+         *           } else {
+         *              # Throw an Exception - trying to access config but nothing is configured...
+         *           }
+         */
+        $max = PersistentStorage::get('orderMaximum', $this);
+
+        if ($max instanceof Money) {
+            return (float) $max->getAmount();
+        }
+
+        return INF;
+    }
+
+    public function __construct($merchantId = null, $secretKey = null, $apiEnvironment = null)
+    {
+        if (! is_null($merchantId) && ! is_null($secretKey)) {
+            $this->merchantId = $merchantId;
+            $this->secretKey = $secretKey;
+        }
+
+        if (! is_null($apiEnvironment)) {
+            $this->apiEnvironment = $apiEnvironment;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSetup()
+    {
+        return ! is_null($this->merchantId) && ! is_null($this->secretKey);
+    }
+}

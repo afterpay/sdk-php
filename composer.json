@@ -1,0 +1,36 @@
+{
+    "name": "afterpay-global/afterpay-sdk-php",
+    "license": "OSL-3.0",
+    "description": "Official Afterpay SDK for PHP",
+    "version": "0.1.0",
+    "require": {
+    },
+    "authors": [
+        {
+            "name": "Afterpay",
+            "homepage": "https://www.afterpay.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Afterpay\\SDK\\": [ "src" ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Afterpay\\SDK\\Test\\": [ "test" ]
+        }
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit --colors=always ./test",
+        "test-unit": "./vendor/bin/phpunit --colors=always ./test/Unit",
+        "test-service": "./vendor/bin/phpunit --colors=always ./test/Service",
+        "test-network": "./vendor/bin/phpunit --colors=always ./test/Network",
+        "test-integration": "./vendor/bin/phpunit --colors=always ./test/Integration",
+        "lint": "./vendor/bin/phpcs --standard=PSR12 --error-severity=1 --warning-severity=6 ./src ./test ./sample",
+        "lint-autofix": "./vendor/bin/phpcbf --standard=PSR12 --error-severity=1 --warning-severity=6 ./src ./test ./sample; if [ $? -eq 1 ]; then exit 0; fi"
+    }
+}

@@ -1,0 +1,165 @@
+# See https://help.github.com/en/actions/configuring-and-managing-workflows
+# See https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions
+
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - 'release/**'
+    paths-ignore:
+      - 'README.md'
+      - 'sample.env.php'
+      - '.gitignore'
+  pull_request:
+    branches:
+      - master
+      - 'release/**'
+    paths-ignore:
+      - 'README.md'
+      - 'sample.env.php'
+      - '.gitignore'
+
+jobs:
+  build:
+
+    # Runner base image (Operating System).
+    # See https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4' ]
+        include:
+          - php: '5.6'
+            mysql: '5.6'
+
+          - php: '7.0'
+            mysql: '5.7'
+
+          - php: '7.1'
+            mysql: '5.7'
+
+          - php: '7.2'
+            mysql: '5.7'
+
+          - php: '7.3'
+            mysql: '5.7'
+
+          - php: '7.4'
+            mysql: '8.0'
+      fail-fast: false
+
+    name: PHP ${{ matrix.php }}
+
+    services:
+
+      # Install the appropriate version of MySQL to work with each PHP build, as a service image.
+      # See https://hub.docker.com/_/mysql
+      mysql:
+        image: mysql:${{ matrix.mysql }}
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        ports:
+        - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      # Install multiple versions of PHP, each in its own independent build.
+      # See https://github.com/marketplace/actions/setup-php-action
+      - name: Install PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, mysqli
+          coverage: none
+
+      # Test coding standards against the PSR-12 coding standard using PHPCS
+      # See https://www.php-fig.org/psr/psr-12/
+      # See https://github.com/squizlabs/PHP_CodeSniffer
+      - name: Test against the PSR-12 coding standard
+        run: composer lint
+
+      # Install the appropriate version of PHPUnit to work with each PHP build.
+      # See https://phpunit.de/index.html
+      - name: Install PHPUnit
+        run: /bin/bash ./bin/install-phpunit.sh
+
+      - name: Run unit test suite
+        run: composer test-unit
+
+      - name: Run service test suite
+        env:
+          DB_API: mysqli
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+        run: composer test-service
+
+      - name: Run network test suite
+        run: composer test-network
+
+      - name: Create a database for PersistentStorage
+        run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[ 3306 ] }} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
+
+      - name: Run integration test suite in AU Sandbox
+        env:
+          MERCHANT_ID: ${{ secrets.AU_SBOX_MID_1 }}
+          SECRET_KEY: ${{ secrets.AU_SBOX_SKEY_1 }}
+          COUNTRY_CODE: AU
+          DB_API: mysqli
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
+          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+        run: composer test-integration
+
+      - name: Run integration test suite in NZ Sandbox
+        env:
+          MERCHANT_ID: ${{ secrets.NZ_SBOX_MID_1 }}
+          SECRET_KEY: ${{ secrets.NZ_SBOX_SKEY_1 }}
+          COUNTRY_CODE: NZ
+          DB_API: mysqli
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
+          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+        run: composer test-integration
+
+      - name: Run integration test suite in UK Sandbox
+        env:
+          MERCHANT_ID: ${{ secrets.UK_SBOX_MID_1 }}
+          SECRET_KEY: ${{ secrets.UK_SBOX_SKEY_1 }}
+          COUNTRY_CODE: GB
+          DB_API: mysqli
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
+          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+        run: composer test-integration
+
+      - name: Run integration test suite in US Sandbox
+        env:
+          MERCHANT_ID: ${{ secrets.US_SBOX_MID_1 }}
+          SECRET_KEY: ${{ secrets.US_SBOX_SKEY_1 }}
+          COUNTRY_CODE: US
+          DB_API: mysqli
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
+          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+        run: composer test-integration
