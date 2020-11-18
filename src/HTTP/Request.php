@@ -109,7 +109,7 @@ class Request extends HTTP
     /**
      * @return \Afterpay\SDK\MerchantAccount
      */
-    private function getMerchantAccount()
+    protected function getMerchantAccount()
     {
         if ($this->merchant instanceof MerchantAccount) {
             # First, look for a MerchantAccount instance as a property of this individual object.
@@ -576,7 +576,7 @@ class Request extends HTTP
         ;
 
         if (method_exists($this->response, 'afterReceive')) {
-            $this->response->afterReceive();
+            $this->response->afterReceive($this->getMerchantAccount());
         }
 
         return $this->response->isSuccessful();
