@@ -3,6 +3,7 @@
 namespace Afterpay\SDK\HTTP\Response;
 
 use Afterpay\SDK\HTTP\Response;
+use Afterpay\SDK\MerchantAccount;
 
 class CreateCheckout extends Response
 {
@@ -13,27 +14,41 @@ class CreateCheckout extends Response
 
     /**
      * This method is called immediately after the HTTP response is received.
-     * 
+     *
      * Intended only for the `downgrade-to-api-v1` branch, as a workaround for v1 responses
      * missing the `redirectCheckoutUrl` property.
-     * 
+     *
      * WARNING: This method manipulates the raw HTTP response!
-     * 
+     *
+     * @param MerchantAccount $merchantAccount
+     *
      * @return \Afterpay\SDK\HTTP\Response\CreateCheckout
      */
-    public function afterReceive()
+    public function afterReceive(MerchantAccount $merchantAccount)
     {
         if ($this->isSuccessful()) {
             $obj = $this->getParsedBody();
+            $countryCode = $merchantAccount->getCountryCode();
+            $apiEnvironment = $merchantAccount->getApiEnvironment();
+            $sandbox_suffix = '.sandbox';
+            $prefix = "portal";
+            $tld = 'afterpay.com';
+            $tokenParam = '?token=';
 
-            if (!is_null($obj)) {
-                if (strtolower(\Afterpay\SDK\HTTP::getApiEnvironment()) == 'production') {
-                    $portalDomain = 'portal.afterpay.com';
-                } else {
-                    $portalDomain = 'portal.sandbox.afterpay.com';
+            if (strlen($countryCode) == 2) {
+                if (preg_match('/ES|FR|IT|PT/', $countryCode)) {
+                    $prefix = 'checkout-container-fe';
+                    $tld = 'clearpay-eu.com'; # Southern Europe
+                    $sandbox_suffix = '-sbx';
+                    $tokenParam = '';
                 }
-                $obj->redirectCheckoutUrl = "https://{$portalDomain}/checkout/?token={$obj->token}";
-
+            }
+            if (!is_null($obj)) {
+                if (strtolower($apiEnvironment) === 'production') {
+                    $obj->redirectCheckoutUrl = "https://{$prefix}.{$tld}/{$tokenParam}{$obj->token}";
+                } else {
+                    $obj->redirectCheckoutUrl = "https://{$prefix}{$sandbox_suffix}.{$tld}/checkout/{$tokenParam}{$obj->token}";
+                }
                 $this->setRawBody(json_encode($obj));
             }
         }
