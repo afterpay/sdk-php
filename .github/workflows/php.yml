@@ -44,7 +44,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4' ]
+        php: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0' ]
         include:
           - php: '5.6'
             mysql: '5.6'
@@ -62,6 +62,9 @@ jobs:
             mysql: '5.7'
 
           - php: '7.4'
+            mysql: '8.0'
+
+          - php: '8.0'
             mysql: '8.0'
       fail-fast: false
 

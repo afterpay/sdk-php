@@ -28,6 +28,8 @@ elif [ $a == '7.3' ]; then
     b=9
 elif [ $a == '7.4' ]; then
     b=9
+elif [ $a == '8.0' ]; then
+    b=9
 else
     # Unsupported PHP version
     exit 1
