@@ -37,15 +37,15 @@ class CreateCheckout extends Response
 
             if (strlen($countryCode) == 2) {
                 if (preg_match('/ES|FR|IT|PT/', $countryCode)) {
-                    $prefix = 'checkout-container-fe';
-                    $tld = 'clearpay-eu.com'; # Southern Europe
-                    $sandbox_suffix = '-sbx';
+                    $prefix = 'checkout';
+                    $tld = 'clearpay.com'; # Southern Europe
+                    $sandbox_suffix = '.sandbox';
                     $tokenParam = '';
                 }
             }
             if (!is_null($obj)) {
                 if (strtolower($apiEnvironment) === 'production') {
-                    $obj->redirectCheckoutUrl = "https://{$prefix}.{$tld}/{$tokenParam}{$obj->token}";
+                    $obj->redirectCheckoutUrl = "https://{$prefix}.{$tld}/checkout/{$tokenParam}{$obj->token}";
                 } else {
                     $obj->redirectCheckoutUrl = "https://{$prefix}{$sandbox_suffix}.{$tld}/checkout/{$tokenParam}{$obj->token}";
                 }
