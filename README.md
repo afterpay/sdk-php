@@ -18,7 +18,7 @@ Optional recommendations:
 
 ## Installation
 
-Install with Composer.
+Install with [Composer](https://getcomposer.org/).
 
 ```bash
 composer require afterpay-global/afterpay-sdk-php

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Copyright (c) 2020 Afterpay Limited Group
 # 
@@ -36,5 +36,18 @@ else
 fi
 
 echo "Installing PHPUnit ${b}..."
-wget -O ./vendor/bin/phpunit https://phar.phpunit.de/phpunit-$b.phar
+
+if command -v wget &> /dev/null
+then
+    wget -O ./vendor/bin/phpunit https://phar.phpunit.de/phpunit-$b.phar
+elif command -v curl &> /dev/null
+then
+    curl --silent --show-error --location --output ./vendor/bin/phpunit https://phar.phpunit.de/phpunit-$b.phar
+else
+    # Unable to download PHPUnit
+    exit 2
+fi
+
 chmod +x ./vendor/bin/phpunit
+
+echo "Installation complete."

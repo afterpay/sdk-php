@@ -16,7 +16,7 @@ Please use the provided shell script to install the appropriate verion based on 
 This script will download PHPUnit to `./vendor/bin/phpunit`.
 
 ```bash
-/bin/bash ./bin/install-phpunit.sh
+/bin/sh ./bin/install-phpunit.sh
 ```
 
 ## Pull Requests
