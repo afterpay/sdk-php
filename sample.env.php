@@ -43,5 +43,7 @@ $afterpay_sdk_env_config = [
     'db.database' => 'MY_DATABASE',
     'db.tablePrefix' => 'afterpay_',
     'db.user' => 'MY_MYSQL_USER',
-    'db.pass' => 'MY_MYSQL_PASS'
+    'db.pass' => 'MY_MYSQL_PASS',
+    'test.consumerEmail' => 'MY_SANDBOX_CONSUMER_EMAIL',
+    'test.consumerPassword' => 'MY_SANDBOX_CONSUMER_PASSWORD'
 ];

@@ -91,6 +91,17 @@ final class Config
             'src' => '.env.php'
         ],
         /**
+         * These are test settings - used only by the Test classes for automated testing.
+         */
+        'test.consumerEmail' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'test.consumerPassword' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        /**
          * This is where the contents of the SDK's composer.json file will be loaded.
          */
         'composerJson' => [
