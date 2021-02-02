@@ -18,6 +18,8 @@
 
 namespace Afterpay\SDK\HTTP\Request;
 
+use Afterpay\SDK\MerchantAccount;
+use Afterpay\SDK\HTTP;
 use Afterpay\SDK\HTTP\Request;
 use Afterpay\SDK\Model\Consumer;
 use Afterpay\SDK\Model\Contact;
@@ -76,6 +78,11 @@ class CreateCheckout extends Request
         ]
     ];
 
+    private function maybeGet($key, $array)
+    {
+        return array_key_exists($key, $array) ? $array[ $key ] : null;
+    }
+
     public function __construct(...$args)
     {
         parent::__construct(... $args);
@@ -85,5 +92,71 @@ class CreateCheckout extends Request
             ->setHttpMethod('POST')
             ->configureBasicAuth()
         ;
+    }
+
+    /**
+     * @return \Afterpay\SDK\HTTP\CreateCheckout
+     */
+    public function fillBodyWithMockData()
+    {
+        $mockData = MerchantAccount::generateMockData(HTTP::getCountryCode());
+
+        $this
+            ->setAmount('10.00', $mockData[ 'currency' ])
+            ->setConsumer([
+                'phoneNumber' => $this->maybeGet('phoneNumber', $mockData),
+                'givenNames' => 'Test',
+                'surname' => 'Test',
+                'email' => 'test@example.com'
+            ])
+            ->setBilling([
+                'name' => 'Joe Consumer',
+                'line1' => $this->maybeGet('line1', $mockData),
+                'line2' => $this->maybeGet('line2', $mockData),
+                'area1' => $this->maybeGet('area1', $mockData),
+                'region' => $this->maybeGet('region', $mockData),
+                'postcode' => $this->maybeGet('postcode', $mockData),
+                'countryCode' => $this->getCountryCode(),
+                'phoneNumber' => $this->maybeGet('phoneNumber', $mockData)
+            ])
+            ->setShipping([
+                'name' => 'Joe Consumer',
+                'line1' => $this->maybeGet('line1', $mockData),
+                'line2' => $this->maybeGet('line2', $mockData),
+                'area1' => $this->maybeGet('area1', $mockData),
+                'region' => $this->maybeGet('region', $mockData),
+                'postcode' => $this->maybeGet('postcode', $mockData),
+                'countryCode' => $this->getCountryCode(),
+                'phoneNumber' => $this->maybeGet('phoneNumber', $mockData)
+            ])
+            ->setItems([
+                [
+                    'name' => 'T-Shirt - Blue - Size M',
+                    'sku' => 'TSH0001B1MED',
+                    'quantity' => 10,
+                    'pageUrl' => 'https://www.example.com/page.html',
+                    'imageUrl' => 'https://www.example.com/image.jpg',
+                    'price' => [ '10.00', $mockData[ 'currency' ] ],
+                    'categories' => [
+                        [ 'Clothing', 'T-Shirts', 'Under 25.00' ],
+                        [ 'Sale', 'Clothing' ]
+                    ]
+                ]
+            ])
+            ->setDiscounts([
+                [
+                    'displayName' => '20% off SALE',
+                    'amount' => [ '24.00', $mockData[ 'currency' ] ]
+                ]
+            ])
+            ->setMerchant([
+                'redirectConfirmUrl' => 'http://localhost',
+                'redirectCancelUrl' => 'http://localhost'
+            ])
+            ->setTaxAmount('0.00', $mockData[ 'currency' ])
+            ->setShippingAmount('0.00', $mockData[ 'currency' ])
+        ;
+
+        return $this;
     }
 }

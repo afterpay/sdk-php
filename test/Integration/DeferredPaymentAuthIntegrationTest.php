@@ -21,8 +21,9 @@ namespace Afterpay\SDK\Test\Integration;
 require_once __DIR__ . '/../autoload.php';
 
 use PHPUnit\Framework\TestCase;
+use Afterpay\SDK\Test\ConsumerSimulator;
 
-class GetCheckoutIntegrationTest extends TestCase
+class DeferredPaymentAuthIntegrationTest extends TestCase
 {
     public function __construct()
     {
@@ -32,7 +33,7 @@ class GetCheckoutIntegrationTest extends TestCase
     /**
      * @todo Update this test to support countries/currencies other that AU/AUD!
      */
-    public function testSuccess200()
+    public function testSuccess201()
     {
         # Reset the credentials to null to make sure they get automatically loaded
         # (just in case a previous test has set them).
@@ -50,11 +51,19 @@ class GetCheckoutIntegrationTest extends TestCase
             ->send()
         ;
 
-        $getCheckoutRequest = new \Afterpay\SDK\HTTP\Request\GetCheckout();
+        $checkoutToken = $createCheckoutRequest->getResponse()->getParsedBody()->token;
 
-        $getCheckoutRequest->setCheckoutToken($createCheckoutRequest->getResponse()->getParsedBody()->token);
+        $consumerSimulator = new ConsumerSimulator();
 
-        $this->assertTrue($getCheckoutRequest->send());
-        $this->assertEquals(200, $getCheckoutRequest->getResponse()->getHttpStatusCode());
+        $consumerSimulator->confirmPaymentSchedule($checkoutToken, '000');
+
+        $deferredPaymentAuthRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentAuth();
+
+        $deferredPaymentAuthRequest
+            ->setToken($checkoutToken)
+            ->send()
+        ;
+
+        $this->assertEquals(201, $deferredPaymentAuthRequest->getResponse()->getHttpStatusCode());
     }
 }
