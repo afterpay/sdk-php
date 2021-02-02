@@ -35,4 +35,18 @@ class PingIntegrationTest extends TestCase
 
         $this->assertTrue($pingRequest->send());
     }
+
+    public function testUserAgentHeader()
+    {
+        \Afterpay\SDK\HTTP::addPlatformDetail('testUserAgentHeader', '1.0.0-beta+exp.sha.5114f85');
+        $pingRequest = new \Afterpay\SDK\HTTP\Request\Ping();
+        \Afterpay\SDK\HTTP::clearPlatformDetails();
+
+        $pingRequest->send();
+
+        $headers_str = $pingRequest->getRawHeaders();
+        $pattern_str = '/^User-Agent: afterpay-sdk-php\/[\d.]+ \(testUserAgentHeader\/1\.0\.0-beta\+exp\.sha\.5114f85; PHP\/[\d.]+; cURL\/[\d.]+/im';
+
+        $this->assertEquals(1, preg_match($pattern_str, $headers_str));
+    }
 }
