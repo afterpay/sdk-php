@@ -99,7 +99,7 @@ class Request extends HTTP
         $curl_version_arr = curl_version();
         $curl_version_str = $curl_version_arr[ 'version' ];
         $composer_json = Config::get('composerJson');
-        $ua_extra_a = '';
+        $ua_extra_a = HTTP::getPlatformDetailsAsString();
         $ua_extra_b = '';
 
         if (! empty($merchantId)) {
