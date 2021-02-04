@@ -49,6 +49,11 @@ class HTTP
     private static $apiEnvironment;
 
     /**
+     * @var array $userAgentPlatformDetails
+     */
+    private static $userAgentPlatformDetails = [];
+
+    /**
      * @return bool
      */
     public static function getLogObfuscationEnabled()
@@ -129,6 +134,55 @@ class HTTP
         }
 
         self::$apiEnvironment = $apiEnvironment;
+    }
+
+    /**
+     * Call this method to declare additional information about the platform where this SDK is being implemented.
+     * This can expedite and improve Afterpay's capacity to provide support, should the need arise.
+     *
+     * For example, consider the following two lines near the beginning of a script on a WooCommerce website:
+     *
+     *      HTTP::addPlatformDetail('WordPress', $wp_version);
+     *      HTTP::addPlatformDetail('WooCommerce', WC()->version);
+     *
+     * As a result, API requests received by Afterpay will contain a User-Agent header similar to the following:
+     *
+     *      afterpay-sdk-php/1.0.2 (WordPress/5.6; WooCommerce/4.9.2; PHP/7.3.11; cURL/7.64.1; Merchant/41599)
+     *                              ++++++++++++++++++++++++++++++++++
+     *
+     * @param string $software
+     * @param string $version
+     */
+    public static function addPlatformDetail($software, $version)
+    {
+        self::$userAgentPlatformDetails[$software] = $version;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPlatformDetailsAsString()
+    {
+        $return = '';
+
+        if (!empty(self::$userAgentPlatformDetails)) {
+            foreach (self::$userAgentPlatformDetails as $software => $version) {
+                $return .= "{$software}/{$version}; ";
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Clear platform details.
+     *
+     * Note: This method only exists to prevent the static property values
+     *       from persisting across unrelated integration tests.
+     */
+    public static function clearPlatformDetails()
+    {
+        self::$userAgentPlatformDetails = [];
     }
 
     /**
