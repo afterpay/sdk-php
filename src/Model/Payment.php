@@ -19,9 +19,52 @@
 namespace Afterpay\SDK\Model;
 
 use Afterpay\SDK\Model;
+use Afterpay\SDK\Model\Money;
+use Afterpay\SDK\Model\OrderDetails;
+use Afterpay\SDK\Model\PaymentEvent;
+use Afterpay\SDK\Model\Refund;
 
 final class Payment extends Model
 {
+    /**
+     * @var array $data
+     */
+    protected $data = [
+        'id' => [
+            'type' => 'string'
+        ],
+        'token' => [
+            'type' => 'string'
+        ],
+        'status' => [
+            'type' => 'string'
+        ],
+        'created' => [
+            'type' => 'string'
+        ],
+        'originalAmount' => [
+            'type' => Money::class
+        ],
+        'openToCaptureAmount' => [
+            'type' => Money::class
+        ],
+        'paymentState' => [
+            'type' => 'string'
+        ],
+        'merchantReference' => [
+            'type' => 'string'
+        ],
+        'refunds' => [
+            'type' => Refund::class . '[]'
+        ],
+        'orderDetails' => [
+            'type' => OrderDetails::class
+        ],
+        'events' => [
+            'type' => PaymentEvent::class . '[]'
+        ]
+    ];
+
     /*public function __construct( ... $args )
     {
         parent::__construct( ... $args );
