@@ -102,7 +102,9 @@ if (! empty($_POST)) {
 </head>
 <body>
     <?php if ($error) : ?>
+        <h3>Error</h3>
         <pre><?php print_r($error); ?></pre>
+        <p><a href="HTTPRequestDeferredPaymentAuth.php">Try again</a></p>
     <?php elseif ($order) : ?>
         <h3>Order Record Created</h3>
         <ul>
@@ -110,10 +112,17 @@ if (! empty($_POST)) {
             <li>Status: <?php echo $order->status; ?></li>
             <li>Is Approved? <?php echo $deferredPaymentAuthRequest->getResponse()->isApproved() ? 'YES - Proceed to thank you page.' : 'NO - Return to checkout with payment declined error.'; ?></li>
         </ul>
+        <?php if ($deferredPaymentAuthRequest->getResponse()->isApproved()) : ?>
+            <p><a href="HTTPRequestDeferredPaymentCapture.php?orderId=<?php echo $order->id; ?>">Capture Payment for this order</a></p>
+        <?php else : ?>
+            <p><a href="HTTPRequestDeferredPaymentAuth.php">Start again</a></p>
+        <?php endif; ?>
+    <?php else : ?>
+        <h3>Deferred Payment Auth</h3>
+        <form method="POST">
+            <div>Return here after checkout: <input type="text" name="redirectReturnUrl" value="<?php echo 'http' . ((! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 's' : '') . '://' . htmlspecialchars($_SERVER['HTTP_HOST']) . (strstr($_SERVER['REQUEST_URI'], '?') ? substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) : $_SERVER['REQUEST_URI']); ?>"></div>
+            <div><button type="submit">Proceed to Afterpay</button></div>
+        </form>
     <?php endif; ?>
-    <form method="POST">
-        <div>Return here after checkout: <input type="text" name="redirectReturnUrl" value="<?php echo 'http' . ((! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 's' : '') . '://' . htmlspecialchars($_SERVER['HTTP_HOST']) . (strstr($_SERVER['REQUEST_URI'], '?') ? substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], '?')) : $_SERVER['REQUEST_URI']); ?>"></div>
-        <div><button type="submit">Proceed to Afterpay</button></div>
-    </form>
 </body>
 </html>
