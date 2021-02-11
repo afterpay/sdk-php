@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<ruleset name="PHP_CodeSniffer">
-    <arg name="error-severity" value="1"/>
-    <arg name="warning-severity" value="6"/>
-    <file>./src</file>
-    <file>./test</file>
-    <file>./sample</file>
-    <rule ref="PSR12"/>
-</ruleset>
