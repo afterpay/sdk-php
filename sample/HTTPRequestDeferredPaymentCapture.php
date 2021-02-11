@@ -24,6 +24,7 @@ if (file_exists($composer_autoload)) {
 }
 
 use Afterpay\SDK\Helper\StringHelper as AfterpayStringHelper;
+use Afterpay\SDK\Model\Payment as AfterpayPayment;
 use Afterpay\SDK\HTTP\Request\DeferredPaymentCapture as AfterpayDeferredPaymentCaptureRequest;
 
 
@@ -33,7 +34,7 @@ use Afterpay\SDK\HTTP\Request\DeferredPaymentCapture as AfterpayDeferredPaymentC
  * Before you can capture a payment, you need to have created a checkout, amd for the consumer to have
  * completed the checkout screenflow and confirmed the payment schedule.
  * See HTTPRequestDeferredPaymentAuth.php for a sample that satisfies these prerequisites.
- * 
+ *
  * A typical use case for partial payment capture is where a shipment is despatched for a portion of an
  * order. For a more detailed explanation and additional use cases, see:
  *  - https://developers.afterpay.com/afterpay-online/reference#deferred-payment-flow
@@ -71,6 +72,7 @@ if (! empty($_POST)) {
     }
 
     if ($capturePaymentRequest->send()) {
+        $payment = new AfterpayPayment($capturePaymentRequest->getResponse()->getParsedBody());
         $paymentEvent = $capturePaymentRequest->getResponse()->getPaymentEvent();
     } else {
         $error = $capturePaymentRequest->getResponse()->getParsedBody();
@@ -93,12 +95,16 @@ if (! empty($_POST)) {
         <ul>
             <li>ID: <?php echo $paymentEvent->getId(); ?></li>
             <li>Timestamp: <?php echo $paymentEvent->getCreated(); ?></li>
+            <li>Open to capture: <?php echo $payment->getOpenToCaptureAmount()->getAmount(); ?></li>
+            <li>Auth expiry: <?php echo $payment->getEvents()[0]->getExpires(); ?></li>
         </ul>
         <p><a href="HTTPRequestDeferredPaymentAuth.php">Start again</a></p>
     <?php endif; ?>
     <h3>Deferred Payment Capture</h3>
     <form method="POST">
+        <p>Path params:</p>
         <div>Order ID: <input type="text" name="orderId" value="<?php echo $_GET['orderId'] ?>"></div>
+        <p>Body params:</p>
         <div>Request ID: <input type="text" name="requestId" value="<?php echo AfterpayStringHelper::generateUuid(); ?>"></div>
         <div>Amount: <input type="text" name="amount[amount]" value="200.00"></div>
         <div>Currency: <input type="text" name="amount[currency]" value="AUD"></div>
