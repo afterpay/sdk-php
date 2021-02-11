@@ -75,7 +75,7 @@ trait ModelMethods
             if (array_key_exists('type', $property)) {
                 $expectedType = $property[ 'type' ];
 
-                if (class_exists($expectedType) && $actualType == get_class(new \StdClass())) {
+                if (class_exists($expectedType) && $value instanceof \StdClass) {
                     $value = new $expectedType($value);
 
                     $actualType = get_class($value);
