@@ -131,7 +131,7 @@ Sample code is provided in the [sample](sample) directory:
 - [Validating and creating a checkout](sample/HTTPRequestCreateCheckoutWithValidation.php)
 - [Immediately capturing payment for a confirmed checkout](sample/HTTPRequestImmediatePaymentCapture.php)
 - [Creating a payment auth for a confirmed checkout](sample/HTTPRequestDeferredPaymentAuth.php)
-- **_@TODO: Capturing payment for a despatched shipment_**
+- [Capturing payment for a despatched shipment](sample/HTTPRequestDeferredPaymentCapture.php)
 - **_@TODO: Voiding the unfulfillable remainder of a payment auth_**
 - [Creating a refund](sample/HTTPRequestCreateRefund.php)
 
