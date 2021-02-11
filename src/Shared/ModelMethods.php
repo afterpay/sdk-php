@@ -93,7 +93,7 @@ trait ModelMethods
 
                 foreach ($value as &$element) {
                     if (! is_a($element, $matches[ 1 ])) {
-                        if (is_array($element)) {
+                        if (is_array($element) || $element instanceof \StdClass) {
                             try {
                                 $element = new $matches[ 1 ]($element);
                             } catch (InvalidModelException $e) {
