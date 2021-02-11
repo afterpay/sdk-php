@@ -22,6 +22,30 @@ use Afterpay\SDK\Model;
 
 final class PaymentEvent extends Model
 {
+    /**
+     * @var array $data
+     */
+    protected $data = [
+        'id' => [
+            'type' => 'string'
+        ],
+        'created' => [
+            'type' => 'string'
+        ],
+        'expires' => [
+            'type' => 'string'
+        ],
+        'type' => [
+            'type' => 'string'
+        ],
+        'amount' => [
+            'type' => Money::class
+        ],
+        'paymentEventMerchantReference' => [
+            'type' => 'string'
+        ]
+    ];
+
     /*public function __construct( ... $args )
     {
         parent::__construct( ... $args );
