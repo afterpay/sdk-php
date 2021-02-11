@@ -71,6 +71,16 @@ trait ModelMethods
 
         if ($actualType == 'object') {
             $actualType = get_class($value);
+
+            if (array_key_exists('type', $property)) {
+                $expectedType = $property[ 'type' ];
+
+                if (class_exists($expectedType) && $actualType == get_class(new \StdClass())) {
+                    $value = new $expectedType($value);
+
+                    $actualType = get_class($value);
+                }
+            }
         }
 
         if (array_key_exists('type', $property)) {
@@ -202,7 +212,7 @@ trait ModelMethods
 
     private function passConstructArgsToMagicSetters(...$args)
     {
-        if (is_array($args[ 0 ])) {
+        if (is_array($args[ 0 ]) || is_object($args[ 0 ])) {
             foreach ($args[ 0 ] as $propertyName => $value) {
                 if (is_numeric($propertyName)) {
                     $propertyName = array_keys($this->data)[ $propertyName ];
