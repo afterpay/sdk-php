@@ -112,7 +112,9 @@ trait ModelMethods
         if ($expectedType != $actualType) {
             $error = "Expected {$expectedType} for " . get_class($this) . "::\${$propertyName}; {$actualType} given";
 
-            if (Model::getAutomaticValidationEnabled()) {
+            if (is_null($value) && (! array_key_exists('required', $property) || ! $property[ 'required' ])) {
+                # Setting an optional property to null is OK, regardless of expected type.
+            } elseif (Model::getAutomaticValidationEnabled()) {
                 throw new InvalidModelException($error);
             } else {
                 if (! array_key_exists('errors', $property)) {
