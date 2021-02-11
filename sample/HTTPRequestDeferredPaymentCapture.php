@@ -23,6 +23,7 @@ if (file_exists($composer_autoload)) {
     require_once __DIR__ . '/../test/autoload.php';
 }
 
+use Afterpay\SDK\Helper\StringHelper as AfterpayStringHelper;
 use Afterpay\SDK\HTTP\Request\DeferredPaymentCapture as AfterpayDeferredPaymentCaptureRequest;
 
 
@@ -57,10 +58,11 @@ $merchant
 
 if (! empty($_POST)) {
     $capturePaymentRequest = new AfterpayDeferredPaymentCaptureRequest([
-        'amount' => [ $_POST['amount']['amount'], $_POST['amount']['currency'] ]
+        'requestId' => $_POST[ 'requestId' ],
+        'amount' => [ $_POST[ 'amount' ][ 'amount' ], $_POST[ 'amount' ][ 'currency' ] ]
     ]);
 
-    $capturePaymentRequest->setOrderId($_POST['orderId']);
+    $capturePaymentRequest->setOrderId($_POST[ 'orderId' ]);
 
     if (!is_null($merchant)) {
         $capturePaymentRequest
@@ -97,6 +99,7 @@ if (! empty($_POST)) {
     <h3>Deferred Payment Capture</h3>
     <form method="POST">
         <div>Order ID: <input type="text" name="orderId" value="<?php echo $_GET['orderId'] ?>"></div>
+        <div>Request ID: <input type="text" name="requestId" value="<?php echo AfterpayStringHelper::generateUuid(); ?>"></div>
         <div>Amount: <input type="text" name="amount[amount]" value="200.00"></div>
         <div>Currency: <input type="text" name="amount[currency]" value="AUD"></div>
         <div><button type="submit">Submit</button></div>
