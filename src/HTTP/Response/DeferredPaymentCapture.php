@@ -30,7 +30,7 @@ class DeferredPaymentCapture extends Response
     }
 
     /**
-     * @return \StdClass
+     * @return \Afterpay\SDK\Model\PaymentEvent
      * @throws \Afterpay\SDK\Exception\PrerequisiteNotMetException
      */
     public function getPaymentEvent()
