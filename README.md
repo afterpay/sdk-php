@@ -132,7 +132,7 @@ Sample code is provided in the [sample](sample) directory:
 - [Immediately capturing payment for a confirmed checkout](sample/HTTPRequestImmediatePaymentCapture.php)
 - [Creating a payment auth for a confirmed checkout](sample/HTTPRequestDeferredPaymentAuth.php)
 - [Capturing payment for a despatched shipment](sample/HTTPRequestDeferredPaymentCapture.php)
-- **_@TODO: Voiding the unfulfillable remainder of a payment auth_**
+- [Voiding an unfulfillable portion of a payment auth](sample/HTTPRequestDeferredPaymentVoid.php)
 - [Creating a refund](sample/HTTPRequestCreateRefund.php)
 
 ## Troubleshooting
