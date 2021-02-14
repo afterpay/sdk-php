@@ -70,6 +70,14 @@ final class Money extends Model
         return $args;
     }
 
+    /**
+     * @return string
+     */
+    public function toString()
+    {
+        return "{$this->getAmount()} {$this->getCurrency()}";
+    }
+
     /*public function __construct( ... $args )
     {
         parent::__construct( ... $args );
