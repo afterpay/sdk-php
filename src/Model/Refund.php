@@ -19,9 +19,34 @@
 namespace Afterpay\SDK\Model;
 
 use Afterpay\SDK\Model;
+use Afterpay\SDK\Model\Money;
 
 final class Refund extends Model
 {
+    /**
+     * @var array $data
+     */
+    protected $data = [
+        'requestId' => [
+            'type' => 'string'
+        ],
+        'amount' => [
+            'type' => Money::class
+        ],
+        'merchantReference' => [
+            'type' => 'string'
+        ],
+        'refundId' => [
+            'type' => 'string'
+        ],
+        'refundedAt' => [
+            'type' => 'string'
+        ],
+        'refundMerchantReference' => [
+            'type' => 'string'
+        ]
+    ];
+
     /*public function __construct( ... $args )
     {
         parent::__construct( ... $args );

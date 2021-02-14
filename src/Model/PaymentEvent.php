@@ -19,6 +19,7 @@
 namespace Afterpay\SDK\Model;
 
 use Afterpay\SDK\Model;
+use Afterpay\SDK\Model\Money;
 
 final class PaymentEvent extends Model
 {
