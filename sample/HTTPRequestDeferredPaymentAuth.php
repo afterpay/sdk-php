@@ -108,12 +108,13 @@ if (! empty($_POST)) {
     <?php elseif ($order) : ?>
         <h3>Order Record Created</h3>
         <ul>
-            <li>ID: <?php echo $order->id; ?></li>
+            <li>Order ID: <?php echo $order->id; ?></li>
             <li>Status: <?php echo $order->status; ?></li>
             <li>Is Approved? <?php echo $deferredPaymentAuthRequest->getResponse()->isApproved() ? 'YES - Proceed to thank you page.' : 'NO - Return to checkout with payment declined error.'; ?></li>
         </ul>
         <?php if ($deferredPaymentAuthRequest->getResponse()->isApproved()) : ?>
             <p><a href="HTTPRequestDeferredPaymentCapture.php?orderId=<?php echo $order->id; ?>">Capture Payment for this order</a></p>
+            <p><a href="HTTPRequestDeferredPaymentVoid.php?orderId=<?php echo $order->id; ?>">Void Payment for this order</a></p>
         <?php else : ?>
             <p><a href="HTTPRequestDeferredPaymentAuth.php">Start again</a></p>
         <?php endif; ?>

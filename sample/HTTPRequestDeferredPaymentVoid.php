@@ -25,18 +25,14 @@ if (file_exists($composer_autoload)) {
 
 use Afterpay\SDK\Helper\StringHelper as AfterpayStringHelper;
 use Afterpay\SDK\Model\Payment as AfterpayPayment;
-use Afterpay\SDK\HTTP\Request\DeferredPaymentCapture as AfterpayDeferredPaymentCaptureRequest;
+use Afterpay\SDK\HTTP\Request\DeferredPaymentVoid as AfterpayDeferredPaymentVoidRequest;
 
 
 
 /**
- * This sample demonstrates capturing a full or partial payment for an open auth.
- * Before you can capture a payment, you need to have created a checkout, amd for the consumer to have
- * completed the checkout screenflow and confirmed the payment schedule.
- * See HTTPRequestDeferredPaymentAuth.php for a sample that satisfies these prerequisites.
+ * This sample demonstrates voiding the open-to-capture remainder of an open auth.
  *
- * A typical use case for partial payment capture is where a shipment is despatched for a portion of an
- * order. For a more detailed explanation and additional use cases, see:
+ * For example use cases of the Void endpoint, see:
  *  - https://developers.afterpay.com/afterpay-online/reference#deferred-payment-flow
  */
 
@@ -58,24 +54,29 @@ $merchant
 ;*/
 
 if (! empty($_POST)) {
-    $capturePaymentRequest = new AfterpayDeferredPaymentCaptureRequest([
-        'requestId' => $_POST[ 'requestId' ],
-        'amount' => [ $_POST[ 'amount' ][ 'amount' ], $_POST[ 'amount' ][ 'currency' ] ]
-    ]);
+    $voidPaymentRequest = new AfterpayDeferredPaymentVoidRequest();
 
-    $capturePaymentRequest->setOrderId($_POST[ 'orderId' ]);
+    if (! empty($_POST[ 'requestId' ])) {
+        $voidPaymentRequest->setRequestId($_POST[ 'requestId' ]);
+    }
+    if (! empty($_POST[ 'amount' ][ 'amount' ]) || ! empty($_POST[ 'amount' ][ 'currency' ])) {
+        $voidPaymentRequest->setAmount($_POST[ 'amount' ][ 'amount' ], $_POST[ 'amount' ][ 'currency' ]);
+    }
+
+    $voidPaymentRequest->setOrderId($_POST[ 'orderId' ]);
 
     if (!is_null($merchant)) {
-        $capturePaymentRequest
+        $voidPaymentRequest
             ->setMerchantAccount($merchant)
         ;
     }
 
-    if ($capturePaymentRequest->send()) {
-        $order = new AfterpayPayment($capturePaymentRequest->getResponse()->getParsedBody());
-        $paymentEvent = $capturePaymentRequest->getResponse()->getPaymentEvent();
+    if ($voidPaymentRequest->send()) {
+        $order = new AfterpayPayment($voidPaymentRequest->getResponse()->getParsedBody());
+        $refund = $voidPaymentRequest->getResponse()->getRefund();
+        $paymentEvent = $voidPaymentRequest->getResponse()->getPaymentEvent();
     } else {
-        $error = $capturePaymentRequest->getResponse()->getParsedBody();
+        $error = $voidPaymentRequest->getResponse()->getParsedBody();
     }
 }
 
@@ -83,7 +84,7 @@ if (! empty($_POST)) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Deferred Payment Capture Request Sample</title>
+    <title>Deferred Payment Void Request Sample</title>
 </head>
 <body>
     <?php if ($error) : ?>
@@ -91,21 +92,23 @@ if (! empty($_POST)) {
         <pre><?php print_r($error); ?></pre>
         <p><a href="HTTPRequestDeferredPaymentAuth.php">Try a new auth</a></p>
     <?php elseif ($paymentEvent) : ?>
-        <h3>Payment Capture Successful</h3>
+        <h3>Payment Void Successful</h3>
         <ul>
-            <li>Capture Event ID: <?php echo $paymentEvent->getId(); ?></li>
+            <li>Void Event ID: <?php echo $paymentEvent->getId(); ?></li>
+            <li>Refund ID: <?php echo $refund->getRefundId(); ?></li>
             <li>Timestamp: <?php echo $paymentEvent->getCreated(); ?></li>
-            <li>Open to Capture: <?php echo $order->getOpenToCaptureAmount()->getAmount(); ?></li>
+            <li>Open to Capture: <?php echo $order->getOpenToCaptureAmount()->toString(); ?></li>
             <li>Auth Expiry: <?php echo $order->getEvents()[0]->getExpires(); ?></li>
         </ul>
-        <p><a href="HTTPRequestDeferredPaymentVoid.php?orderId=<?php echo $_GET['orderId'] ?>">Void Payment for this order</a></p>
+        <p><a href="HTTPRequestDeferredPaymentCapture.php?orderId=<?php echo $_GET['orderId'] ?>">Capture Payment for this order</a></p>
         <p><a href="HTTPRequestDeferredPaymentAuth.php">Start again</a></p>
     <?php endif; ?>
-    <h3>Deferred Payment Capture</h3>
+    <h3>Deferred Payment Void</h3>
     <form method="POST">
         <p>Path params:</p>
         <div>Order ID: <input type="text" name="orderId" value="<?php echo $_GET['orderId'] ?>"></div>
         <p>Body params:</p>
+        <p><em>Note: Clear the Amount and Currency fields to void the total "Open to Capture" remainder for the order.</em></p>
         <div>Request ID: <input type="text" name="requestId" value="<?php echo AfterpayStringHelper::generateUuid(); ?>"></div>
         <div>Amount: <input type="text" name="amount[amount]" value="200.00"></div>
         <div>Currency: <input type="text" name="amount[currency]" value="AUD"></div>
