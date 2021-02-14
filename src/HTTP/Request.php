@@ -528,6 +528,10 @@ class Request extends HTTP
             }
         }
 
+        if (is_null($this->getRawBody())) {
+            $this->addHeader('Content-Type', null);
+        }
+
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->getHeaders());
 
         if ($this->getMockMode() == 'alwaysReceiveServiceUnavailable') {
