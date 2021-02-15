@@ -23,7 +23,7 @@ require_once __DIR__ . '/../autoload.php';
 use PHPUnit\Framework\TestCase;
 use Afterpay\SDK\Test\ConsumerSimulator;
 
-class DeferredPaymentCaptureIntegrationTest extends TestCase
+class DeferredPaymentVoidIntegrationTest extends TestCase
 {
     public function __construct()
     {
@@ -31,10 +31,10 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
     }
 
     /**
-     * Ensure that the total `openToCapture` amount can be captured in a single
-     * DeferredPaymentCapture Request.
+     * Ensure that the total `openToCapture` amount can be voided in a single
+     * DeferredPaymentVoid Request by omitting the `amount` parameter.
      */
-    public function testCaptureFullAmountSuccess201()
+    public function testVoidFullAmountSuccess201()
     {
         # Reset the credentials to null to make sure they get automatically loaded
         # (just in case a previous test has set them).
@@ -83,29 +83,27 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         # Step 4 of 4
 
-        # Capture a 10.00 payment for the order, completing the auth
+        # Void the original amount of 10.00, completing the auth
 
-        $mockData = \Afterpay\SDK\MerchantAccount::generateMockData(\Afterpay\SDK\HTTP::getCountryCode());
+        $deferredPaymentVoidRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentVoid();
 
-        $deferredPaymentCaptureRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentCapture();
-
-        $deferredPaymentCaptureRequest
+        $deferredPaymentVoidRequest
             ->setOrderId($orderId)
-            ->setAmount('10.00', $mockData[ 'currency' ])
             ->send()
         ;
 
-        $deferredPaymentCaptureResponse = $deferredPaymentCaptureRequest->getResponse();
+        $deferredPaymentVoidResponse = $deferredPaymentVoidRequest->getResponse();
 
-        $this->assertEquals(201, $deferredPaymentCaptureResponse->getHttpStatusCode());
-        $this->assertEquals('0.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
-        $this->assertEquals('CAPTURED', $deferredPaymentCaptureResponse->getParsedBody()->paymentState);
+        $this->assertEquals(201, $deferredPaymentVoidResponse->getHttpStatusCode());
+        $this->assertEquals('0.00', $deferredPaymentVoidResponse->getParsedBody()->openToCaptureAmount->amount);
+        $this->assertEquals('VOIDED', $deferredPaymentVoidResponse->getParsedBody()->paymentState);
     }
 
     /**
-     * Ensure that a partial amount can be captured, after a partial void.
+     * Ensure that a partial amount can be voided by including
+     * the `amount` parameter.
      */
-    public function testCapturePartialAmountSuccess201()
+    public function testVoidPartialAmountSuccess201()
     {
         # Reset the credentials to null to make sure they get automatically loaded
         # (just in case a previous test has set them).
@@ -116,7 +114,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
         \Afterpay\SDK\HTTP::setMerchantId(null);
         \Afterpay\SDK\HTTP::setSecretKey(null);
 
-        # Step 1 of 5
+        # Step 1 of 4
 
         # Create a checkout for 10.00 in the currency of the merchant account.
 
@@ -129,7 +127,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         $checkoutToken = $createCheckoutRequest->getResponse()->getParsedBody()->token;
 
-        # Step 2 of 5
+        # Step 2 of 4
 
         # Simulate a consumer completing the checkout and clicking the confirm button
         # to commit to the payment schedule.
@@ -138,7 +136,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         $consumerSimulator->confirmPaymentSchedule($checkoutToken, '000');
 
-        # Step 3 of 5
+        # Step 3 of 4
 
         # Create a payment auth with an APPROVED status.
         # This action converts the temporary checkout into a permanent order record.
@@ -152,7 +150,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         $orderId = $deferredPaymentAuthRequest->getResponse()->getParsedBody()->id;
 
-        # Step 4 of 5
+        # Step 4 of 4
 
         # Void a partial amount of 2.00, leaving 8.00 open to capture.
 
@@ -166,22 +164,10 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
             ->send()
         ;
 
-        # Step 5 of 5
+        $deferredPaymentVoidResponse = $deferredPaymentVoidRequest->getResponse();
 
-        # Capture a partial amount of 2.00, leaving 6.00 open to capture.
-
-        $deferredPaymentCaptureRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentCapture();
-
-        $deferredPaymentCaptureRequest
-            ->setOrderId($orderId)
-            ->setAmount('2.00', $mockData[ 'currency' ])
-            ->send()
-        ;
-
-        $deferredPaymentCaptureResponse = $deferredPaymentCaptureRequest->getResponse();
-
-        $this->assertEquals(201, $deferredPaymentCaptureResponse->getHttpStatusCode());
-        $this->assertEquals('6.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
-        $this->assertEquals('PARTIALLY_CAPTURED', $deferredPaymentCaptureResponse->getParsedBody()->paymentState);
+        $this->assertEquals(201, $deferredPaymentVoidResponse->getHttpStatusCode());
+        $this->assertEquals('8.00', $deferredPaymentVoidResponse->getParsedBody()->openToCaptureAmount->amount);
+        $this->assertEquals('AUTH_APPROVED', $deferredPaymentVoidResponse->getParsedBody()->paymentState);
     }
 }
