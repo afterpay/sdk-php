@@ -23,14 +23,18 @@ require_once __DIR__ . '/../autoload.php';
 use PHPUnit\Framework\TestCase;
 use Afterpay\SDK\Test\ConsumerSimulator;
 
-class DeferredPaymentAuthIntegrationTest extends TestCase
+class DeferredPaymentCaptureIntegrationTest extends TestCase
 {
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function testApproved201()
+    /**
+     * Ensure that the total `openToCapture` amount can be captured in a single
+     * DeferredPaymentCapture Request.
+     */
+    public function testCaptureFullAmountSuccess201()
     {
         # Reset the credentials to null to make sure they get automatically loaded
         # (just in case a previous test has set them).
@@ -41,7 +45,7 @@ class DeferredPaymentAuthIntegrationTest extends TestCase
         \Afterpay\SDK\HTTP::setMerchantId(null);
         \Afterpay\SDK\HTTP::setSecretKey(null);
 
-        # Step 1 of 3
+        # Step 1 of 4
 
         # Create a checkout for 10.00 in the currency of the merchant account.
 
@@ -54,7 +58,7 @@ class DeferredPaymentAuthIntegrationTest extends TestCase
 
         $checkoutToken = $createCheckoutRequest->getResponse()->getParsedBody()->token;
 
-        # Step 2 of 3
+        # Step 2 of 4
 
         # Simulate a consumer completing the checkout and clicking the confirm button
         # to commit to the payment schedule.
@@ -63,7 +67,7 @@ class DeferredPaymentAuthIntegrationTest extends TestCase
 
         $consumerSimulator->confirmPaymentSchedule($checkoutToken, '000');
 
-        # Step 3 of 3
+        # Step 3 of 4
 
         # Create a payment auth with an APPROVED status.
         # This action converts the temporary checkout into a permanent order record.
@@ -75,61 +79,26 @@ class DeferredPaymentAuthIntegrationTest extends TestCase
             ->send()
         ;
 
-        $deferredPaymentAuthResponse = $deferredPaymentAuthRequest->getResponse();
+        $orderId = $deferredPaymentAuthRequest->getResponse()->getParsedBody()->id;
 
-        $this->assertEquals(201, $deferredPaymentAuthResponse->getHttpStatusCode());
-        $this->assertEquals('APPROVED', $deferredPaymentAuthResponse->getParsedBody()->status);
-    }
+        # Step 4 of 4
 
-    public function testDeclined402()
-    {
-        # Reset the credentials to null to make sure they get automatically loaded
-        # (just in case a previous test has set them).
+        # Capture a 10.00 payment for the order, completing the auth
 
-        # Note: API credentials must be configured correctly in your `.env.php` file
-        #       for this test to pass, or set as environment variables.
+        $mockData = \Afterpay\SDK\MerchantAccount::generateMockData(\Afterpay\SDK\HTTP::getCountryCode());
 
-        \Afterpay\SDK\HTTP::setMerchantId(null);
-        \Afterpay\SDK\HTTP::setSecretKey(null);
+        $deferredPaymentCaptureRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentCapture();
 
-        # Step 1 of 3
-
-        # Create a checkout for 10.00 in the currency of the merchant account.
-
-        $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
-
-        $createCheckoutRequest
-            ->fillBodyWithMockData()
+        $deferredPaymentCaptureRequest
+            ->setOrderId($orderId)
+            ->setAmount('10.00', $mockData[ 'currency' ])
             ->send()
         ;
 
-        $checkoutToken = $createCheckoutRequest->getResponse()->getParsedBody()->token;
+        $deferredPaymentCaptureResponse = $deferredPaymentCaptureRequest->getResponse();
 
-        # Step 2 of 3
-
-        # Simulate a consumer completing the checkout and clicking the confirm button
-        # to commit to the payment schedule.
-        # During this process, the consumer selects a card with a CSC of "051".
-
-        $consumerSimulator = new ConsumerSimulator();
-
-        $consumerSimulator->confirmPaymentSchedule($checkoutToken, '051');
-
-        # Step 3 of 3
-
-        # Create a payment auth with a DECLINED status.
-        # This action converts the temporary checkout into a permanent order record.
-
-        $deferredPaymentAuthRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentAuth();
-
-        $deferredPaymentAuthRequest
-            ->setToken($checkoutToken)
-            ->send()
-        ;
-
-        $deferredPaymentAuthResponse = $deferredPaymentAuthRequest->getResponse();
-
-        $this->assertEquals(402, $deferredPaymentAuthResponse->getHttpStatusCode());
-        $this->assertEquals('DECLINED', $deferredPaymentAuthResponse->getParsedBody()->status);
+        $this->assertEquals(201, $deferredPaymentCaptureResponse->getHttpStatusCode());
+        $this->assertEquals('0.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
+        $this->assertEquals('CAPTURED', $deferredPaymentCaptureResponse->getParsedBody()->paymentState);
     }
 }
