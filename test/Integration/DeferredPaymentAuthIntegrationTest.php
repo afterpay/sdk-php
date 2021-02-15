@@ -30,9 +30,6 @@ class DeferredPaymentAuthIntegrationTest extends TestCase
         parent::__construct();
     }
 
-    /**
-     * @todo Update this test to support countries/currencies other that AU/AUD!
-     */
     public function testSuccess201()
     {
         # Reset the credentials to null to make sure they get automatically loaded
