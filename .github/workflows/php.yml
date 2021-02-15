@@ -144,6 +144,21 @@ jobs:
           TEST_CONSUMER_PASSWORD: ${{ secrets.AU_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
 
+      - name: Run integration test suite in CA Sandbox
+        env:
+          MERCHANT_ID: ${{ secrets.CA_SBOX_MID_1 }}
+          SECRET_KEY: ${{ secrets.CA_SBOX_SKEY_1 }}
+          COUNTRY_CODE: CA
+          DB_API: mysqli
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
+          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.CA_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.CA_SBOX_CONSUMER_PASSWORD_1 }}
+        run: composer test-integration
+
       - name: Run integration test suite in NZ Sandbox
         env:
           MERCHANT_ID: ${{ secrets.NZ_SBOX_MID_1 }}
