@@ -140,6 +140,8 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.AU_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.AU_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
 
       - name: Run integration test suite in NZ Sandbox
@@ -153,6 +155,8 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.NZ_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.NZ_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
 
       - name: Run integration test suite in UK Sandbox
@@ -166,6 +170,8 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.UK_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.UK_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
 
       - name: Run integration test suite in US Sandbox
@@ -179,4 +185,6 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.US_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.US_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
