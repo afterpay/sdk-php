@@ -19,7 +19,11 @@ class CreateCheckout extends Request
     protected $data = [
         'totalAmount' => [
             'type' => Money::class,
-            'required' => true
+            'required' => false
+        ],
+        'amount' => [
+            'type' => Money::class,
+            'required' => false
         ],
         'consumer' => [
             'type' => Consumer::class,
