@@ -22,9 +22,9 @@ use Afterpay\SDK\HTTP\Request;
 
 class Ping extends Request
 {
-    public function __construct()
+    public function __construct(...$args)
     {
-        parent::__construct();
+        parent::__construct(... $args);
 
         $this->setUri('/ping');
     }
