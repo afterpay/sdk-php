@@ -24,6 +24,10 @@ final class Contact extends Model
             'type' => 'string',
             'length' => 128
         ],
+        'area1' => [
+            'type' => 'string',
+            'length' => 128
+        ],
         'suburb' => [
             'type' => 'string',
             'length' => 128
