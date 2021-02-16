@@ -51,7 +51,7 @@ class GetCheckout extends Request
 
         $this->checkoutToken = $checkoutToken;
 
-        $this->setUri("/v2/checkouts/{$this->checkoutToken}");
+        $this->setUri("/v1/orders/{$this->checkoutToken}");
 
         return $this;
     }
