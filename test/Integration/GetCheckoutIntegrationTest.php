@@ -35,7 +35,7 @@ class GetCheckoutIntegrationTest extends TestCase
         $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
         $mockData = \Afterpay\SDK\MerchantAccount::generateMockData(\Afterpay\SDK\HTTP::getCountryCode());
         $createCheckoutRequest
-            ->setAmount('10.00', $mockData[ 'currency' ])
+            ->setTotalAmount('10.00', $mockData[ 'currency' ])
             ->setConsumer([
                 'phoneNumber' => $this->maybeGet('phoneNumber', $mockData),
                 'givenNames' => 'Test',
@@ -46,8 +46,8 @@ class GetCheckoutIntegrationTest extends TestCase
                 'name' => 'Joe Consumer',
                 'line1' => $this->maybeGet('line1', $mockData),
                 'line2' => $this->maybeGet('line2', $mockData),
-                'area1' => $this->maybeGet('area1', $mockData),
-                'region' => $this->maybeGet('region', $mockData),
+                'suburb' => $this->maybeGet('area1', $mockData),
+                'state' => $this->maybeGet('region', $mockData),
                 'postcode' => $this->maybeGet('postcode', $mockData),
                 'countryCode' => $createCheckoutRequest->getCountryCode(),
                 'phoneNumber' => $this->maybeGet('phoneNumber', $mockData)
@@ -56,8 +56,8 @@ class GetCheckoutIntegrationTest extends TestCase
                 'name' => 'Joe Consumer',
                 'line1' => $this->maybeGet('line1', $mockData),
                 'line2' => $this->maybeGet('line2', $mockData),
-                'area1' => $this->maybeGet('area1', $mockData),
-                'region' => $this->maybeGet('region', $mockData),
+                'suburb' => $this->maybeGet('area1', $mockData),
+                'state' => $this->maybeGet('region', $mockData),
                 'postcode' => $this->maybeGet('postcode', $mockData),
                 'countryCode' => $createCheckoutRequest->getCountryCode(),
                 'phoneNumber' => $this->maybeGet('phoneNumber', $mockData)
@@ -67,13 +67,7 @@ class GetCheckoutIntegrationTest extends TestCase
                     'name' => 'T-Shirt - Blue - Size M',
                     'sku' => 'TSH0001B1MED',
                     'quantity' => 10,
-                    'pageUrl' => 'https://www.example.com/page.html',
-                    'imageUrl' => 'https://www.example.com/image.jpg',
-                    'price' => [ '10.00', $mockData[ 'currency' ] ],
-                    'categories' => [
-                        [ 'Clothing', 'T-Shirts', 'Under 25.00' ],
-                        [ 'Sale', 'Clothing' ]
-                    ]
+                    'price' => [ '10.00', $mockData[ 'currency' ] ]
                 ]
             ])
             ->setDiscounts([
