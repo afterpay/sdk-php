@@ -26,6 +26,7 @@ $contact = new AfterpayContact(
     'Level 23',
     '2 Southbank Blvd',
     'Southbank',
+    'Southbank',
     'VIC',
     '3006',
     'AU',

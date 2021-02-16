@@ -25,6 +25,7 @@ $contact = new AfterpayContact([
     'name' => 'Joe Consumer',
     'line1' => 'Level 23',
     'line2' => '2 Southbank Blvd',
+    'area1' => 'Southbank',
     'suburb' => 'Southbank',
     'state' => 'VIC',
     'postcode' => '3006',
