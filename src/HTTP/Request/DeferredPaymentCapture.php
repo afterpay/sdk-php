@@ -85,9 +85,9 @@ class DeferredPaymentCapture extends Request
         if (is_int($orderId)) {
             $orderId = (string) abs($orderId);
         } elseif (is_string($orderId) && ! preg_match('/^\d+$/', $orderId)) {
-            throw new InvalidArgumentException("Expected integer or numeric string for orderId; '{$orderId}' given");
+            throw new InvalidArgumentException("Expected numeric orderId; '{$orderId}' given");
         } elseif (! is_string($orderId)) {
-            throw new InvalidArgumentException('Expected integer or numeric string for orderId; ' . gettype($orderId) . ' given');
+            throw new InvalidArgumentException('Expected numeric orderId; ' . gettype($orderId) . ' given');
         }
 
         $this->orderId = $orderId;
