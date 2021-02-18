@@ -20,6 +20,7 @@ namespace Afterpay\SDK\HTTP\Request;
 
 use Afterpay\SDK\MerchantAccount;
 use Afterpay\SDK\HTTP;
+use Afterpay\SDK\Helper\ArrayHelper;
 use Afterpay\SDK\HTTP\Request;
 use Afterpay\SDK\Model\Consumer;
 use Afterpay\SDK\Model\Contact;
@@ -78,11 +79,6 @@ class CreateCheckout extends Request
         ]
     ];
 
-    private function maybeGet($key, $array)
-    {
-        return array_key_exists($key, $array) ? $array[ $key ] : null;
-    }
-
     public function __construct(...$args)
     {
         parent::__construct(... $args);
@@ -104,30 +100,30 @@ class CreateCheckout extends Request
         $this
             ->setAmount('10.00', $mockData[ 'currency' ])
             ->setConsumer([
-                'phoneNumber' => $this->maybeGet('phoneNumber', $mockData),
+                'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData),
                 'givenNames' => 'Test',
                 'surname' => 'Test',
                 'email' => 'test@example.com'
             ])
             ->setBilling([
                 'name' => 'Joe Consumer',
-                'line1' => $this->maybeGet('line1', $mockData),
-                'line2' => $this->maybeGet('line2', $mockData),
-                'area1' => $this->maybeGet('area1', $mockData),
-                'region' => $this->maybeGet('region', $mockData),
-                'postcode' => $this->maybeGet('postcode', $mockData),
+                'line1' => ArrayHelper::maybeGet('line1', $mockData),
+                'line2' => ArrayHelper::maybeGet('line2', $mockData),
+                'area1' => ArrayHelper::maybeGet('area1', $mockData),
+                'region' => ArrayHelper::maybeGet('region', $mockData),
+                'postcode' => ArrayHelper::maybeGet('postcode', $mockData),
                 'countryCode' => $this->getCountryCode(),
-                'phoneNumber' => $this->maybeGet('phoneNumber', $mockData)
+                'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData)
             ])
             ->setShipping([
                 'name' => 'Joe Consumer',
-                'line1' => $this->maybeGet('line1', $mockData),
-                'line2' => $this->maybeGet('line2', $mockData),
-                'area1' => $this->maybeGet('area1', $mockData),
-                'region' => $this->maybeGet('region', $mockData),
-                'postcode' => $this->maybeGet('postcode', $mockData),
+                'line1' => ArrayHelper::maybeGet('line1', $mockData),
+                'line2' => ArrayHelper::maybeGet('line2', $mockData),
+                'area1' => ArrayHelper::maybeGet('area1', $mockData),
+                'region' => ArrayHelper::maybeGet('region', $mockData),
+                'postcode' => ArrayHelper::maybeGet('postcode', $mockData),
                 'countryCode' => $this->getCountryCode(),
-                'phoneNumber' => $this->maybeGet('phoneNumber', $mockData)
+                'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData)
             ])
             ->setItems([
                 [
