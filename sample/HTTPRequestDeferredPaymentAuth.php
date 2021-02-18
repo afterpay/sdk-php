@@ -71,10 +71,15 @@ if (! empty($_POST)) {
         ;
     }
 
-    if ($createCheckoutRequest->send()) {
-        header('Location: ' . $createCheckoutRequest->getResponse()->getParsedBody()->redirectCheckoutUrl);
+    $createCheckoutRequest->send();
+
+    $createCheckoutResponse = $createCheckoutRequest->getResponse();
+    $obj = $createCheckoutResponse->getParsedBody();
+
+    if ($createCheckoutResponse->isSuccessful()) {
+        header('Location: ' . $obj->redirectCheckoutUrl);
     } else {
-        $error = $createCheckoutRequest->getResponse()->getParsedBody();
+        $error = $obj;
     }
 } elseif (! empty($_GET)) {
     $deferredPaymentAuthRequest = new AfterpayDeferredPaymentAuthRequest([
@@ -87,10 +92,15 @@ if (! empty($_POST)) {
         ;
     }
 
-    if ($deferredPaymentAuthRequest->send()) {
-        $order = $deferredPaymentAuthRequest->getResponse()->getParsedBody();
+    $deferredPaymentAuthRequest->send();
+
+    $deferredPaymentAuthResponse = $deferredPaymentAuthRequest->getResponse();
+    $obj = $deferredPaymentAuthResponse->getParsedBody();
+
+    if ($deferredPaymentAuthResponse->isSuccessful()) {
+        $order = $obj;
     } else {
-        $error = $deferredPaymentAuthRequest->getResponse()->getParsedBody();
+        $error = $obj;
     }
 }
 
