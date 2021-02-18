@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2020 Afterpay Limited Group
+ * @copyright Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ class CreateRefundTest extends TestCase
 
             throw new \Exception('Expected InvalidArgumentException not thrown');
         } catch (\Afterpay\SDK\Exception\InvalidArgumentException $e) {
-            $this->assertEquals('Expected integer or numeric string for orderId; NULL given', $e->getMessage());
+            $this->assertEquals('Expected numeric orderId; NULL given', $e->getMessage());
         }
     }
 
@@ -64,7 +64,7 @@ class CreateRefundTest extends TestCase
 
             throw new \Exception('Expected InvalidArgumentException not thrown');
         } catch (\Afterpay\SDK\Exception\InvalidArgumentException $e) {
-            $this->assertEquals('Expected integer or numeric string for orderId; array given', $e->getMessage());
+            $this->assertEquals('Expected numeric orderId; array given', $e->getMessage());
         }
     }
 
@@ -77,7 +77,7 @@ class CreateRefundTest extends TestCase
 
             throw new \Exception('Expected InvalidArgumentException not thrown');
         } catch (\Afterpay\SDK\Exception\InvalidArgumentException $e) {
-            $this->assertEquals('Expected integer or numeric string for orderId; double given', $e->getMessage());
+            $this->assertEquals('Expected numeric orderId; double given', $e->getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ class CreateRefundTest extends TestCase
 
             throw new \Exception('Expected InvalidArgumentException not thrown');
         } catch (\Afterpay\SDK\Exception\InvalidArgumentException $e) {
-            $this->assertEquals("Expected integer or numeric string for orderId; '10a' given", $e->getMessage());
+            $this->assertEquals("Expected numeric orderId; '10a' given", $e->getMessage());
         }
     }
 
@@ -103,7 +103,7 @@ class CreateRefundTest extends TestCase
 
             throw new \Exception('Expected InvalidArgumentException not thrown');
         } catch (\Afterpay\SDK\Exception\InvalidArgumentException $e) {
-            $this->assertEquals('Expected integer or numeric string for orderId; double given', $e->getMessage());
+            $this->assertEquals('Expected numeric orderId; double given', $e->getMessage());
         }
     }
 

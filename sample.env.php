@@ -17,7 +17,7 @@
  * 
  * 
  * 
- * @copyright Copyright (c) 2020 Afterpay Limited Group
+ * @copyright Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,5 +43,7 @@ $afterpay_sdk_env_config = [
     'db.database' => 'MY_DATABASE',
     'db.tablePrefix' => 'afterpay_',
     'db.user' => 'MY_MYSQL_USER',
-    'db.pass' => 'MY_MYSQL_PASS'
+    'db.pass' => 'MY_MYSQL_PASS',
+    'test.consumerEmail' => 'MY_SANDBOX_CONSUMER_EMAIL',
+    'test.consumerPassword' => 'MY_SANDBOX_CONSUMER_PASSWORD'
 ];

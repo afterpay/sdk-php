@@ -16,12 +16,12 @@ Please use the provided shell script to install the appropriate verion based on 
 This script will download PHPUnit to `./vendor/bin/phpunit`.
 
 ```bash
-/bin/bash ./bin/install-phpunit.sh
+/bin/sh ./bin/install-phpunit.sh
 ```
 
-## Pull Requests
+## Linting
 
-Before making a Pull Request (PR), please ensure you have linted your code against the [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard.
+Please ensure you lint your code against the [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard.
 
 ```bash
 composer lint
@@ -33,7 +33,16 @@ You can also often auto-correct your code using the following command.
 composer lint-autofix
 ```
 
-You'll also need to ensure your changes don't cause any regression.
+## Testing
+
+In order to pass the test suite in your local development environment, you will need to meet some prerequisites.
+For each of the following, you will need credentials configured in your `.env.php` file.
+
+1. A Sandbox Merchant account.
+2. A Sandbox Consumer account, with a stored default payment card.
+3. A local [MySQL Server](https://dev.mysql.com/downloads/mysql/).
+
+Once the above prerequisites have been met, you can run the entire test suite with the following command:
 
 ```bash
 composer test
@@ -56,3 +65,8 @@ For example:
 ```bash
 ./vendor/bin/phpunit --colors=always ./test --filter testNaRegionalApiEnvironmentSelection
 ```
+
+## Making a Pull Request (PR)
+
+Before making a Pull Request, please ensure you have linted and tested your code, as per the sections above.
+

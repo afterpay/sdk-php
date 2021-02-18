@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2020 Afterpay Limited Group
+ * @copyright Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,34 @@
 namespace Afterpay\SDK\Model;
 
 use Afterpay\SDK\Model;
+use Afterpay\SDK\Model\Money;
 
 final class Refund extends Model
 {
+    /**
+     * @var array $data
+     */
+    protected $data = [
+        'requestId' => [
+            'type' => 'string'
+        ],
+        'amount' => [
+            'type' => Money::class
+        ],
+        'merchantReference' => [
+            'type' => 'string'
+        ],
+        'refundId' => [
+            'type' => 'string'
+        ],
+        'refundedAt' => [
+            'type' => 'string'
+        ],
+        'refundMerchantReference' => [
+            'type' => 'string'
+        ]
+    ];
+
     /*public function __construct( ... $args )
     {
         parent::__construct( ... $args );

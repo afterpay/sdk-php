@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2020 Afterpay Limited Group
+ * @copyright Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,9 +83,9 @@ class CreateRefund extends Request
         if (is_int($orderId)) {
             $orderId = (string) abs($orderId);
         } elseif (is_string($orderId) && ! preg_match('/^\d+$/', $orderId)) {
-            throw new InvalidArgumentException("Expected integer or numeric string for orderId; '{$orderId}' given");
+            throw new InvalidArgumentException("Expected numeric orderId; '{$orderId}' given");
         } elseif (! is_string($orderId)) {
-            throw new InvalidArgumentException('Expected integer or numeric string for orderId; ' . gettype($orderId) . ' given');
+            throw new InvalidArgumentException('Expected numeric orderId; ' . gettype($orderId) . ' given');
         }
 
         $this->orderId = $orderId;

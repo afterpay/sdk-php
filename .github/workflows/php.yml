@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Afterpay Limited Group
+# Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ jobs:
           - php: '8.0'
             mysql: '8.0'
       fail-fast: false
+      max-parallel: 1
 
     name: PHP ${{ matrix.php }}
 
@@ -140,6 +141,23 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.AU_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.AU_SBOX_CONSUMER_PASSWORD_1 }}
+        run: composer test-integration
+
+      - name: Run integration test suite in CA Sandbox
+        env:
+          MERCHANT_ID: ${{ secrets.CA_SBOX_MID_1 }}
+          SECRET_KEY: ${{ secrets.CA_SBOX_SKEY_1 }}
+          COUNTRY_CODE: CA
+          DB_API: mysqli
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
+          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.CA_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.CA_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
 
       - name: Run integration test suite in NZ Sandbox
@@ -153,6 +171,8 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.NZ_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.NZ_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
 
       - name: Run integration test suite in UK Sandbox
@@ -166,6 +186,8 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.UK_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.UK_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
 
       - name: Run integration test suite in US Sandbox
@@ -179,4 +201,6 @@ jobs:
           DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          TEST_CONSUMER_EMAIL: ${{ secrets.US_SBOX_CONSUMER_EMAIL_1 }}
+          TEST_CONSUMER_PASSWORD: ${{ secrets.US_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration

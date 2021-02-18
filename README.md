@@ -18,7 +18,7 @@ Optional recommendations:
 
 ## Installation
 
-Install with Composer.
+Install with [Composer](https://getcomposer.org/).
 
 ```bash
 composer require afterpay-global/afterpay-sdk-php
@@ -130,9 +130,9 @@ Sample code is provided in the [sample](sample) directory:
 - [Making a "Get Configuration" request, and persisting the result](sample/HTTPRequestGetConfigurationWithPersistence.php)
 - [Validating and creating a checkout](sample/HTTPRequestCreateCheckoutWithValidation.php)
 - [Immediately capturing payment for a confirmed checkout](sample/HTTPRequestImmediatePaymentCapture.php)
-- **_@TODO: Creating a payment auth for a confirmed checkout_**
-- **_@TODO: Capturing payment for a despatched shipment_**
-- **_@TODO: Voiding the unfulfillable remainder of a payment auth_**
+- [Creating a payment auth for a confirmed checkout](sample/HTTPRequestDeferredPaymentAuth.php)
+- [Capturing payment for a despatched shipment](sample/HTTPRequestDeferredPaymentCapture.php)
+- [Voiding an unfulfillable portion of a payment auth](sample/HTTPRequestDeferredPaymentVoid.php)
 - [Creating a refund](sample/HTTPRequestCreateRefund.php)
 
 ## Troubleshooting

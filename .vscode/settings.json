@@ -1,0 +1,5 @@
+{
+    "phpcs.standard": "PSR12",
+    "phpcs.errorSeverity": 1,
+    "phpcs.warningSeverity": 6
+}

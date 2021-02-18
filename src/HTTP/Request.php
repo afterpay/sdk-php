@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2020 Afterpay Limited Group
+ * @copyright Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,26 +84,8 @@ class Request extends HTTP
 
         if (count($args) == 1 && $args[ 0 ] instanceof MerchantAccount) {
             $this->merchant = $args[ 0 ];
-
-            $merchantId = $this->merchant->getMerchantId();
-        } else {
-            $merchant = $this->getMerchantAccount();
-            $merchantId = $merchant->getMerchantId();
-
-            if (count($args) > 0) {
-                $this->passConstructArgsToMagicSetters(... $args);
-            }
-        }
-
-        $php_version_str = phpversion();
-        $curl_version_arr = curl_version();
-        $curl_version_str = $curl_version_arr[ 'version' ];
-        $composer_json = Config::get('composerJson');
-        $ua_extra_a = HTTP::getPlatformDetailsAsString();
-        $ua_extra_b = '';
-
-        if (! empty($merchantId)) {
-            $ua_extra_b .= "; Merchant/{$merchantId}";
+        } elseif (count($args) > 0) {
+            $this->passConstructArgsToMagicSetters(... $args);
         }
 
         $this->ch = curl_init();
@@ -118,8 +100,29 @@ class Request extends HTTP
         curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($this->ch, CURLOPT_TIMEOUT, 70);
 
-        # String options
+        $this->configureUserAgent();
+    }
+
+    /**
+     * @return \Afterpay\SDK\HTTP\Request
+     */
+    private function configureUserAgent()
+    {
+        $composer_json = Config::get('composerJson');
+        $ua_extra_a = HTTP::getPlatformDetailsAsString();
+        $php_version_str = phpversion();
+        $curl_version_arr = curl_version();
+        $curl_version_str = $curl_version_arr[ 'version' ];
+        $ua_extra_b = '';
+        $merchant_id = $this->getMerchantAccount()->getMerchantId();
+
+        if (! empty($merchant_id)) {
+            $ua_extra_b .= "; Merchant/{$merchant_id}";
+        }
+
         curl_setopt($this->ch, CURLOPT_USERAGENT, "afterpay-sdk-php/{$composer_json->version} ({$ua_extra_a}PHP/{$php_version_str}; cURL/{$curl_version_str}{$ua_extra_b})");
+
+        return $this;
     }
 
     /**
@@ -168,8 +171,6 @@ class Request extends HTTP
 
             return $merchant;
         }
-
-        return $credentials;
     }
 
     /**
@@ -193,6 +194,7 @@ class Request extends HTTP
 
         $this->setUri($this->uri); # If the Country Code or API Environment has changed we'll need to update the CURLOPT_URL option
         $this->configureBasicAuth(); # If the MerchantAccount credentials have changed we'll need to update the CURLOPT_USERPWD option
+        $this->configureUserAgent(); # If the Merchant ID has changed we'll need to update the CURLOPT_USERAGENT option
 
         return $this;
     }
@@ -526,6 +528,10 @@ class Request extends HTTP
             if (is_null($this->getRawBody()) && ! empty($model_data)) {
                 $this->setRequestBody($model_data);
             }
+        }
+
+        if (is_null($this->getRawBody())) {
+            $this->addHeader('Content-Type', null);
         }
 
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->getHeaders());

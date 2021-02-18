@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2020 Afterpay Limited Group
+ * @copyright Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,6 +87,17 @@ final class Config
             'src' => '.env.php'
         ],
         'db.pass' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        /**
+         * These are test settings - used only by the Test classes for automated testing.
+         */
+        'test.consumerEmail' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'test.consumerPassword' => [
             'type' => 'string',
             'src' => '.env.php'
         ],

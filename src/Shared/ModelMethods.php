@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2020 Afterpay Limited Group
+ * @copyright Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,6 +71,16 @@ trait ModelMethods
 
         if ($actualType == 'object') {
             $actualType = get_class($value);
+
+            if (array_key_exists('type', $property)) {
+                $expectedType = $property[ 'type' ];
+
+                if (class_exists($expectedType) && $value instanceof \StdClass) {
+                    $value = new $expectedType($value);
+
+                    $actualType = get_class($value);
+                }
+            }
         }
 
         if (array_key_exists('type', $property)) {
@@ -83,7 +93,7 @@ trait ModelMethods
 
                 foreach ($value as &$element) {
                     if (! is_a($element, $matches[ 1 ])) {
-                        if (is_array($element)) {
+                        if (is_array($element) || $element instanceof \StdClass) {
                             try {
                                 $element = new $matches[ 1 ]($element);
                             } catch (InvalidModelException $e) {
@@ -112,7 +122,9 @@ trait ModelMethods
         if ($expectedType != $actualType) {
             $error = "Expected {$expectedType} for " . get_class($this) . "::\${$propertyName}; {$actualType} given";
 
-            if (Model::getAutomaticValidationEnabled()) {
+            if (is_null($value) && (! array_key_exists('required', $property) || ! $property[ 'required' ])) {
+                # Setting an optional property to null is OK, regardless of expected type.
+            } elseif (Model::getAutomaticValidationEnabled()) {
                 throw new InvalidModelException($error);
             } else {
                 if (! array_key_exists('errors', $property)) {
@@ -200,7 +212,7 @@ trait ModelMethods
 
     private function passConstructArgsToMagicSetters(...$args)
     {
-        if (is_array($args[ 0 ])) {
+        if (is_array($args[ 0 ]) || is_object($args[ 0 ])) {
             foreach ($args[ 0 ] as $propertyName => $value) {
                 if (is_numeric($propertyName)) {
                     $propertyName = array_keys($this->data)[ $propertyName ];

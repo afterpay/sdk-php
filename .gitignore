@@ -1,2 +1,5 @@
+/.vscode/*
+!/.vscode/settings.json
 /vendor/*
 /.env.php
+.DS_Store
