@@ -123,7 +123,7 @@ class GetCheckoutTest extends TestCase
 
         $getCheckoutRequest->setCheckoutToken('123456789');
 
-        $this->assertEquals('/v2/checkouts/123456789', $getCheckoutRequest->getUri());
+        $this->assertEquals('/v1/orders/123456789', $getCheckoutRequest->getUri());
     }
 
     public function testUnusualStringCheckoutTokenOk()
@@ -132,6 +132,6 @@ class GetCheckoutTest extends TestCase
 
         $getCheckoutRequest->setCheckoutToken('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~');
 
-        $this->assertEquals('/v2/checkouts/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~', $getCheckoutRequest->getUri());
+        $this->assertEquals('/v1/orders/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~', $getCheckoutRequest->getUri());
     }
 }
