@@ -51,7 +51,6 @@ class CreateCheckout extends Response
                     $obj->redirectCheckoutUrl = "https://{$prefix}.{$tld}/checkout/{$tokenParam}{$obj->token}";
                 } else {
                     $obj->redirectCheckoutUrl = "https://{$prefix}{$sandbox_suffix}.{$tld}/checkout/{$tokenParam}{$obj->token}";
-                    var_dump($obj->redirectCheckoutUrl); die;
                 }
                 $this->setRawBody(json_encode($obj));
             }
