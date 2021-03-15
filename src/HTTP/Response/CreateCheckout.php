@@ -32,7 +32,8 @@ class CreateCheckout extends Response
             $apiEnvironment = $merchantAccount->getApiEnvironment();
             $sandbox_suffix = '.sandbox';
             $prefix = "portal";
-            $tld = 'afterpay.com/' . strtolower($countryCode);
+            $tld = 'afterpay.com/';
+            $uriCountry = strtolower($countryCode);
             $tokenParam = '?token=';
 
             if (strlen($countryCode) == 2) {
@@ -41,16 +42,17 @@ class CreateCheckout extends Response
                     $tld = 'clearpay.com'; # Southern Europe
                     $sandbox_suffix = '.sandbox';
                     $tokenParam = '';
-                }
-                if ($countryCode == 'GB') {
-                    $tld = 'clearpay.co.uk/uk';
+                    $uriCountry = '';
+                } else if ($countryCode == 'GB') {
+                    $tld = 'clearpay.co.uk/';
+                    $uriCountry = 'uk';
                 }
             }
             if (!is_null($obj)) {
                 if (strtolower($apiEnvironment) === 'production') {
-                    $obj->redirectCheckoutUrl = "https://{$prefix}.{$tld}/checkout/{$tokenParam}{$obj->token}";
+                    $obj->redirectCheckoutUrl = "https://{$prefix}.{$tld}{$uriCountry}/checkout/{$tokenParam}{$obj->token}";
                 } else {
-                    $obj->redirectCheckoutUrl = "https://{$prefix}{$sandbox_suffix}.{$tld}/checkout/{$tokenParam}{$obj->token}";
+                    $obj->redirectCheckoutUrl = "https://{$prefix}{$sandbox_suffix}.{$tld}{$uriCountry}/checkout/{$tokenParam}{$obj->token}";
                 }
                 $this->setRawBody(json_encode($obj));
             }
