@@ -44,6 +44,14 @@ final class Contact extends Model
         'phoneNumber' => [
             'type' => 'string',
             'length' => 32
+        ],
+        'area1' => [
+            'type' => 'string',
+            'length' => 128
+        ],
+        'region' => [
+            'type' => 'string',
+            'length' => 128
         ]
     ];
 
