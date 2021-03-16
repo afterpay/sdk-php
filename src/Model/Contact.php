@@ -28,15 +28,7 @@ final class Contact extends Model
             'type' => 'string',
             'length' => 128
         ],
-        'area1' => [
-            'type' => 'string',
-            'length' => 128
-        ],
         'state' => [
-            'type' => 'string',
-            'length' => 128
-        ],
-        'region' => [
             'type' => 'string',
             'length' => 128
         ],
@@ -52,6 +44,14 @@ final class Contact extends Model
         'phoneNumber' => [
             'type' => 'string',
             'length' => 32
+        ],
+        'area1' => [
+            'type' => 'string',
+            'length' => 128
+        ],
+        'region' => [
+            'type' => 'string',
+            'length' => 128
         ]
     ];
 
