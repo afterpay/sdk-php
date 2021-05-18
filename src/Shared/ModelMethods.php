@@ -18,6 +18,7 @@
 
 namespace Afterpay\SDK\Shared;
 
+use Afterpay\SDK\Exception\InternalException;
 use Afterpay\SDK\Exception\InvalidArgumentException;
 use Afterpay\SDK\Exception\InvalidModelException;
 use Afterpay\SDK\Model;
@@ -51,6 +52,8 @@ trait ModelMethods
         if (method_exists($this, 'filterBeforeSet' . ucfirst($propertyName))) {
             $value = $this->{ 'filterBeforeSet' . ucfirst($propertyName) }(... $value);
         }
+
+        $this->clearErrors($propertyName);
 
         $values = count($value);
         $property = &$this->data[ $propertyName ];
@@ -119,19 +122,52 @@ trait ModelMethods
             $expectedType = $actualType;
         }
 
-        if ($expectedType != $actualType) {
-            $error = "Expected {$expectedType} for " . get_class($this) . "::\${$propertyName}; {$actualType} given";
+        if (! is_null($value) || (array_key_exists('required', $property) && $property[ 'required' ])) {
+            if (
+                array_key_exists('type', $property)
+                && $property[ 'type' ] == 'enumi'
+                && array_key_exists('options', $property)
+                && is_array($property[ 'options' ])
+            ) {
+                $valueMatchesValidOption = false;
 
-            if (is_null($value) && (! array_key_exists('required', $property) || ! $property[ 'required' ])) {
-                # Setting an optional property to null is OK, regardless of expected type.
-            } elseif (Model::getAutomaticValidationEnabled()) {
-                throw new InvalidModelException($error);
-            } else {
-                if (! array_key_exists('errors', $property)) {
-                    $property[ 'errors' ] = [];
+                if ($actualType == 'string') {
+                    foreach ($property[ 'options' ] as $optionKey => $optionValue) {
+                        if (is_string($optionValue)) {
+                            if (strtolower($value) == strtolower($optionValue)) {
+                                $valueMatchesValidOption = true;
+                            }
+                        } else {
+                            throw new InternalException('The "enumi" data type supports case insensitive string options only');
+                        }
+                    }
                 }
 
-                $property[ 'errors' ][] = $error;
+                if (! $valueMatchesValidOption) {
+                    $error = 'Expected one of "';
+                    $error .= implode('", "', $property[ 'options' ]);
+                    $error .= '" for ' . get_class($this) . "::\${$propertyName}; ";
+
+                    if ($actualType == 'string') {
+                        $error .= "\"{$value}\" given";
+                    } else {
+                        $error .= "{$actualType} given";
+                    }
+
+                    if (Model::getAutomaticValidationEnabled()) {
+                        throw new InvalidModelException($error);
+                    } else {
+                        $this->addError($error, $propertyName);
+                    }
+                }
+            } elseif ($expectedType != $actualType) {
+                $error = "Expected {$expectedType} for " . get_class($this) . "::\${$propertyName}; {$actualType} given";
+
+                if (Model::getAutomaticValidationEnabled()) {
+                    throw new InvalidModelException($error);
+                } else {
+                    $this->addError($error, $propertyName);
+                }
             }
         }
 
@@ -152,11 +188,7 @@ trait ModelMethods
                     } elseif (Model::getAutomaticValidationEnabled()) {
                         throw new InvalidModelException($error);
                     } else {
-                        if (! array_key_exists('errors', $property)) {
-                            $property[ 'errors' ] = [];
-                        }
-
-                        $property[ 'errors' ][] = $error;
+                        $this->addError($error, $propertyName);
                     }
                 }
             }
@@ -174,11 +206,7 @@ trait ModelMethods
                     if (Model::getAutomaticValidationEnabled()) {
                         throw new InvalidModelException($error);
                     } else {
-                        if (! array_key_exists('errors', $property)) {
-                            $property[ 'errors' ] = [];
-                        }
-
-                        $property[ 'errors' ][] = $error;
+                        $this->addError($error, $propertyName);
                     }
                 }
             }
@@ -195,17 +223,17 @@ trait ModelMethods
                     if (Model::getAutomaticValidationEnabled()) {
                         throw new InvalidModelException($error);
                     } else {
-                        if (! array_key_exists('errors', $property)) {
-                            $property[ 'errors' ] = [];
-                        }
-
-                        $property[ 'errors' ][] = $error;
+                        $this->addError($error, $propertyName);
                     }
                 }
             }
         }
 
         $this->data[ $propertyName ][ 'value' ] = $value;
+
+        if (method_exists($this, 'afterSet')) {
+            $this->{ 'afterSet' }($propertyName);
+        }
 
         return $this;
     }
@@ -242,6 +270,54 @@ trait ModelMethods
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @param string $propertyName
+     */
+    protected function clearErrors($propertyName = null)
+    {
+        if (! is_null($propertyName)) {
+            if (array_key_exists('errors', $this->data[ $propertyName ])) {
+                $this->data[ $propertyName ][ 'errors' ] = [];
+            }
+        } else {
+            foreach ($this->data as $propertyName => $propertyData) {
+                $this->clearErrors($propertyName);
+            }
+        }
+    }
+
+    /**
+     * @param string $error
+     * @param string $propertyName
+     */
+    protected function clearError($error, $propertyName)
+    {
+        if (array_key_exists('errors', $this->data[ $propertyName ])) {
+            $key = array_search($error, $this->data[ $propertyName ][ 'errors' ]);
+            if (is_int($key)) {
+                array_splice($this->data[ $propertyName ][ 'errors' ], $key, 1);
+            }
+        }
+    }
+
+    /**
+     * @param string $error
+     * @param string $propertyName
+     */
+    protected function addError($error, $propertyName)
+    {
+        if (! array_key_exists('errors', $this->data[ $propertyName ])) {
+            $this->data[ $propertyName ][ 'errors' ] = [];
+            $key = false;
+        } else {
+            $key = array_search($error, $this->data[ $propertyName ][ 'errors' ]);
+        }
+
+        if ($key === false) {
+            $this->data[ $propertyName ][ 'errors' ][] = $error;
         }
     }
 

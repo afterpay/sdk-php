@@ -27,17 +27,46 @@ final class Merchant extends Model
      */
     protected $data = [
         'redirectConfirmUrl' => [
-            'type' => 'string',
-            'required' => true
+            'type' => 'string'
         ],
         'redirectCancelUrl' => [
-            'type' => 'string',
-            'required' => true
+            'type' => 'string'
+        ],
+        'popupOriginUrl' => [
+            'type' => 'string'
         ]
     ];
 
-    /*public function __construct( ... $args )
+    protected function afterSet($propertyName)
     {
-        parent::__construct( ... $args );
-    }*/
+        $redirectUrlsRequiredError = 'redirectConfirmUrl and redirectCancelUrl are required if popupOriginUrl is not provided';
+        $popupUrlRequiredError = 'popupOriginUrl is required if redirectConfirmUrl and redirectCancelUrl are not provided';
+
+        $redirectConfirmUrl = $this->getRedirectConfirmUrl();
+        $redirectCancelUrl = $this->getRedirectCancelUrl();
+        $popupOriginUrl = $this->getPopupOriginUrl();
+
+        if (empty($redirectConfirmUrl) && empty($redirectCancelUrl) && empty($popupOriginUrl)) {
+            $this->addError($redirectUrlsRequiredError, 'redirectConfirmUrl');
+            $this->addError($redirectUrlsRequiredError, 'redirectCancelUrl');
+            $this->addError($popupUrlRequiredError, 'popupOriginUrl');
+        } else {
+            $this->clearError($redirectUrlsRequiredError, 'redirectConfirmUrl');
+            $this->clearError($redirectUrlsRequiredError, 'redirectCancelUrl');
+            $this->clearError($popupUrlRequiredError, 'popupOriginUrl');
+            if (! empty($redirectConfirmUrl) && empty($redirectCancelUrl)) {
+                $this->addError($redirectUrlsRequiredError, 'redirectCancelUrl');
+            }
+            if (! empty($redirectCancelUrl) && empty($redirectConfirmUrl)) {
+                $this->addError($redirectUrlsRequiredError, 'redirectConfirmUrl');
+            }
+        }
+    }
+
+    public function __construct(...$args)
+    {
+        parent::__construct(... $args);
+
+        $this->afterSet(null);
+    }
 }

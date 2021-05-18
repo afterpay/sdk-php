@@ -76,6 +76,13 @@ class CreateCheckout extends Request
         ],
         'shippingAmount' => [
             'type' => Money::class
+        ],
+        'mode' => [
+            'type' => 'enumi',
+            'options' => [
+                'STANDARD',
+                'EXPRESS'
+            ]
         ]
     ];
 
