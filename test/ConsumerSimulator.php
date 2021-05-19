@@ -242,6 +242,51 @@ class ConsumerSimulator
     }
 
     /**
+     * @throws \Exception
+     */
+    private function request2faCode()
+    {
+        $url = "{$this->portalapiBaseUrl}/portal/consumers/auth/2fa/code";
+        $postheaders = [
+            'Content-Type: application/json'
+        ];
+        $postbody = json_encode([
+            'sendBy' => 'SMS'
+        ]);
+
+        $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
+
+        if ($responseObj->responseHttpStatusCode == 201) {
+            return;
+        }
+
+        throw new \Exception('request2faCode did not complete as expected');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function validate2faCode()
+    {
+        $url = "{$this->portalapiBaseUrl}/portal/consumers/auth/2fa/check-code";
+        $postheaders = [
+            'Content-Type: application/json'
+        ];
+        $postbody = json_encode([
+            'code' => '111111',
+            'profilingSessionId' => ''
+        ]);
+
+        $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
+
+        if ($responseObj->responseHttpStatusCode === 201) {
+            return;
+        }
+
+        throw new \Exception('validate2faCode did not complete as expected');
+    }
+
+    /**
      * @param string $checkoutToken
      * @throws \Exception
      */
