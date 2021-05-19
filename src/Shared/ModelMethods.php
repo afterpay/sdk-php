@@ -288,6 +288,12 @@ trait ModelMethods
     {
         $return = [];
 
+        if (! property_exists($this, 'data')) {
+            # For GET requests, there is no request body to validate.
+
+            return $return;
+        }
+
         foreach ($this->data as $name => $data) {
             if (array_key_exists('errors', $data) && ! empty($data[ 'errors' ])) {
                 $return[ $name ] = $data[ 'errors' ];
