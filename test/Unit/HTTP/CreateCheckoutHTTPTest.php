@@ -30,6 +30,9 @@ class CreateCheckoutHTTPTest extends TestCase
     }
 
     /**
+     * This method popupulates the request body with "bad" data. Data that will validate within the SDK for these unit
+     * tests, but would fail an integration test. For example, "AAA" is not a valid ISO 3166-1 alpha-3 country code.
+     *
      * @param Afterpay\SDK\HTTP\Request\CreateCheckout $request
      */
     private function populateWithBadMinimumData($request)
@@ -91,6 +94,54 @@ class CreateCheckoutHTTPTest extends TestCase
         $this->populateWithBadMinimumData($request);
 
         $request->setMode('express');
+
+        $this->assertCount(0, $request->getValidationErrors());
+    }
+
+    public function testConsumerRequiredForModeDefault()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
+
+        $request->setAmount('0.00', 'AAA');
+        $request->setMerchant(['popupOriginUrl' => 'a://a']);
+
+        $errors = $request->getValidationErrors();
+
+        $this->assertCount(1, $errors);
+        $this->assertArrayHasKey('consumer', $errors);
+        $this->assertCount(1, $errors['consumer']);
+        $this->assertEquals('consumer is required if mode is not "EXPRESS"', $errors['consumer'][0]);
+    }
+
+    public function testConsumerRequiredForModeStandard()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
+
+        $request->setAmount('0.00', 'AAA');
+        $request->setMerchant(['popupOriginUrl' => 'a://a']);
+        $request->setMode('STANDARD');
+
+        $errors = $request->getValidationErrors();
+
+        $this->assertCount(1, $errors);
+        $this->assertArrayHasKey('consumer', $errors);
+        $this->assertCount(1, $errors['consumer']);
+        $this->assertEquals('consumer is required if mode is not "EXPRESS"', $errors['consumer'][0]);
+    }
+
+    public function testConsumerOptionalForModeExpress()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
+
+        $request->setAmount('0.00', 'AAA');
+        $request->setMerchant(['popupOriginUrl' => 'a://a']);
+        $request->setMode('EXPRESS');
 
         $this->assertCount(0, $request->getValidationErrors());
     }
