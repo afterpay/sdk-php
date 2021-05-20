@@ -19,6 +19,7 @@
 namespace Afterpay\SDK\HTTP\Request;
 
 use Afterpay\SDK\HTTP\Request;
+use Afterpay\SDK\Model\Money;
 
 class DeferredPaymentAuth extends Request
 {
@@ -35,6 +36,9 @@ class DeferredPaymentAuth extends Request
         'merchantReference' => [
             'type' => 'string',
             'length' => 128
+        ],
+        'amount' => [
+            'type' => Money::class
         ]
     ];
 
