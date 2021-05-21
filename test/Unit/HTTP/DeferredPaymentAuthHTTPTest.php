@@ -55,4 +55,45 @@ class DeferredPaymentAuthHTTPTest extends TestCase
 
         $this->assertCount(0, $request->getValidationErrors());
     }
+
+    public function testIntegerOneAcceptedForBooleanTrue()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\DeferredPaymentAuth();
+
+        $request->setToken('a');
+        $request->setIsCheckoutAdjusted(1);
+
+        $this->assertCount(0, $request->getValidationErrors());
+        $this->assertTrue($request->getIsCheckoutAdjusted());
+    }
+
+    public function testIntegerZeroAcceptedForBooleanFalse()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\DeferredPaymentAuth();
+
+        $request->setToken('a');
+        $request->setIsCheckoutAdjusted(0);
+
+        $this->assertCount(0, $request->getValidationErrors());
+        $this->assertFalse($request->getIsCheckoutAdjusted());
+    }
+
+    public function testIntegerTwoForBooleanException()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(true);
+
+        $request = new \Afterpay\SDK\HTTP\Request\DeferredPaymentAuth();
+
+        try {
+            $request->setIsCheckoutAdjusted(2);
+
+            throw new \Exception('Expected InvalidModelException not thrown');
+        } catch (\Afterpay\SDK\Exception\InvalidModelException $e) {
+            $this->assertEquals('Expected boolean for Afterpay\SDK\HTTP\Request\DeferredPaymentAuth::$isCheckoutAdjusted; integer given', $e->getMessage());
+        }
+    }
 }

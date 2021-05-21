@@ -55,4 +55,56 @@ class ImmediatePaymentCaptureHTTPTest extends TestCase
 
         $this->assertCount(0, $request->getValidationErrors());
     }
+
+    public function testStringYesAcceptedForBooleanTrue()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\ImmediatePaymentCapture();
+
+        $request->setToken('a');
+        $request->setIsCheckoutAdjusted('Yes');
+
+        $this->assertCount(0, $request->getValidationErrors());
+        $this->assertTrue($request->getIsCheckoutAdjusted());
+    }
+
+    public function testStringNoAcceptedForBooleanFalse()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\ImmediatePaymentCapture();
+
+        $request->setToken('a');
+        $request->setIsCheckoutAdjusted('No');
+
+        $this->assertCount(0, $request->getValidationErrors());
+        $this->assertFalse($request->getIsCheckoutAdjusted());
+    }
+
+    public function testStringTrueAcceptedForBooleanTrue()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\ImmediatePaymentCapture();
+
+        $request->setToken('a');
+        $request->setIsCheckoutAdjusted('TRUE');
+
+        $this->assertCount(0, $request->getValidationErrors());
+        $this->assertTrue($request->getIsCheckoutAdjusted());
+    }
+
+    public function testStringFalseAcceptedForBooleanFalse()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\ImmediatePaymentCapture();
+
+        $request->setToken('a');
+        $request->setIsCheckoutAdjusted('false');
+
+        $this->assertCount(0, $request->getValidationErrors());
+        $this->assertFalse($request->getIsCheckoutAdjusted());
+    }
 }
