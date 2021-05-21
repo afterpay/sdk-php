@@ -96,4 +96,17 @@ class DeferredPaymentAuthHTTPTest extends TestCase
             $this->assertEquals('Expected boolean for Afterpay\SDK\HTTP\Request\DeferredPaymentAuth::$isCheckoutAdjusted; integer given', $e->getMessage());
         }
     }
+
+    public function testEmptyStringAcceptedForBooleanFalse()
+    {
+        \Afterpay\SDK\Model::setAutomaticValidationEnabled(false);
+
+        $request = new \Afterpay\SDK\HTTP\Request\DeferredPaymentAuth();
+
+        $request->setToken('a');
+        $request->setIsCheckoutAdjusted('');
+
+        $this->assertCount(0, $request->getValidationErrors());
+        $this->assertFalse($request->getIsCheckoutAdjusted());
+    }
 }
