@@ -28,7 +28,8 @@ class ImmediatePaymentCapture extends Request
      */
     protected $data = [
         'token' => [
-            'type' => 'string'
+            'type' => 'string',
+            'required' => true
         ],
         'merchantReference' => [
             'type' => 'string',

@@ -31,7 +31,8 @@ class DeferredPaymentAuth extends Request
             'type' => 'string'
         ],
         'token' => [
-            'type' => 'string'
+            'type' => 'string',
+            'required' => true
         ],
         'merchantReference' => [
             'type' => 'string',
