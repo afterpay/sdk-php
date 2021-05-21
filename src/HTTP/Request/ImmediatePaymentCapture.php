@@ -19,6 +19,8 @@
 namespace Afterpay\SDK\HTTP\Request;
 
 use Afterpay\SDK\HTTP\Request;
+use Afterpay\SDK\Model\Contact;
+use Afterpay\SDK\Model\Item;
 use Afterpay\SDK\Model\Money;
 
 class ImmediatePaymentCapture extends Request
@@ -37,6 +39,18 @@ class ImmediatePaymentCapture extends Request
         ],
         'amount' => [
             'type' => Money::class
+        ],
+        'isCheckoutAdjusted' => [
+            'type' => 'boolean'
+        ],
+        'items' => [
+            'type' => Item::class . '[]'
+        ],
+        'shipping' => [
+            'type' => Contact::class
+        ],
+        'paymentScheduleChecksum' => [
+            'type' => 'string'
         ]
     ];
 
