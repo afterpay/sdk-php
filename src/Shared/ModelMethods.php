@@ -117,20 +117,11 @@ trait ModelMethods
             } elseif ($actualType == 'string' && class_exists($expectedType) && is_array(json_decode($value, true))) {
                 $value = new $expectedType($value);
                 $actualType = get_class($value);
-            } elseif ($actualType == 'string' && $expectedType == 'boolean') {
-                if (in_array(strtolower($value), ['true', '1', 'yes', 'on'])) {
-                    $value = true;
-                    $actualType = gettype($value);
-                } elseif (in_array(strtolower($value), ['false', '0', 'no', 'off'])) {
-                    $value = false;
-                    $actualType = gettype($value);
-                }
-            } elseif ($actualType == 'integer' && $expectedType == 'boolean') {
-                if ($value === 1) {
-                    $value = true;
-                    $actualType = gettype($value);
-                } elseif ($value === 0) {
-                    $value = false;
+            } elseif ($expectedType == 'boolean') {
+                $filteredValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+                if (!is_null($filteredValue)) {
+                    $value = $filteredValue;
                     $actualType = gettype($value);
                 }
             }
