@@ -4,6 +4,7 @@ namespace Afterpay\SDK;
 
 use Afterpay\SDK\PersistentStorage;
 use Afterpay\SDK\Model\Money;
+use Afterpay\SDK\Exception\InvalidArgumentException;
 
 final class MerchantAccount
 {
