@@ -30,7 +30,8 @@ class UpdatePaymentByOrderId extends Request
     protected $data = [
         'merchantReference' => [
             'type' => 'string',
-            'length' => 128
+            'length' => 128,
+            'required' => true
         ]
     ];
 
