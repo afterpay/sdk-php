@@ -128,7 +128,7 @@ if (! $courier->isValid()) {
     </ul>
     <li>priority:</li>
     <ul>
-        <li>Expected string for Afterpay\SDK\Model\ShippingCourier::$priority; boolean given</li>
+        <li>Expected one of "STANDARD", "EXPRESS" for Afterpay\SDK\Model\ShippingCourier::$priority; boolean given</li>
     </ul>
 </ul>
 =*/

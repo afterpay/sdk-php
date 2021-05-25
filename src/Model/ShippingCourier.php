@@ -38,7 +38,11 @@ final class ShippingCourier extends Model
             'length' => 128
         ],
         'priority' => [
-            'type' => 'string'
+            'type' => 'enumi',
+            'options' => [
+                'STANDARD',
+                'EXPRESS'
+            ]
         ]
     ];
 
