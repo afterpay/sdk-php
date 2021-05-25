@@ -62,10 +62,12 @@ class ListPayments extends Request
         $queryParams = [];
 
         if (! is_null($this->toCreatedDate)) {
-            $queryParams[] = "toCreatedDate={$this->toCreatedDate}";
+            $str = urlencode($this->toCreatedDate);
+            $queryParams[] = "toCreatedDate={$str}";
         }
         if (! is_null($this->fromCreatedDate)) {
-            $queryParams[] = "fromCreatedDate={$this->fromCreatedDate}";
+            $str = urlencode($this->fromCreatedDate);
+            $queryParams[] = "fromCreatedDate={$str}";
         }
         if (! is_null($this->limit)) {
             $queryParams[] = "limit={$this->limit}";
@@ -75,17 +77,20 @@ class ListPayments extends Request
         }
         if (! is_null($this->tokens)) {
             foreach ($this->tokens as $token) {
-                $queryParams[] = "tokens={$token}";
+                $str = urlencode($token);
+                $queryParams[] = "tokens={$str}";
             }
         }
         if (! is_null($this->ids)) {
             foreach ($this->ids as $id) {
-                $queryParams[] = "ids={$id}";
+                $str = urlencode($id);
+                $queryParams[] = "ids={$str}";
             }
         }
         if (! is_null($this->merchantReferences)) {
             foreach ($this->merchantReferences as $merchantReference) {
-                $queryParams[] = "merchantReferences={$merchantReference}";
+                $str = urlencode($merchantReference);
+                $queryParams[] = "merchantReferences={$str}";
             }
         }
         if (! is_null($this->statuses)) {
@@ -255,7 +260,9 @@ class ListPayments extends Request
         if (! is_array($statuses)) {
             throw new InvalidArgumentException('Expected array for statuses; ' . gettype($statuses) . ' given');
         } elseif (array_sum(array_map('is_string', $statuses)) != count($statuses)) {
-            throw new InvalidArgumentException("Expected an array of string elements; one or more non-string elements given");
+            throw new InvalidArgumentException('Expected an array of string elements for statuses; one or more non-string elements given');
+        } elseif (count(array_udiff($statuses, ['APPROVED', 'DECLINED'], 'strcasecmp')) > 0) {
+            throw new InvalidArgumentException('Expected all statuses to be one of "APPROVED", "DECLINED"; one or more unexpected strings given');
         }
 
         $this->statuses = $statuses;

@@ -110,4 +110,92 @@ class ListPaymentsIntegrationTest extends TestCase
         $this->assertEquals(2, $listPaymentsResponseBody->totalResults);
         $this->assertEquals(array_reverse($immediatePaymentCaptureResponseBodies), $listPaymentsResponseBody->results);
     }
+
+    public function testListPaymentsByStatusArray()
+    {
+        # Reset the credentials to null to make sure they get automatically loaded
+        # (just in case a previous test has set them).
+
+        # Note: API credentials must be configured correctly in your `.env.php` file
+        #       for this test to pass, or set as environment variables.
+
+        \Afterpay\SDK\HTTP::setMerchantId(null);
+        \Afterpay\SDK\HTTP::setSecretKey(null);
+
+        # Step 1 of 4
+
+        # Create two checkouts, each for 10.00 in the currency of the merchant account.
+
+        $fromCreatedDate = gmdate('c');
+
+        $tokens = [];
+
+        for ($i = 0; $i <= 1; $i++) {
+            $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
+
+            $createCheckoutRequest
+                ->fillBodyWithMockData()
+                ->send()
+            ;
+
+            $tokens[$i] = $createCheckoutRequest->getResponse()->getParsedBody()->token;
+        }
+
+        # Step 2 of 4
+
+        # Simulate consumers completing the checkouts and clicking the confirm buttons
+        # to commit to the payment schedules.
+        # Note: The CVC of "000" will simulate an APPROVED status in the next step.
+        # Note: The CVC of "051" will simulate a DECLINED status in the next step.
+
+        $consumerSimulator = new ConsumerSimulator();
+
+        $consumerSimulator->confirmPaymentSchedule($tokens[0], '000');
+
+        $consumerSimulator = new ConsumerSimulator();
+
+        $consumerSimulator->confirmPaymentSchedule($tokens[1], '051');
+
+        # Step 3 of 4
+
+        # Capture payments to convert the temporary checkouts into permanent order records.
+        # Note: A permanent order record is created even if the payment is declined.
+
+        $immediatePaymentCaptureResponseBodies = [];
+
+        for ($i = 0; $i <= 1; $i++) {
+            $immediatePaymentCaptureRequest = new \Afterpay\SDK\HTTP\Request\ImmediatePaymentCapture();
+
+            $immediatePaymentCaptureRequest
+                ->setToken($tokens[$i])
+                ->send()
+            ;
+
+            $immediatePaymentCaptureResponseBodies[$i] = $immediatePaymentCaptureRequest->getResponse()->getParsedBody();
+        }
+
+        $toCreatedDate = gmdate('c');
+
+        # Step 4 of 4
+
+        # Call ListPayments using the timestamps recorded above and a status of "APPROVED".
+        # The expectation is that only one of the two orders placed within the date range
+        # will be returned.
+
+        $listPaymentsRequest = new \Afterpay\SDK\HTTP\Request\ListPayments();
+
+        $listPaymentsRequest
+            ->setFromCreatedDate($fromCreatedDate)
+            ->setToCreatedDate($toCreatedDate)
+            ->setStatuses(['approved'])
+            ->send()
+        ;
+
+        $listPaymentsResponse = $listPaymentsRequest->getResponse();
+        $listPaymentsResponseBody = $listPaymentsResponse->getParsedBody();
+
+        $this->assertEquals(200, $listPaymentsResponse->getHttpStatusCode());
+        $this->assertEquals(1, $listPaymentsResponseBody->totalResults);
+        $this->assertEquals($immediatePaymentCaptureResponseBodies[0], $listPaymentsResponseBody->results[0]);
+    }
 }
