@@ -19,6 +19,9 @@
 namespace Afterpay\SDK\HTTP\Request;
 
 use Afterpay\SDK\HTTP\Request;
+use Afterpay\SDK\Model\Contact;
+use Afterpay\SDK\Model\Item;
+use Afterpay\SDK\Model\Money;
 
 class DeferredPaymentAuth extends Request
 {
@@ -30,11 +33,27 @@ class DeferredPaymentAuth extends Request
             'type' => 'string'
         ],
         'token' => [
-            'type' => 'string'
+            'type' => 'string',
+            'required' => true
         ],
         'merchantReference' => [
             'type' => 'string',
             'length' => 128
+        ],
+        'amount' => [
+            'type' => Money::class
+        ],
+        'isCheckoutAdjusted' => [
+            'type' => 'boolean'
+        ],
+        'items' => [
+            'type' => Item::class . '[]'
+        ],
+        'shipping' => [
+            'type' => Contact::class
+        ],
+        'paymentScheduleChecksum' => [
+            'type' => 'string'
         ]
     ];
 

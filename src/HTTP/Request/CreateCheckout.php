@@ -41,8 +41,7 @@ class CreateCheckout extends Request
             'required' => true
         ],
         'consumer' => [
-            'type' => Consumer::class,
-            'required' => true
+            'type' => Consumer::class
         ],
         'billing' => [
             'type' => Contact::class
@@ -76,8 +75,29 @@ class CreateCheckout extends Request
         ],
         'shippingAmount' => [
             'type' => Money::class
+        ],
+        'mode' => [
+            'type' => 'enumi',
+            'options' => [
+                'STANDARD',
+                'EXPRESS'
+            ]
         ]
     ];
+
+    protected function afterSet($propertyName)
+    {
+        $consumerRequiredError = 'consumer is required if mode is not "EXPRESS"';
+
+        $consumer = $this->getConsumer();
+        $mode = $this->getMode();
+
+        if (empty($consumer) && (empty($mode) || strtoupper($mode) !== 'EXPRESS')) {
+            $this->addError($consumerRequiredError, 'consumer');
+        } else {
+            $this->clearError($consumerRequiredError, 'consumer');
+        }
+    }
 
     public function __construct(...$args)
     {

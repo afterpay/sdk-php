@@ -42,7 +42,11 @@ class UpdateShippingCourier extends Request
             'length' => 128
         ],
         'priority' => [
-            'type' => 'string'
+            'type' => 'enumi',
+            'options' => [
+                'STANDARD',
+                'EXPRESS'
+            ]
         ]
     ];
 

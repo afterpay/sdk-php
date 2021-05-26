@@ -430,9 +430,6 @@ class ConsumerSimulator
             $this->login($this->consumerEmail, $this->consumerPassword);
         } catch (\Exception $e) {
             if ($e->getMessage() == "user.requires2fa") {
-                /**
-                 * @todo Simulate 2FA
-                 */
                 $this->request2faCode();
                 $this->validate2faCode();
             } else {
