@@ -174,6 +174,32 @@ class Request extends HTTP
     }
 
     /**
+     * Allows the retrieval of getMerchantAccount()->getCountryCode()
+     * from the linked Response class. (self::getMerchantAccount is private.)
+     *
+     * @return string
+     */
+    public function getMerchantAccountCountryCode()
+    {
+        $merchant = $this->getMerchantAccount();
+
+        return $merchant->getCountryCode();
+    }
+
+    /**
+     * Allows the retrieval of getMerchantAccount()->getApiEnvironment()
+     * from the linked Response class. (self::getMerchantAccount is private.)
+     *
+     * @return string
+     */
+    public function getMerchantAccountApiEnvironment()
+    {
+        $merchant = $this->getMerchantAccount();
+
+        return $merchant->getApiEnvironment();
+    }
+
+    /**
      * @param \Afterpay\SDK\MerchantAccount $merchant
      * @return \Afterpay\SDK\HTTP\Request
      * @throws \Afterpay\SDK\Exception\InvalidArgumentException
@@ -596,6 +622,10 @@ class Request extends HTTP
             ->setRawHeaders(implode("\n\n", $response_headers) . "\n\n")
             ->setRawBody(implode("\n\n", $response_parts))
         ;
+
+        if (method_exists($this->response, 'afterReceive')) {
+            $this->response->afterReceive();
+        }
 
         return $this->response->isSuccessful();
     }

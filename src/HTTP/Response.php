@@ -42,6 +42,14 @@ class Response extends HTTP
     }
 
     /**
+     * @return \Afterpay\SDK\HTTP\Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
      * @param \Afterpay\SDK\HTTP\Request $request
      * @return \Afterpay\SDK\HTTP\Response
      * @throws \Afterpay\SDK\Exception\InvalidArgumentException
