@@ -85,6 +85,9 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
 
         # Call GetPaymentByOrderId using the order ID returned by the API in the previous step.
         # The expectation is that the same Payment object will be returned again.
+        # Note: Since we modified the response for Immediate Payment Capture to include an extra
+        # property, we will need to remove that property before comparing with the Get Payment
+        # response.
 
         $getPaymentByOrderIdRequest = new \Afterpay\SDK\HTTP\Request\GetPaymentByOrderId();
 
@@ -94,6 +97,8 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
         ;
 
         $getPaymentByOrderIdResponse = $getPaymentByOrderIdRequest->getResponse();
+
+        unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
 
         $this->assertEquals(200, $getPaymentByOrderIdResponse->getHttpStatusCode());
         $this->assertEquals($immediatePaymentCaptureResponseBody, $getPaymentByOrderIdResponse->getParsedBody());

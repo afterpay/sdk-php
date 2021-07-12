@@ -83,6 +83,9 @@ class GetPaymentByTokenIntegrationTest extends TestCase
 
         # Call GetPaymentByToken using the checkout token returned by the API in Step 1.
         # The expectation is that the same Payment object will be returned again.
+        # Note: Since we modified the response for Immediate Payment Capture to include an extra
+        # property, we will need to remove that property before comparing with the Get Payment
+        # response.
 
         $getPaymentByTokenRequest = new \Afterpay\SDK\HTTP\Request\GetPaymentByToken();
 
@@ -92,6 +95,8 @@ class GetPaymentByTokenIntegrationTest extends TestCase
         ;
 
         $getPaymentByTokenResponse = $getPaymentByTokenRequest->getResponse();
+
+        unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
 
         $this->assertEquals(200, $getPaymentByTokenResponse->getHttpStatusCode());
         $this->assertEquals($immediatePaymentCaptureResponseBody, $getPaymentByTokenResponse->getParsedBody());
