@@ -103,13 +103,13 @@ class ListPaymentsIntegrationTest extends TestCase
         # The expectation is that the same Payment objects will be returned again.
 
         # Note: There is a delay between the order being created and indexed by the search
-        # service. A wait time of 1 second is added to account for this.
+        # service. A wait time of 2 seconds is added to account for this.
 
         # Note: Default order is by createdAt descending (newest first), so orders will be
         # returned in the opposite order from what they were created in. The array will
         # therefore be reversed for comparison.
 
-        sleep(1);
+        sleep(2);
 
         $listPaymentsRequest = new \Afterpay\SDK\HTTP\Request\ListPayments();
 
