@@ -87,6 +87,11 @@ class GetPaymentByTokenIntegrationTest extends TestCase
         # property, we will need to remove that property before comparing with the Get Payment
         # response.
 
+        # Note: There is a delay between the order being created and indexed by the search
+        # service. A wait time of 1 second is added to account for this.
+
+        sleep(1);
+
         $getPaymentByTokenRequest = new \Afterpay\SDK\HTTP\Request\GetPaymentByToken();
 
         $getPaymentByTokenRequest
