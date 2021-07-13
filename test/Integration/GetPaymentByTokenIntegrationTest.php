@@ -76,7 +76,7 @@ class GetPaymentByTokenIntegrationTest extends TestCase
         ;
 
         $immediatePaymentCaptureResponse = $immediatePaymentCaptureRequest->getResponse();
-
+        $immediatePaymentCaptureResponse->removeEventCreationTimestamps();
         $immediatePaymentCaptureResponseBody = $immediatePaymentCaptureResponse->getParsedBody();
 
         # Step 4 of 4
@@ -95,6 +95,7 @@ class GetPaymentByTokenIntegrationTest extends TestCase
         ;
 
         $getPaymentByTokenResponse = $getPaymentByTokenRequest->getResponse();
+        $getPaymentByTokenResponse->removeEventCreationTimestamps();
 
         unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
 

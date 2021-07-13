@@ -76,7 +76,7 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
         ;
 
         $immediatePaymentCaptureResponse = $immediatePaymentCaptureRequest->getResponse();
-
+        $immediatePaymentCaptureResponse->removeEventCreationTimestamps();
         $immediatePaymentCaptureResponseBody = $immediatePaymentCaptureResponse->getParsedBody();
 
         $orderId = $immediatePaymentCaptureResponseBody->id;
@@ -97,6 +97,7 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
         ;
 
         $getPaymentByOrderIdResponse = $getPaymentByOrderIdRequest->getResponse();
+        $getPaymentByOrderIdResponse->removeEventCreationTimestamps();
 
         unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
 
