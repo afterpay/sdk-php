@@ -298,8 +298,8 @@ class Request extends HTTP
             } elseif (preg_match('/GB|UK/', $countryCode)) {
                 $region_suffix = '.eu'; # Europe
             } elseif (preg_match('/ES|FR|IT|PT/', $countryCode)) {
-                $tld = 'clearpay-eu.com'; # Southern Europe
-                $sandbox_suffix = '-sbx';
+                $tld = 'clearpay.com'; # Southern Europe
+                $sandbox_suffix = '.sandbox';
             }
         }
 

@@ -18,6 +18,7 @@
 
 namespace Afterpay\SDK;
 
+use Afterpay\SDK\Exception\InvalidArgumentException;
 use Afterpay\SDK\PersistentStorage;
 use Afterpay\SDK\Model\Money;
 
