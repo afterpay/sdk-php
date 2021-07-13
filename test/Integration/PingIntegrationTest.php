@@ -45,7 +45,7 @@ class PingIntegrationTest extends TestCase
         $pingRequest->send();
 
         $headers_str = $pingRequest->getRawHeaders();
-        $pattern_str = '/^User-Agent: afterpay-sdk-php\/[\d.]+ \(testUserAgentHeader\/1\.0\.0-beta\+exp\.sha\.5114f85; PHP\/[^ ;]+; cURL\/[\d.]+/im';
+        $pattern_str = '/^User-Agent: afterpay-sdk-php\/[\d.]+ \(testUserAgentHeader\/1\.0\.0-beta\+exp\.sha\.5114f85; PHP\/[^;]+; cURL\/[\d.]+/im';
 
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression($pattern_str, $headers_str);

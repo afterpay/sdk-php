@@ -48,6 +48,7 @@ jobs:
         include:
           - php: '5.6'
             mysql: '5.6'
+            run-integration-tests: true
 
           - php: '7.0'
             mysql: '5.7'
@@ -66,6 +67,7 @@ jobs:
 
           - php: '8.0'
             mysql: '8.0'
+            run-integration-tests: true
       fail-fast: false
       max-parallel: 1
 
@@ -131,6 +133,7 @@ jobs:
         run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[ 3306 ] }} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
 
       - name: Run integration test suite in AU Sandbox
+        if: ${{ matrix.run-integration-tests }}
         env:
           MERCHANT_ID: ${{ secrets.AU_SBOX_MID_1 }}
           SECRET_KEY: ${{ secrets.AU_SBOX_SKEY_1 }}
@@ -146,6 +149,7 @@ jobs:
         run: composer test-integration
 
       - name: Run integration test suite in CA Sandbox
+        if: ${{ matrix.run-integration-tests }}
         env:
           MERCHANT_ID: ${{ secrets.CA_SBOX_MID_1 }}
           SECRET_KEY: ${{ secrets.CA_SBOX_SKEY_1 }}
@@ -161,6 +165,7 @@ jobs:
         run: composer test-integration
 
       - name: Run integration test suite in NZ Sandbox
+        if: ${{ matrix.run-integration-tests }}
         env:
           MERCHANT_ID: ${{ secrets.NZ_SBOX_MID_1 }}
           SECRET_KEY: ${{ secrets.NZ_SBOX_SKEY_1 }}
@@ -176,6 +181,7 @@ jobs:
         run: composer test-integration
 
       - name: Run integration test suite in UK Sandbox
+        if: ${{ matrix.run-integration-tests }}
         env:
           MERCHANT_ID: ${{ secrets.UK_SBOX_MID_1 }}
           SECRET_KEY: ${{ secrets.UK_SBOX_SKEY_1 }}
@@ -191,6 +197,7 @@ jobs:
         run: composer test-integration
 
       - name: Run integration test suite in US Sandbox
+        if: ${{ matrix.run-integration-tests }}
         env:
           MERCHANT_ID: ${{ secrets.US_SBOX_MID_1 }}
           SECRET_KEY: ${{ secrets.US_SBOX_SKEY_1 }}

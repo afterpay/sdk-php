@@ -110,6 +110,9 @@ class UpdateShippingCourierIntegrationTest extends TestCase
         # Call UpdateShippingCourier using the order ID returned by the API in the previous step.
         # The expectation is that the a second Payment object will be returned, with the only differences
         # being the properties of the orderDetails.courier object that were altered.
+        # Note: Since we modified the response for Immediate Payment Capture to include an extra
+        # property, we will need to remove that property before comparing with the Update Shipping
+        # Courier response.
 
         $updateShippingCourierRequest = new \Afterpay\SDK\HTTP\Request\UpdateShippingCourier();
 
@@ -134,6 +137,7 @@ class UpdateShippingCourierIntegrationTest extends TestCase
 
         unset($immediatePaymentCaptureResponseBody->orderDetails->courier);
         unset($updateShippingCourierResponseBody->orderDetails->courier);
+        unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
 
         $this->assertEquals($immediatePaymentCaptureResponseBody, $updateShippingCourierResponseBody);
     }

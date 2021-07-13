@@ -18,6 +18,7 @@
 
 namespace Afterpay\SDK\HTTP\Response;
 
+use Afterpay\SDK\Helper\UrlHelper;
 use Afterpay\SDK\HTTP\Response;
 
 class ImmediatePaymentCapture extends Response
@@ -30,5 +31,34 @@ class ImmediatePaymentCapture extends Response
     public function isApproved()
     {
         return $this->isSuccessful() && $this->getParsedBody()->status == 'APPROVED';
+    }
+
+    /**
+     * This method is called immediately after the HTTP response is received.
+     *
+     * Adds a URL for the order view in the merchant portal to the API response.
+     *
+     * WARNING: This method manipulates the raw HTTP response!
+     *
+     * @return \Afterpay\SDK\HTTP\Response\DeferredPaymentAuth
+     */
+    public function afterReceive()
+    {
+        if ($this->isSuccessful()) {
+            $request = $this->getRequest();
+            $bodyObj = $this->getParsedBody();
+
+            if (!is_null($bodyObj)) {
+                $orderId = $bodyObj->id;
+                $countryCode = $request->getMerchantAccountCountryCode();
+                $apiEnvironment = $request->getMerchantAccountApiEnvironment();
+
+                $bodyObj->merchantPortalOrderUrl = UrlHelper::generateMerchantPortalOrderUrl($orderId, $countryCode, $apiEnvironment);
+
+                $this->setRawBody(json_encode($bodyObj, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            }
+        }
+
+        return $this;
     }
 }

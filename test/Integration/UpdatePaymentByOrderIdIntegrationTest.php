@@ -86,6 +86,9 @@ class UpdatePaymentByOrderIdIntegrationTest extends TestCase
         # Call UpdatePaymentByOrderId using the order ID returned by the API in the previous step.
         # The expectation is that the a second Payment object will be returned, with the only difference
         # being the merchantReference property.
+        # Note: Since we modified the response for Immediate Payment Capture to include an extra
+        # property, we will need to remove that property before comparing with the Update Payment
+        # response.
 
         $updatePaymentByOrderIdRequest = new \Afterpay\SDK\HTTP\Request\UpdatePaymentByOrderId();
 
@@ -105,6 +108,7 @@ class UpdatePaymentByOrderIdIntegrationTest extends TestCase
 
         unset($immediatePaymentCaptureResponseBody->merchantReference);
         unset($updatePaymentByOrderIdResponseBody->merchantReference);
+        unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
 
         $this->assertEquals($immediatePaymentCaptureResponseBody, $updatePaymentByOrderIdResponseBody);
     }

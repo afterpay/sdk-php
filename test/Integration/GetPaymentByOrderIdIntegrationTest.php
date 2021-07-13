@@ -76,7 +76,7 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
         ;
 
         $immediatePaymentCaptureResponse = $immediatePaymentCaptureRequest->getResponse();
-
+        $immediatePaymentCaptureResponse->removeEventCreationTimestamps();
         $immediatePaymentCaptureResponseBody = $immediatePaymentCaptureResponse->getParsedBody();
 
         $orderId = $immediatePaymentCaptureResponseBody->id;
@@ -85,6 +85,14 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
 
         # Call GetPaymentByOrderId using the order ID returned by the API in the previous step.
         # The expectation is that the same Payment object will be returned again.
+        # Note: Since we modified the response for Immediate Payment Capture to include an extra
+        # property, we will need to remove that property before comparing with the Get Payment
+        # response.
+
+        # Note: There is a delay between the order being created and indexed by the search
+        # service. A wait time of 1 second is added to account for this.
+
+        sleep(1);
 
         $getPaymentByOrderIdRequest = new \Afterpay\SDK\HTTP\Request\GetPaymentByOrderId();
 
@@ -94,6 +102,9 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
         ;
 
         $getPaymentByOrderIdResponse = $getPaymentByOrderIdRequest->getResponse();
+        $getPaymentByOrderIdResponse->removeEventCreationTimestamps();
+
+        unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
 
         $this->assertEquals(200, $getPaymentByOrderIdResponse->getHttpStatusCode());
         $this->assertEquals($immediatePaymentCaptureResponseBody, $getPaymentByOrderIdResponse->getParsedBody());
