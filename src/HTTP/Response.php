@@ -113,4 +113,41 @@ class Response extends HTTP
     {
         return $this->http_status_code >= 200 && $this->http_status_code <= 299;
     }
+
+    /**
+     * Remove all timestamps from the events array. This method must only be
+     * used by tests, when comparing Payment objects returned on creation
+     * (by DeferredPaymentAuth and ImmediatePaymentCapture) with their
+     * equivalents returned by the search service ("Get Payment" / "List
+     * Payments").
+     *
+     * WARNING: This method manipulates the raw HTTP response!
+     */
+    public function removeEventCreationTimestamps()
+    {
+        $bodyObj = $this->getParsedBody();
+        $bodyModified = false;
+
+        if (!is_null($bodyObj)) {
+            if (property_exists($bodyObj, 'events') && is_array($bodyObj->events)) {
+                for ($i = 0; $i < count($bodyObj->events); $i++) {
+                    unset($bodyObj->events[$i]->created);
+                    $bodyModified = true;
+                }
+            } elseif (property_exists($bodyObj, 'results') && is_array($bodyObj->results)) {
+                for ($h = 0; $h < count($bodyObj->results); $h++) {
+                    if (property_exists($bodyObj->results[$h], 'events') && is_array($bodyObj->results[$h]->events)) {
+                        for ($i = 0; $i < count($bodyObj->results[$h]->events); $i++) {
+                            unset($bodyObj->results[$h]->events[$i]->created);
+                            $bodyModified = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($bodyModified) {
+            $this->setRawBody(json_encode($bodyObj, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        }
+    }
 }

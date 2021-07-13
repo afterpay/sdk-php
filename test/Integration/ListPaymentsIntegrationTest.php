@@ -74,6 +74,10 @@ class ListPaymentsIntegrationTest extends TestCase
 
         # Capture payments to convert the temporary checkouts into permanent order records.
 
+        # Note: Since we modified the response for Immediate Payment Capture to include an extra
+        # property, we will need to remove that property before comparing with the List Payments
+        # response.
+
         $immediatePaymentCaptureResponseBodies = [];
 
         for ($i = 0; $i <= 1; $i++) {
@@ -84,7 +88,13 @@ class ListPaymentsIntegrationTest extends TestCase
                 ->send()
             ;
 
-            $immediatePaymentCaptureResponseBodies[$i] = $immediatePaymentCaptureRequest->getResponse()->getParsedBody();
+            $response = $immediatePaymentCaptureRequest->getResponse();
+            $response->removeEventCreationTimestamps();
+
+            $responseBody = $response->getParsedBody();
+            unset($responseBody->merchantPortalOrderUrl);
+
+            $immediatePaymentCaptureResponseBodies[$i] = $responseBody;
         }
 
         # Step 4 of 4
@@ -92,9 +102,14 @@ class ListPaymentsIntegrationTest extends TestCase
         # Call ListPayments using the checkout tokens returned by the API in Step 1.
         # The expectation is that the same Payment objects will be returned again.
 
+        # Note: There is a delay between the order being created and indexed by the search
+        # service. A wait time of 1 second is added to account for this.
+
         # Note: Default order is by createdAt descending (newest first), so orders will be
         # returned in the opposite order from what they were created in. The array will
         # therefore be reversed for comparison.
+
+        sleep(1);
 
         $listPaymentsRequest = new \Afterpay\SDK\HTTP\Request\ListPayments();
 
@@ -104,6 +119,7 @@ class ListPaymentsIntegrationTest extends TestCase
         ;
 
         $listPaymentsResponse = $listPaymentsRequest->getResponse();
+        $listPaymentsResponse->removeEventCreationTimestamps();
         $listPaymentsResponseBody = $listPaymentsResponse->getParsedBody();
 
         $this->assertEquals(200, $listPaymentsResponse->getHttpStatusCode());
@@ -161,6 +177,10 @@ class ListPaymentsIntegrationTest extends TestCase
         # Capture payments to convert the temporary checkouts into permanent order records.
         # Note: A permanent order record is created even if the payment is declined.
 
+        # Note: Since we modified the response for Immediate Payment Capture to include an extra
+        # property, we will need to remove that property before comparing with the List Payments
+        # response.
+
         $immediatePaymentCaptureResponseBodies = [];
 
         for ($i = 0; $i <= 1; $i++) {
@@ -171,7 +191,13 @@ class ListPaymentsIntegrationTest extends TestCase
                 ->send()
             ;
 
-            $immediatePaymentCaptureResponseBodies[$i] = $immediatePaymentCaptureRequest->getResponse()->getParsedBody();
+            $response = $immediatePaymentCaptureRequest->getResponse();
+            $response->removeEventCreationTimestamps();
+
+            $responseBody = $response->getParsedBody();
+            unset($responseBody->merchantPortalOrderUrl);
+
+            $immediatePaymentCaptureResponseBodies[$i] = $responseBody;
         }
 
         $toCreatedDate = gmdate('c');
@@ -181,6 +207,11 @@ class ListPaymentsIntegrationTest extends TestCase
         # Call ListPayments using the timestamps recorded above and a status of "APPROVED".
         # The expectation is that only one of the two orders placed within the date range
         # will be returned.
+
+        # Note: There is a delay between the order being created and indexed by the search
+        # service. A wait time of 1 second is added to account for this.
+
+        sleep(1);
 
         $listPaymentsRequest = new \Afterpay\SDK\HTTP\Request\ListPayments();
 
@@ -192,7 +223,10 @@ class ListPaymentsIntegrationTest extends TestCase
         ;
 
         $listPaymentsResponse = $listPaymentsRequest->getResponse();
+        $listPaymentsResponse->removeEventCreationTimestamps();
         $listPaymentsResponseBody = $listPaymentsResponse->getParsedBody();
+
+        unset($immediatePaymentCaptureResponseBodies[0]->merchantPortalOrderUrl);
 
         $this->assertEquals(200, $listPaymentsResponse->getHttpStatusCode());
         $this->assertEquals(1, $listPaymentsResponseBody->totalResults);
