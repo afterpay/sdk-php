@@ -200,8 +200,6 @@ class ListPaymentsIntegrationTest extends TestCase
             $immediatePaymentCaptureResponseBodies[$i] = $responseBody;
         }
 
-        $toCreatedDate = gmdate('c');
-
         # Step 4 of 4
 
         # Call ListPayments using the timestamps recorded above and a status of "APPROVED".
@@ -212,6 +210,8 @@ class ListPaymentsIntegrationTest extends TestCase
         # service. A wait time of 1 second is added to account for this.
 
         sleep(1);
+
+        $toCreatedDate = gmdate('c');
 
         $listPaymentsRequest = new \Afterpay\SDK\HTTP\Request\ListPayments();
 
