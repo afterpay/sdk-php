@@ -82,6 +82,10 @@ class CreateCheckout extends Request
                 'STANDARD',
                 'EXPRESS'
             ]
+        ],
+        'purchaseCountry' => [
+            'type' => 'string',
+            'length' => 2
         ]
     ];
 
@@ -96,6 +100,16 @@ class CreateCheckout extends Request
             $this->addError($consumerRequiredError, 'consumer');
         } else {
             $this->clearError($consumerRequiredError, 'consumer');
+        }
+    }
+
+    /**
+     * Populates the purchaseCountry field based on the merchantAccount countryCode
+     */
+    protected function beforeSend()
+    {
+        if (is_null($this->getPurchaseCountry())) {
+            $this->setPurchaseCountry($this->getMerchantAccountCountryCode());
         }
     }
 
