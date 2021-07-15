@@ -40,10 +40,21 @@ final class MerchantAccount
 
             case 'ES':
                 $data[ 'currency' ] = 'EUR';
+                $data[ 'phoneNumber' ] = '620 210 714';
+                $data[ 'line1' ] = 'Fuente de los Galápagos';
+                $data[ 'line2' ] = 'Parque de El Retiro';
+                $data[ 'area1' ] = 'Madrid';
+                $data[ 'region' ] = 'Comunidad de Madrid';
+                $data[ 'postcode' ] = '28009';
                 break;
 
             case 'FR':
                 $data[ 'currency' ] = 'EUR';
+                $data[ 'phoneNumber' ] = '06 20 21 07 14';
+                $data[ 'line1' ] = '99 Rue de Rivoli';
+                $data[ 'area1' ] = 'Paris';
+                $data[ 'region' ] = 'Île-de-France';
+                $data[ 'postcode' ] = '75004';
                 break;
 
             case 'GB':
@@ -66,6 +77,12 @@ final class MerchantAccount
 
             case 'IT':
                 $data[ 'currency' ] = 'EUR';
+                $data[ 'phoneNumber' ] = '300 20210714';
+                $data[ 'line1' ] = 'Fontana di Esculapio';
+                $data[ 'line2' ] = 'Piazzale del Fiocco';
+                $data[ 'area1' ] = 'Rome';
+                $data[ 'region' ] = 'Lazio';
+                $data[ 'postcode' ] = '00197';
                 break;
 
             case 'US':
