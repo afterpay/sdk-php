@@ -56,6 +56,10 @@ final class OrderDetails extends Model
         ],
         'shippingAmount' => [
             'type' => Money::class
+        ],
+        'purchaseCountry' => [ # For Europe only
+            'type' => 'string',
+            'length' => 2
         ]
     ];
 
