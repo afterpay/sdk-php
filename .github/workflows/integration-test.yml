@@ -45,18 +45,6 @@ jobs:
     strategy:
       matrix:
         country-code: [ 'AU', 'NZ' ]
-        include:
-          - country-code: 'AU'
-            mid: 'AU_SBOX_MID_1'
-            skey: 'AU_SBOX_SKEY_1'
-            email: 'AU_SBOX_CONSUMER_EMAIL_1'
-            pword: 'AU_SBOX_CONSUMER_PASSWORD_1'
-
-          - country-code: 'NZ'
-            mid: 'NZ_SBOX_MID_1'
-            skey: 'NZ_SBOX_SKEY_1'
-            email: 'NZ_SBOX_CONSUMER_EMAIL_1'
-            pword: 'NZ_SBOX_CONSUMER_PASSWORD_1'
       fail-fast: false
       max-parallel: 1
 
@@ -64,54 +52,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Disable Xdebug
-        run: sudo phpdismod -s cli xdebug
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      # Install the appropriate version of PHPUnit
-      # See https://phpunit.de/index.html
-      - name: Install PHPUnit
-        run: /bin/bash ./bin/install-phpunit.sh
       
-      - name: Start MySQL service
-        run: sudo systemctl start mysql.service
-
-      - name: Create a database for PersistentStorage
-        run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
-
-      - name: Run integration test suite
-        env:
-          MERCHANT_ID: ${{ secrets[matrix.mid] }}
-          SECRET_KEY: ${{ secrets[matrix.skey] }}
-          COUNTRY_CODE: ${{ matrix.country-code }}
-          DB_API: mysqli
-          DB_DATABASE: sdk_php
-          DB_USER: root
-          DB_PASS: root
-          TEST_CONSUMER_EMAIL: ${{ secrets[matrix.email] }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets[matrix.pword] }}
-        run: composer test-integration
+      - uses: ./.github/actions/test-integration
+        with:
+          country-code: ${{ matrix.country-code }}
   north-america:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         country-code: [ 'CA', 'US' ]
-        include:
-          - country-code: 'CA'
-            mid: 'CA_SBOX_MID_1'
-            skey: 'CA_SBOX_SKEY_1'
-            email: 'CA_SBOX_CONSUMER_EMAIL_1'
-            pword: 'CA_SBOX_CONSUMER_PASSWORD_1'
-
-          - country-code: 'US'
-            mid: 'US_SBOX_MID_1'
-            skey: 'US_SBOX_SKEY_1'
-            email: 'US_SBOX_CONSUMER_EMAIL_1'
-            pword: 'US_SBOX_CONSUMER_PASSWORD_1'
       fail-fast: false
       max-parallel: 1
 
@@ -119,74 +69,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Disable Xdebug
-        run: sudo phpdismod -s cli xdebug
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      # Install the appropriate version of PHPUnit
-      # See https://phpunit.de/index.html
-      - name: Install PHPUnit
-        run: /bin/bash ./bin/install-phpunit.sh
       
-      - name: Start MySQL service
-        run: sudo systemctl start mysql.service
-
-      - name: Create a database for PersistentStorage
-        run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
-
-      - name: Run integration test suite
-        env:
-          MERCHANT_ID: ${{ secrets[matrix.mid] }}
-          SECRET_KEY: ${{ secrets[matrix.skey] }}
-          COUNTRY_CODE: ${{ matrix.country-code }}
-          DB_API: mysqli
-          DB_DATABASE: sdk_php
-          DB_USER: root
-          DB_PASS: root
-          TEST_CONSUMER_EMAIL: ${{ secrets[matrix.email] }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets[matrix.pword] }}
-        run: composer test-integration
+      - uses: ./.github/actions/test-integration
+        with:
+          country-code: ${{ matrix.country-code }}
   europe:
     runs-on: ubuntu-latest
 
     strategy:
+      matrix:
+        country-code: [ 'UK' ] # To-do: Replace UK secrets with GB secrets
       fail-fast: false
+      max-parallel: 1
 
-    name: UK Sandbox
+    name: ${{ matrix.country-code }} Sandbox
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: Disable Xdebug
-        run: sudo phpdismod -s cli xdebug
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      # Install the appropriate version of PHPUnit
-      # See https://phpunit.de/index.html
-      - name: Install PHPUnit
-        run: /bin/bash ./bin/install-phpunit.sh
       
-      - name: Start MySQL service
-        run: sudo systemctl start mysql.service
-
-      - name: Create a database for PersistentStorage
-        run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
-
-      - name: Run integration test suite
-        env:
-          MERCHANT_ID: ${{ secrets.UK_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.UK_SBOX_SKEY_1 }}
-          COUNTRY_CODE: GB
-          DB_API: mysqli
-          DB_DATABASE: sdk_php
-          DB_USER: root
-          DB_PASS: root
-          TEST_CONSUMER_EMAIL: ${{ secrets.UK_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.UK_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
+      - uses: ./.github/actions/test-integration
+        with:
+          country-code: ${{ matrix.country-code }}
   #southern-europe:

@@ -1,0 +1,37 @@
+name: 'Test Integration'
+description: 'Run the integration test suite for a single country in the Sandbox environment, given its country code.'
+inputs:
+  country-code:
+    description: 'ISO 2-character country code.'
+    required: true
+    default: 'AU'
+runs:
+  using: 'composite'
+  steps: 
+    - name: Disable Xdebug
+      run: sudo phpdismod -s cli xdebug
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Install PHPUnit
+      run: /bin/bash ./bin/install-phpunit.sh
+    
+    - name: Start MySQL service
+      run: sudo systemctl start mysql.service
+
+    - name: Create a database for PersistentStorage
+      run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
+
+    - name: Run integration test suite
+      env:
+        MERCHANT_ID: ${{ secrets[ format('{0}_SBOX_MID_1', inputs.country-code) ] }}
+        SECRET_KEY: ${{ secrets[ format('{0}_SBOX_SKEY_1', inputs.country-code) ] }}
+        COUNTRY_CODE: ${{ inputs.country-code }}
+        DB_API: mysqli
+        DB_DATABASE: sdk_php
+        DB_USER: root
+        DB_PASS: root
+        TEST_CONSUMER_EMAIL: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', inputs.country-code) ] }}
+        TEST_CONSUMER_PASSWORD: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', inputs.country-code) ] }}
+      run: composer test-integration
