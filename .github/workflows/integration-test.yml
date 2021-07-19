@@ -35,10 +35,6 @@ on:
       - 'sample.env.php'
       - '.gitignore'
 
-defaults:
-  run:
-    shell: bash
-
 # Note: For information on the `ubuntu-latest` base image, see:
 # https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
 
