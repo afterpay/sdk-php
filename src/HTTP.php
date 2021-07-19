@@ -106,6 +106,10 @@ class HTTP
      */
     public static function setCountryCode($countryCode)
     {
+        if ($countryCode == 'UK') {
+            $countryCode = 'GB';
+        }
+
         self::$countryCode = $countryCode;
     }
 
