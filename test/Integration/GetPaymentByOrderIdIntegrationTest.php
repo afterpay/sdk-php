@@ -90,9 +90,9 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
         # response.
 
         # Note: There is a delay between the order being created and indexed by the search
-        # service. A wait time of 1 second is added to account for this.
+        # service in a correct state. A wait time of 3 seconds is added to account for this.
 
-        sleep(1);
+        sleep(3);
 
         $getPaymentByOrderIdRequest = new \Afterpay\SDK\HTTP\Request\GetPaymentByOrderId();
 
