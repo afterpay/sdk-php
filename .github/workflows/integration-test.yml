@@ -65,6 +65,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Disable Xdebug
+        run: sudo phpdismod -s cli xdebug
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
@@ -117,6 +120,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Disable Xdebug
+        run: sudo phpdismod -s cli xdebug
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
@@ -153,6 +159,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Disable Xdebug
+        run: sudo phpdismod -s cli xdebug
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
