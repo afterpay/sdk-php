@@ -67,9 +67,12 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
+      
+      - name: Start MySQL service
+        run: sudo systemctl start mysql.service
 
       - name: Create a database for PersistentStorage
-        run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[ 3306 ] }} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
+        run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
 
       - name: Run integration test suite
         env:
@@ -77,11 +80,9 @@ jobs:
           SECRET_KEY: ${{ secrets[matrix.skey] }}
           COUNTRY_CODE: ${{ matrix.country-code }}
           DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          DB_DATABASE: sdk_php
+          DB_USER: root
+          DB_PASS: root
           TEST_CONSUMER_EMAIL: ${{ secrets[matrix.email] }}
           TEST_CONSUMER_PASSWORD: ${{ secrets[matrix.pword] }}
         run: composer test-integration
@@ -113,9 +114,12 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
+      
+      - name: Start MySQL service
+        run: sudo systemctl start mysql.service
 
       - name: Create a database for PersistentStorage
-        run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[ 3306 ] }} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
+        run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
 
       - name: Run integration test suite
         env:
@@ -123,11 +127,9 @@ jobs:
           SECRET_KEY: ${{ secrets[matrix.skey] }}
           COUNTRY_CODE: ${{ matrix.country-code }}
           DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          DB_DATABASE: sdk_php
+          DB_USER: root
+          DB_PASS: root
           TEST_CONSUMER_EMAIL: ${{ secrets[matrix.email] }}
           TEST_CONSUMER_PASSWORD: ${{ secrets[matrix.pword] }}
         run: composer test-integration
@@ -144,9 +146,12 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
+      
+      - name: Start MySQL service
+        run: sudo systemctl start mysql.service
 
       - name: Create a database for PersistentStorage
-        run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[ 3306 ] }} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
+        run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
 
       - name: Run integration test suite
         env:
@@ -154,11 +159,9 @@ jobs:
           SECRET_KEY: ${{ secrets.UK_SBOX_SKEY_1 }}
           COUNTRY_CODE: GB
           DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+          DB_DATABASE: sdk_php
+          DB_USER: root
+          DB_PASS: root
           TEST_CONSUMER_EMAIL: ${{ secrets.UK_SBOX_CONSUMER_EMAIL_1 }}
           TEST_CONSUMER_PASSWORD: ${{ secrets.UK_SBOX_CONSUMER_PASSWORD_1 }}
         run: composer test-integration
