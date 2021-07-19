@@ -1,8 +1,5 @@
 name: 'Test Integration'
 description: 'Run the integration test suite for a single country in the Sandbox environment, given its country code.'
-defaults:
-  run:
-    shell: bash
 inputs:
   country-code:
     description: 'ISO 2-character country code.'
@@ -22,6 +19,9 @@ inputs:
     required: true
 runs:
   using: 'composite'
+  defaults:
+    run:
+      shell: bash
   steps: 
     - name: Disable Xdebug
       run: sudo phpdismod -s cli xdebug
