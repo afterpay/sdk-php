@@ -48,7 +48,6 @@ jobs:
         include:
           - php: '5.6'
             mysql: '5.6'
-            run-integration-tests: true
 
           - php: '7.0'
             mysql: '5.7'
@@ -67,9 +66,7 @@ jobs:
 
           - php: '8.0'
             mysql: '8.0'
-            run-integration-tests: true
       fail-fast: false
-      max-parallel: 1
 
     name: PHP ${{ matrix.php }}
 
@@ -128,86 +125,3 @@ jobs:
 
       - name: Run network test suite
         run: composer test-network
-
-      - name: Create a database for PersistentStorage
-        run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[ 3306 ] }} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
-
-      - name: Run integration test suite in AU Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.AU_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.AU_SBOX_SKEY_1 }}
-          COUNTRY_CODE: AU
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.AU_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.AU_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in CA Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.CA_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.CA_SBOX_SKEY_1 }}
-          COUNTRY_CODE: CA
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.CA_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.CA_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in NZ Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.NZ_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.NZ_SBOX_SKEY_1 }}
-          COUNTRY_CODE: NZ
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.NZ_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.NZ_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in UK Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.UK_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.UK_SBOX_SKEY_1 }}
-          COUNTRY_CODE: GB
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.UK_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.UK_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in US Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.US_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.US_SBOX_SKEY_1 }}
-          COUNTRY_CODE: US
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.US_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.US_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
