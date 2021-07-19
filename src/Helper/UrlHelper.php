@@ -49,7 +49,7 @@ final class UrlHelper
         $tld = 'afterpay.com';
         $uriCountry = strtolower($countryCode);
 
-        if ($countryCode == 'GB') {
+        if ($countryCode == 'GB' || $countryCode == 'UK') {
             $tld = 'clearpay.co.uk';
             $uriCountry = 'uk';
         }
