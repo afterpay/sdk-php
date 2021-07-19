@@ -67,6 +67,11 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
+
+      # Install the appropriate version of PHPUnit
+      # See https://phpunit.de/index.html
+      - name: Install PHPUnit
+        run: /bin/bash ./bin/install-phpunit.sh
       
       - name: Start MySQL service
         run: sudo systemctl start mysql.service
@@ -114,6 +119,11 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
+
+      # Install the appropriate version of PHPUnit
+      # See https://phpunit.de/index.html
+      - name: Install PHPUnit
+        run: /bin/bash ./bin/install-phpunit.sh
       
       - name: Start MySQL service
         run: sudo systemctl start mysql.service
@@ -146,6 +156,11 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
+
+      # Install the appropriate version of PHPUnit
+      # See https://phpunit.de/index.html
+      - name: Install PHPUnit
+        run: /bin/bash ./bin/install-phpunit.sh
       
       - name: Start MySQL service
         run: sudo systemctl start mysql.service
