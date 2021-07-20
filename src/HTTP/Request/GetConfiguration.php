@@ -27,7 +27,7 @@ class GetConfiguration extends Request
         parent::__construct(... $args);
 
         $this
-            ->setUri('/v2/configuration')
+            ->setUri('/v2/configuration?include=activeCountries&include=cbt')
             ->configureBasicAuth()
         ;
     }
