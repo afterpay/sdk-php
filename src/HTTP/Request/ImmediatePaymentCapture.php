@@ -3,6 +3,7 @@
 namespace Afterpay\SDK\HTTP\Request;
 
 use Afterpay\SDK\HTTP\Request;
+use Afterpay\SDK\Model\Money;
 
 class ImmediatePaymentCapture extends Request
 {
@@ -16,6 +17,10 @@ class ImmediatePaymentCapture extends Request
         'merchantReference' => [
             'type' => 'string',
             'length' => 128
+        ],
+        'amount' => [
+            'type' => Money::class,
+            'required' => false
         ]
     ];
 
