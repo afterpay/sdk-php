@@ -42,6 +42,10 @@ class CreateCheckout extends Request
             'type' => 'string',
             'length' => 256
         ],
+        'mode' => [
+            'type' => 'string',
+            'length' => 256
+        ],
         'items' => [
             'type' => Item::class . '[]'
         ],

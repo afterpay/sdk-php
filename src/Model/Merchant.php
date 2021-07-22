@@ -17,6 +17,10 @@ final class Merchant extends Model
         'redirectCancelUrl' => [
             'type' => 'string',
             'required' => true
+        ],
+        'popupOriginUrl' => [
+            'type' => 'string',
+            'required' => false
         ]
     ];
 
