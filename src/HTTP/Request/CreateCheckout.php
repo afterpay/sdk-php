@@ -27,7 +27,7 @@ class CreateCheckout extends Request
         ],
         'consumer' => [
             'type' => Consumer::class,
-            'required' => true
+            'required' => false
         ],
         'billing' => [
             'type' => Contact::class
