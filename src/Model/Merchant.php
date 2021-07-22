@@ -12,11 +12,11 @@ final class Merchant extends Model
     protected $data = [
         'redirectConfirmUrl' => [
             'type' => 'string',
-            'required' => true
+            'required' => false
         ],
         'redirectCancelUrl' => [
             'type' => 'string',
-            'required' => true
+            'required' => false
         ],
         'popupOriginUrl' => [
             'type' => 'string',
