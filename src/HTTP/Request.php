@@ -115,12 +115,18 @@ class Request extends HTTP
         $curl_version_str = $curl_version_arr[ 'version' ];
         $ua_extra_b = '';
         $merchant_id = $this->getMerchantAccount()->getMerchantId();
+        $ua_extra_c = '';
+        $store_url = HTTP::getStoreUrl();
 
         if (! empty($merchant_id)) {
             $ua_extra_b .= "; Merchant/{$merchant_id}";
         }
 
-        curl_setopt($this->ch, CURLOPT_USERAGENT, "afterpay-sdk-php/{$composer_json->version} ({$ua_extra_a}PHP/{$php_version_str}; cURL/{$curl_version_str}{$ua_extra_b})");
+        if (! empty($store_url)) {
+            $ua_extra_c .= " {$store_url}";
+        }
+
+        curl_setopt($this->ch, CURLOPT_USERAGENT, "afterpay-sdk-php/{$composer_json->version} ({$ua_extra_a}PHP/{$php_version_str}; cURL/{$curl_version_str}{$ua_extra_b}){$ua_extra_c}");
 
         return $this;
     }

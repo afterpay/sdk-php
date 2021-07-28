@@ -54,6 +54,11 @@ class HTTP
     private static $userAgentPlatformDetails = [];
 
     /**
+     * @var string $userAgentStoreUrl
+     */
+    private static $userAgentStoreUrl;
+
+    /**
      * @return bool
      */
     public static function getLogObfuscationEnabled()
@@ -187,6 +192,47 @@ class HTTP
     public static function clearPlatformDetails()
     {
         self::$userAgentPlatformDetails = [];
+    }
+
+    /**
+     * @param string $url
+     * @throws \Afterpay\SDK\Exception\InvalidArgumentException
+     */
+    public static function addStoreUrl($url)
+    {
+        if (!is_string($url)) {
+            throw new InvalidArgumentException('Expected string; ' . gettype($url) . ' given');
+        } elseif (! preg_match('/^.+:\/\/.+$/i', $url)) {
+            throw new InvalidArgumentException("Expected a URL; '{$url}' given");
+        }
+
+        self::$userAgentStoreUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getStoreUrl()
+    {
+        if (is_null(self::$userAgentStoreUrl)) {
+            if (array_key_exists('REQUEST_SCHEME', $_SERVER) && array_key_exists('SERVER_NAME', $_SERVER)) {
+                $protocol = $_SERVER['REQUEST_SCHEME'];
+                $host = $_SERVER['SERVER_NAME'];
+                $port = '';
+
+                if (array_key_exists('SERVER_PORT', $_SERVER)) {
+                    $server_port = $_SERVER['SERVER_PORT'];
+
+                    if ((preg_match('/^http$/i', $protocol) && $server_port != 80) || (preg_match('/^https$/i', $protocol) && $server_port != 443)) {
+                        $port = ":{$server_port}";
+                    }
+                }
+
+                self::$userAgentStoreUrl = "{$protocol}://{$host}{$port}";
+            }
+        }
+
+        return self::$userAgentStoreUrl;
     }
 
     /**
