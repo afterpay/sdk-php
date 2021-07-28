@@ -221,12 +221,10 @@ class HTTP
                 $port = '';
 
                 if (array_key_exists('SERVER_PORT', $_SERVER)) {
-                    $port = $_SERVER['SERVER_PORT'];
+                    $server_port = $_SERVER['SERVER_PORT'];
 
-                    if ((preg_match('/^http$/i', $protocol) && $port != 80) || (preg_match('/^https$/i', $protocol) && $port != 443)) {
-                        $port = ":{$port}";
-                    } else {
-                        $port = '';
+                    if ((preg_match('/^http$/i', $protocol) && $server_port != 80) || (preg_match('/^https$/i', $protocol) && $server_port != 443)) {
+                        $port = ":{$server_port}";
                     }
                 }
 
