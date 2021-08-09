@@ -100,13 +100,13 @@ if (! empty($_POST)) {
             <li>Open to Capture: <?php echo $order->getOpenToCaptureAmount()->toString(); ?></li>
             <li>Auth Expiry: <?php echo $order->getEvents()[0]->getExpires(); ?></li>
         </ul>
-        <p><a href="HTTPRequestDeferredPaymentCapture.php?orderId=<?php echo $_GET['orderId'] ?>">Capture Payment for this order</a></p>
+        <p><a href="HTTPRequestDeferredPaymentCapture.php?orderId=<?php echo urlencode($_GET['orderId']) ?>">Capture Payment for this order</a></p>
         <p><a href="HTTPRequestDeferredPaymentAuth.php">Start again</a></p>
     <?php endif; ?>
     <h3>Deferred Payment Void</h3>
     <form method="POST">
         <p>Path params:</p>
-        <div>Order ID: <input type="text" name="orderId" value="<?php echo $_GET['orderId'] ?>"></div>
+        <div>Order ID: <input type="text" name="orderId" value="<?php echo urlencode($_GET['orderId']) ?>"></div>
         <p>Body params:</p>
         <p><em>Note: Clear the Amount and Currency fields to void the total "Open to Capture" remainder for the order.</em></p>
         <div>Request ID: <input type="text" name="requestId" value="<?php echo AfterpayStringHelper::generateUuid(); ?>"></div>

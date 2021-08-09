@@ -55,7 +55,7 @@ if (! empty($_POST)) {
     }
 } elseif (! empty($_GET)) {
     $immediatePaymentCaptureRequest = new AfterpayImmediatePaymentCaptureRequest([
-        'token' => $_GET['orderToken']
+        'token' => urlencode($_GET['orderToken'])
     ]);
 
     if ($immediatePaymentCaptureRequest->send()) {
