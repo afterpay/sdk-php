@@ -32,20 +32,5 @@
         "test-integration": "./vendor/bin/phpunit --colors=always ./test/Integration",
         "lint": "./vendor/bin/phpcs --standard=PSR12 --error-severity=1 --warning-severity=6 ./src ./test ./sample",
         "lint-autofix": "./vendor/bin/phpcbf --standard=PSR12 --error-severity=1 --warning-severity=6 ./src ./test ./sample; if [ $? -eq 1 ]; then exit 0; fi"
-    },
-    "archive": {
-        "exclude": [
-            "/.github",
-            "/.vscode",
-            "/bin",
-            "/sample",
-            "/test",
-            "/.gitignore",
-            "/composer.json",
-            "/composer.lock",
-            "/CONTRIBUTING.md",
-            "/README.md",
-            "/sample.env.php"
-        ]
     }
 }

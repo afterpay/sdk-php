@@ -1,0 +1,11 @@
+/.github            export-ignore
+/.vscode            export-ignore
+/bin                export-ignore
+/sample             export-ignore
+/test               export-ignore
+/.gitignore         export-ignore
+/composer.json      export-ignore
+/composer.lock      export-ignore
+/CONTRIBUTING.md    export-ignore
+/README.md          export-ignore
+/sample.env.php     export-ignore
