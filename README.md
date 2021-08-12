@@ -20,8 +20,29 @@ Optional recommendations:
 
 Install with [Composer](https://getcomposer.org/).
 
+### For Production
+
+For production usage, ensure the `dist` install method is used. This will exclude development resources
+such as tests and sample code.
+
 ```bash
-composer require afterpay-global/afterpay-sdk-php
+composer require --prefer-dist afterpay-global/afterpay-sdk-php
+```
+
+### For Development
+
+For development purposes, install from source using the `--prefer-source` option. This will include
+development resources such as tests and sample code.
+
+```bash
+composer require --prefer-source afterpay-global/afterpay-sdk-php
+```
+
+Note: If you need to switch between `source` and `dist` installations, you will need to first remove the
+package using the following command, then reinstall using one of the `require` commands above.
+
+```bash
+composer remove afterpay-global/afterpay-sdk-php
 ```
 
 ## Configuration
