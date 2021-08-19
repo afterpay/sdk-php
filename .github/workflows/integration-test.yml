@@ -20,7 +20,7 @@ name: Integration Test
 on:
   push:
     branches:
-      - master
+      - main
       - 'release/**'
     paths-ignore:
       - 'README.md'
@@ -28,7 +28,7 @@ on:
       - '.gitignore'
   pull_request:
     branches:
-      - master
+      - main
       - 'release/**'
     paths-ignore:
       - 'README.md'
