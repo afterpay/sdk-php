@@ -16,7 +16,7 @@ _Thu 12 Aug 2021_
 
 _Wed 28 Jul 2021_
 
-- Added a store URL to the end of the UA header (#25)
+- Added a store URL to the end of the UA header ([#25](https://github.com/afterpay/sdk-php/issues/25))
 
 ## Version 1.3.2
 
@@ -44,20 +44,20 @@ _Mon 19 Jul 2021_
 
 _Wed 26 May 2021_
 
-- Added support for Express Checkout (#10)
+- Added support for Express Checkout ([#10](https://github.com/afterpay/sdk-php/issues/10))
 
 ## Version 1.1.2
 
 _Tue 25 May 2021_
 
-- Improved endpoint coverage (#14)
+- Improved endpoint coverage ([#14](https://github.com/afterpay/sdk-php/issues/14))
 
 ## Version 1.1.1
 
 _Fri 21 May 2021_
 
-- Improved the Consumer Simulator to also simulate 2FA (#18)
-- Fixed a warning that could occur when validating GET requests (#13)
+- Improved the Consumer Simulator to also simulate 2FA ([#18](https://github.com/afterpay/sdk-php/issues/18))
+- Fixed a warning that could occur when validating GET requests ([#13](https://github.com/afterpay/sdk-php/issues/13))
 
 ## Version 1.1.0
 
@@ -89,4 +89,3 @@ _Wed 28 Oct 2020_
 _Wed 28 Oct 2020_
 
 - Initial release
-
