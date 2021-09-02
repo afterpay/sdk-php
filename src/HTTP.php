@@ -67,6 +67,14 @@ class HTTP
     }
 
     /**
+     * @param bool $setting
+     */
+    public static function setLogObfuscationEnabled($setting)
+    {
+        self::$logObfuscationEnabled = $setting;
+    }
+
+    /**
      * @return string
      */
     public static function getMerchantId()
