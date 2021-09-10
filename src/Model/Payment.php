@@ -62,6 +62,9 @@ final class Payment extends Model
         ],
         'events' => [
             'type' => PaymentEvent::class . '[]'
+        ],
+        'merchantPortalOrderUrl' => [
+            'type' => 'string'
         ]
     ];
 
