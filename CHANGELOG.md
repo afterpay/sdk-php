@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 1.3.7
+
+_Fri 10 Sep 2021_
+
+- Add a `merchantPortalOrderUrl` property to the Payment model ([#42](https://github.com/afterpay/sdk-php/issues/42))
+
+## Version 1.3.6
+
+_Thu 02 Sep 2021_
+
+- Add a setter on the HTTP class for log obfuscation
+
 ## Version 1.3.5
 
 _Thu 12 Aug 2021_
