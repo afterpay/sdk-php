@@ -98,10 +98,10 @@ class ModelTest extends TestCase
 
         $item = new \Afterpay\SDK\Model\Item();
         try {
-            $item->setQuantity(-2147483649);
+            $item->setQuantity(-2147483648);
         } catch (\Exception $e) {
             $this->assertEquals('Afterpay\SDK\Exception\InvalidModelException', get_class($e));
-            $this->assertEquals("Expected minimum of -2147483648 for Afterpay\SDK\Model\Item::\$quantity; -2147483649 given", $e->getMessage());
+            $this->assertEquals("Expected minimum of -2147483647 for Afterpay\SDK\Model\Item::\$quantity; -2147483648 given", $e->getMessage());
         }
     }
 
