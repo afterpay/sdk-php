@@ -26,7 +26,7 @@ class Model implements \JsonSerializable
     private static $automaticFormattingEnabled = true;
     private static $automaticValidationEnabled = false;
 
-    const SIGNED_32BIT_INT_MIN = -2147483648;
+    const SIGNED_32BIT_INT_MIN = -2147483647;
     const SIGNED_32BIT_INT_MAX = 2147483647;
 
     /**
