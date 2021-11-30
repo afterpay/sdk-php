@@ -19,6 +19,22 @@ This script will download PHPUnit to `./vendor/bin/phpunit`.
 /bin/sh ./bin/install-phpunit.sh
 ```
 
+## For Windows Users
+
+On a fresh clone of the repo, you may encounter the following error when running `composer lint`:
+
+```bash
+[x] End of line character is invalid; expected "\n" but found "\r\n"
+```
+
+This can be fixed by running `composer lint-autofix`.
+
+In some cases, the composer scripts do not run properly on Windows. Then you will have to copy the corresponding full command from the composer.json file and run it directly instead. For example:
+
+```bash
+./vendor/bin/phpcbf --standard=PSR12 --error-severity=1 --warning-severity=6 ./src ./test ./sample; if [ $? -eq 1 ]; then exit 0; fi
+```
+
 ## Linting
 
 Please ensure you lint your code against the [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standard.
@@ -69,4 +85,3 @@ For example:
 ## Making a Pull Request (PR)
 
 Before making a Pull Request, please ensure you have linted and tested your code, as per the sections above.
-
