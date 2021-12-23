@@ -463,6 +463,7 @@ trait ModelMethods
         return $return;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [];
