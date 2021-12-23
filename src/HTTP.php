@@ -445,7 +445,7 @@ class HTTP
 
     public function isJson()
     {
-        if (preg_match('/^application\/json/i', $this->content_type)) {
+        if (is_string($this->content_type) && preg_match('/^application\/json/i', $this->content_type)) {
             return true;
         }
 
@@ -457,6 +457,10 @@ class HTTP
      */
     public function parseRawHeaders()
     {
+        if (!is_string($this->raw_headers) || strlen($this->raw_headers) < 1) {
+            return;
+        }
+
         $headers_arr = explode("\n", $this->raw_headers);
         $matches = [];
 
