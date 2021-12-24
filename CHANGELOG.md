@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.3.8
+
+_Tue 28 Sep 2021_
+
+- Updated the SIGNED_32BIT_INT_MIN in Model (EIT-488)
+
 ## Version 1.3.7
 
 _Fri 10 Sep 2021_
