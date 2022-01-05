@@ -298,7 +298,7 @@ class Request extends HTTP
         $sandbox_suffix = '-sandbox';
         $tld = 'afterpay.com';
 
-        if (strlen($countryCode) == 2) {
+        if (is_string($countryCode) && strlen($countryCode) == 2) {
             if (preg_match('/CA|US/', $countryCode)) {
                 $region_suffix = '.us'; # North America
             } elseif (preg_match('/GB|UK/', $countryCode)) {

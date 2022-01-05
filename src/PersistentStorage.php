@@ -19,6 +19,7 @@
 namespace Afterpay\SDK;
 
 use Afterpay\SDK\Config;
+use Afterpay\SDK\Exception;
 use Afterpay\SDK\MerchantAccount;
 use Afterpay\SDK\Model\Money;
 use Afterpay\SDK\HTTP\Request\GetConfiguration as GetConfigurationRequest;
@@ -133,13 +134,13 @@ final class PersistentStorage
                 restore_error_handler();
 
                 if ($this->db_connection->connect_errno) {
-                    throw new \Exception($this->db_connection->connect_error, $this->db_connection->connect_errno);
+                    throw new Exception($this->db_connection->connect_error, $this->db_connection->connect_errno);
                 }
             } else {
-                throw new \Exception("Required extension 'mysqli' not loaded");
+                throw new Exception("Required extension 'mysqli' not loaded");
             }
         } else {
-            throw new \Exception("No available database API");
+            throw new Exception("No available database API");
         }
     }
 
@@ -182,61 +183,20 @@ final class PersistentStorage
                 $escaped_table_name = $this->db_connection->real_escape_string($table_name);
 
                 if (in_array($property, [ 'orderMinimum', 'orderMaximum' ])) {
-                    $select_stmt = $this->db_connection->prepare("
-                        SELECT `property`, `amount`, `currency`, `updated_at`
-                        FROM `{$escaped_table_name}`
-                        WHERE
-                            `merchant_id` = ?
-                            AND `property` IN ( 'orderMinimum', 'orderMaximum' )
-                        LIMIT 2
-                    ");
+                    try {
+                        $select_stmt = $this->db_connection->prepare("
+                            SELECT `property`, `amount`, `currency`, `updated_at`
+                            FROM `{$escaped_table_name}`
+                            WHERE
+                                `merchant_id` = ?
+                                AND `property` IN ( 'orderMinimum', 'orderMaximum' )
+                            LIMIT 2
+                        ");
 
-                    if ($select_stmt === false) {
-                        if ($this->db_connection->errno == 1146) {
-                            # Table does not exist.
-                            # E.g. "Table '{$this->db_database}.{$escaped_table_name}' doesn't exist"
-
-                            /**
-                             * Create the missing table.
-                             * Note that this will use the default engine, charset and collation for the db.
-                             *
-                             * @todo Define at least part of this schema in the Model, not here.
-                             *       `id`, `merchant_id` and `property` would be applicable in any schema,
-                             *       as would `created_at` and `updated_at`, but the properties of
-                             *       `amount` and `currency` should be defined in the model.
-                             * @todo Is there a library we can use to do this stuff?
-                             * @todo Build an upgrade/migration class for users who update the SDK and need
-                             *       their existing db models upgraded
-                             */
-                            $create_table_stmt = $this->db_connection->prepare("
-								CREATE TABLE `{$escaped_table_name}` (
-									`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-									`merchant_id` varchar(9) DEFAULT NULL,
-									`property` varchar(64) DEFAULT NULL,
-									`amount` varchar(10) DEFAULT NULL,
-									`currency` varchar(3) DEFAULT NULL,
-									`created_at` datetime DEFAULT NULL,
-									`updated_at` datetime DEFAULT NULL,
-									PRIMARY KEY (`id`),
-									UNIQUE KEY `merchant_id_property` (`merchant_id`, `property`)
-								)
-                            ");
-
-                            if ($create_table_stmt === false) {
-                                throw new Exception($this->db_connection->error, $this->db_connection->errno);
-                            } else {
-                                $create_table_stmt->execute();
-                                $create_table_stmt->close();
-
-                                # Now the table is created, but it's empty.
-                                # We'll need to call the API, then insert the result into the db.
-
-                                $need_to_get_fresh_data = true;
-                            }
-                        } else {
-                            throw new Exception($this->db_connection->error, $this->db_connection->errno);
+                        if ($select_stmt === false && $this->db_connection->errno == 1146) {
+                            throw new Exception("Table '{$this->db_database}.{$escaped_table_name}' doesn't exist", 1146);
                         }
-                    } else {
+
                         $select_stmt->bind_param(
                             "s",
                             $merchantId
@@ -272,6 +232,51 @@ final class PersistentStorage
                         }
 
                         $select_rs->free();
+                    } catch (\Exception $e) {
+                        if ($e->getCode() == 1146) {
+                            # Table does not exist.
+                            # E.g. "Table '{$this->db_database}.{$escaped_table_name}' doesn't exist"
+
+                            /**
+                             * Create the missing table.
+                             * Note that this will use the default engine, charset and collation for the db.
+                             *
+                             * @todo Define at least part of this schema in the Model, not here.
+                             *       `id`, `merchant_id` and `property` would be applicable in any schema,
+                             *       as would `created_at` and `updated_at`, but the properties of
+                             *       `amount` and `currency` should be defined in the model.
+                             * @todo Is there a library we can use to do this stuff?
+                             * @todo Build an upgrade/migration class for users who update the SDK and need
+                             *       their existing db models upgraded
+                             */
+                            $create_table_stmt = $this->db_connection->prepare("
+								CREATE TABLE `{$escaped_table_name}` (
+									`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+									`merchant_id` varchar(9) DEFAULT NULL,
+									`property` varchar(64) DEFAULT NULL,
+									`amount` varchar(10) DEFAULT NULL,
+									`currency` varchar(3) DEFAULT NULL,
+									`created_at` datetime DEFAULT NULL,
+									`updated_at` datetime DEFAULT NULL,
+									PRIMARY KEY (`id`),
+									UNIQUE KEY `merchant_id_property` (`merchant_id`, `property`)
+								)
+                            ");
+
+                            if ($create_table_stmt === false) {
+                                throw new Exception($this->db_connection->error, $this->db_connection->errno);
+                            }
+
+                            $create_table_stmt->execute();
+                            $create_table_stmt->close();
+
+                            # Now the table is created, but it's empty.
+                            # We'll need to call the API, then insert the result into the db.
+
+                            $need_to_get_fresh_data = true;
+                        } else {
+                            throw new Exception($this->db_connection->error, $this->db_connection->errno);
+                        }
                     }
                 }
             } else {
@@ -309,7 +314,7 @@ final class PersistentStorage
                                         # for this property, so we're going to update it.
 
                                         $update_stmt = $this->db_connection->prepare("
-											UPDATE `{$escaped_table_name}` 
+											UPDATE `{$escaped_table_name}`
 											SET
 												`amount` = ?,
 												`currency` = ?,
@@ -336,7 +341,7 @@ final class PersistentStorage
                                         # INSERT query.
 
                                         $insert_stmt = $this->db_connection->prepare("
-											INSERT INTO `{$escaped_table_name}` 
+											INSERT INTO `{$escaped_table_name}`
 											(
 												`merchant_id`,
 												`property`,
@@ -388,7 +393,7 @@ final class PersistentStorage
                                         # for this property, so we're going to update it.
 
                                         $update_stmt = $this->db_connection->prepare("
-											UPDATE `{$escaped_table_name}` 
+											UPDATE `{$escaped_table_name}`
 											SET
 												`amount` = NULL,
 												`currency` = NULL,

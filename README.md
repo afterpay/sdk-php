@@ -73,6 +73,7 @@ Each release is verified in the following test environments:
 | 7.3 | 5.7   | 9       |
 | 7.4 | 8.0   | 9       |
 | 8.0 | 8.0   | 9       |
+| 8.1 | 8.0   | 9       |
 
 However, it is always recommended to also test all software in your own unique environment prior
 to deploying to production.
