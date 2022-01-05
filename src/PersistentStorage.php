@@ -19,10 +19,10 @@
 namespace Afterpay\SDK;
 
 use Afterpay\SDK\Config;
+use Afterpay\SDK\Exception;
 use Afterpay\SDK\MerchantAccount;
 use Afterpay\SDK\Model\Money;
 use Afterpay\SDK\HTTP\Request\GetConfiguration as GetConfigurationRequest;
-use \Exception;
 
 final class PersistentStorage
 {
@@ -194,7 +194,7 @@ final class PersistentStorage
                         ");
 
                         if ($select_stmt === false && $this->db_connection->errno == 1146) {
-                            throw new Exception("Afterpay SDK: Table '{$this->db_database}.{$escaped_table_name}' doesn't exist", 1146);
+                            throw new Exception("Table '{$this->db_database}.{$escaped_table_name}' doesn't exist", 1146);
                         }
 
                         $select_stmt->bind_param(
@@ -232,7 +232,7 @@ final class PersistentStorage
                         }
 
                         $select_rs->free();
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         if ($e->getCode() == 1146) {
                             # Table does not exist.
                             # E.g. "Table '{$this->db_database}.{$escaped_table_name}' doesn't exist"
