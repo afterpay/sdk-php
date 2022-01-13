@@ -495,6 +495,17 @@ class HTTP
                 if ($this->isJson() && is_null($this->parsed_body)) {
                     throw new ParsingException(json_last_error_msg(), json_last_error());
                 }
+            } else {
+                // e.g. Blocked by Cloudflare, and received a 403 page instead of a JSON response
+                $response = [
+                    "errorCode" => "security_block",
+                    "errorId" => null,
+                    "message" => "HTTP request blocked by security service. Cloudflare Ray ID: " . $this->getParsedHeaders()['cf-ray']
+                ];
+                if (method_exists($this, 'getHttpStatusCode')) {
+                    $response['httpStatusCode'] = $this->getHttpStatusCode();
+                }
+                $this->parsed_body = (object) $response;
             }
         }
     }
