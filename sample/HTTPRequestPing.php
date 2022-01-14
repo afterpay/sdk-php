@@ -120,7 +120,7 @@ tryPing($pingRequest);
 
 # Expected output (regular expression):
 /*~
-ERROR: Received unexpected HTTP 403 text\/html response from Afterpay with errorCode: security_block; errorId: ; message: HTTP request blocked by security service. Cloudflare Ray ID: [0-9a-f]{16}-[A-Z]{3}
+ERROR: Received unexpected HTTP 403 text\/html response from Afterpay with errorCode: non_json_response; errorId: ; message: Expected JSON response. Received: text\/html. Cloudflare Ray ID: [0-9a-f]{16}-[A-Z]{3}
 ~*/
 
 

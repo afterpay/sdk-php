@@ -498,9 +498,14 @@ class HTTP
             } else {
                 // e.g. Blocked by Cloudflare, and received a 403 page instead of a JSON response
                 $response = [
-                    "errorCode" => "security_block",
+                    "errorCode" => "non_json_response",
                     "errorId" => null,
-                    "message" => "HTTP request blocked by security service. Cloudflare Ray ID: " . $this->getParsedHeaders()['cf-ray']
+                    "message" => implode(" ", [
+                        "Expected JSON response. Received:",
+                        ($this->getContentTypeSimplified() ?: "unknown") . ".",
+                        "Cloudflare Ray ID:",
+                        isset($this->getParsedHeaders()['cf-ray']) ? $this->getParsedHeaders()['cf-ray'] : "not found"
+                    ])
                 ];
                 if (method_exists($this, 'getHttpStatusCode')) {
                     $response['httpStatusCode'] = $this->getHttpStatusCode();
