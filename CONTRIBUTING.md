@@ -9,16 +9,6 @@ you do anything else.
 composer install
 ```
 
-Unfortunately, Composer can't define conditional dependency versions contingent on system software versions.
-So PHPUnit is not defined as a dev dependency because its version will depend on your PHP version. Instead,
-Please use the provided shell script to install the appropriate verion based on your system.
-
-This script will download PHPUnit to `./vendor/bin/phpunit`.
-
-```bash
-/bin/sh ./bin/install-phpunit.sh
-```
-
 ## For Windows Users
 
 On a fresh clone of the repo, you may encounter the following error when running `composer lint`:
