@@ -109,11 +109,6 @@ jobs:
       - name: Test against the PSR-12 coding standard
         run: composer lint
 
-      # Install the appropriate version of PHPUnit to work with each PHP build.
-      # See https://phpunit.de/index.html
-      - name: Install PHPUnit
-        run: /bin/bash ./bin/install-phpunit.sh
-
       - name: Run unit test suite
         run: composer test-unit
 
