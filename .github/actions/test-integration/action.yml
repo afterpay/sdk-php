@@ -19,7 +19,7 @@ inputs:
     required: true
 runs:
   using: 'composite'
-  steps: 
+  steps:
     - name: Disable Xdebug
       run: sudo phpdismod -s cli xdebug
       shell: bash
@@ -28,10 +28,6 @@ runs:
       run: composer install --prefer-dist --no-progress --no-suggest
       shell: bash
 
-    - name: Install PHPUnit
-      run: /bin/bash ./bin/install-phpunit.sh
-      shell: bash
-    
     - name: Start MySQL service
       run: sudo systemctl start mysql.service
       shell: bash
