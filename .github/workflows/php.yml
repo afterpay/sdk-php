@@ -91,9 +91,6 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
       # Install multiple versions of PHP, each in its own independent build.
       # See https://github.com/marketplace/actions/setup-php-action
       - name: Install PHP ${{ matrix.php }}
@@ -102,6 +99,9 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: curl, mysqli
           coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       # Test coding standards against the PSR-12 coding standard using PHPCS
       # See https://www.php-fig.org/psr/psr-12/
