@@ -142,8 +142,6 @@ class ListPaymentsIntegrationTest extends TestCase
 
         # Create two checkouts, each for 10.00 in the currency of the merchant account.
 
-        $fromCreatedDate = gmdate('c');
-
         $tokens = [];
 
         for ($i = 0; $i <= 1; $i++) {
@@ -211,7 +209,8 @@ class ListPaymentsIntegrationTest extends TestCase
 
         sleep(3);
 
-        $toCreatedDate = gmdate('c');
+        $fromCreatedDate = gmdate('c', strtotime($immediatePaymentCaptureResponseBodies[0]->created) - 1);
+        $toCreatedDate = gmdate('c', strtotime($immediatePaymentCaptureResponseBodies[1]->created) + 1);
 
         $listPaymentsRequest = new \Afterpay\SDK\HTTP\Request\ListPayments();
 
