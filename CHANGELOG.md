@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 1.3.10
+
+_Mon 24 Jan 2022_
+
+- Installed phpunit as a dev dependency
+- Standardised non-JSON responses into JSON error objects (EIT-741)
+
+## Version 1.3.9
+
+_Wed 05 Jan 2022_
+
+- Added support for PHP 8.1
+
 ## Version 1.3.8
 
 _Tue 28 Sep 2021_
