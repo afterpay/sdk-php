@@ -36,7 +36,7 @@ class Request extends HTTP
     private $merchant;
 
     /**
-     * @var resource $ch
+     * @var \CurlHandle|resource $ch
      */
     protected $ch;
 
