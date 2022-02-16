@@ -247,7 +247,7 @@ echo $createCheckoutRequest->getRawLog();
 ```
 ########## BEGIN RAW HTTP REQUEST  ##########
 POST /v2/checkouts HTTP/2
-Host: api-sandbox.afterpay.com
+Host: global-api-sandbox.afterpay.com
 Authorization: Basic MzM******************************************************************************************************************************************************************************TA=
 User-Agent: afterpay-sdk-php/0.1.0 (PHP/7.3.11; cURL/7.64.1; Merchant/*****)
 Accept: */*
