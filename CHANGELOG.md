@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.4.0
+
+_Thu 24 Feb 2022_
+
+- Upgrade to the Afterpay Global API (EIT-782)
+
 ## Version 1.3.10
 
 _Mon 24 Jan 2022_
