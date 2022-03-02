@@ -144,7 +144,7 @@ alpha-2 two-character country code of the merchant account. The following method
 2. As the `MERCHANT_ID`, `SECRET_KEY` and `COUNTRY_CODE` environment variables.
 3. By manually defining an object of class `\Afterpay\SDK\MerchantAccount`, passing your account details using its
    `setMerchantId`, `setSecretKey` and `setCountryCode` methods, then passing this object to the the HTTP Request object using
-   its `setMerchantAccount` method. 
+   its `setMerchantAccount` method.
 
 Sample code is provided in the [sample](sample) directory:
 
@@ -247,9 +247,9 @@ echo $createCheckoutRequest->getRawLog();
 ```
 ########## BEGIN RAW HTTP REQUEST  ##########
 POST /v2/checkouts HTTP/2
-Host: api-sandbox.afterpay.com
+Host: global-api-sandbox.afterpay.com
 Authorization: Basic MzM******************************************************************************************************************************************************************************TA=
-User-Agent: afterpay-sdk-php/0.1.0 (PHP/7.3.11; cURL/7.64.1; Merchant/*****)
+User-Agent: afterpay-sdk-php/1.4.0 (PHP/8.1.1; cURL/7.77.0; Merchant/*****)
 Accept: */*
 Content-Type: application/json
 Content-Length: 1223
@@ -257,7 +257,7 @@ Content-Length: 1223
 {"amount":{"amount":"10.00","currency":"AUD"},"consumer":{"phoneNumber":"**** *** ***","givenNames":"****","surname":"****","email":"****************"},"billing":{"name":"*** ********","line1":"***** *","line2":"*** ******* ******","area1":"*********","region":"***","postcode":"****","countryCode":"AU","phoneNumber":"**** *** ***"},"shipping":{"name":"*** ********","line1":"***** *","line2":"*** ******* ******","area1":"*********","region":"***","postcode":"****","countryCode":"AU","phoneNumber":"**** *** ***"},"courier":{"shippedAt":"2019-01-01T00:00:00+10:00","name":"********* ****","tracking":"AA0000000000000","priority":"STANDARD"},"items":[{"name":"******* * **** * **** *","sku":"TSH0001B1MED","quantity":10,"pageUrl":"https:\/\/www.example.com\/page.html","imageUrl":"https:\/\/www.example.com\/image.jpg","price":{"amount":"10.00","currency":"AUD"},"categories":[["Clothing","T-Shirts","Under $25"],["Sale","Clothing"]]}],"discounts":[{"displayName":"20% off SALE","amount":{"amount":"24.00","currency":"AUD"}}],"merchant":{"redirectConfirmUrl":"http:\/\/localhost","redirectCancelUrl":"http:\/\/localhost"},"taxAmount":{"amount":"0.00","currency":"AUD"},"shippingAmount":{"amount":"0.00","currency":"AUD"}}
 ########## END RAW HTTP REQUEST    ##########
 ########## BEGIN RAW HTTP RESPONSE ##########
-HTTP/2 201 
+HTTP/2 201
 date: Tue, 15 Sep 2020 14:20:49 GMT
 content-type: application/json
 content-length: 249

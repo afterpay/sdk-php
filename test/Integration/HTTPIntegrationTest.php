@@ -32,7 +32,10 @@ class HTTPIntegrationTest extends TestCase
     public function test404()
     {
         $invalidRequest = new \Afterpay\SDK\HTTP\Request();
-        $invalidRequest->setUri('/');
+        $invalidRequest
+            ->setUri('/')
+            ->configureBasicAuth()
+        ;
         $this->assertFalse($invalidRequest->send());
         $this->assertEquals(404, $invalidRequest->getResponse()->getHttpStatusCode());
     }

@@ -26,6 +26,9 @@ class Ping extends Request
     {
         parent::__construct(... $args);
 
-        $this->setUri('/ping');
+        $this
+            ->setUri('/ping')
+            ->configureBasicAuth()
+        ;
     }
 }

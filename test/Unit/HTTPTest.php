@@ -82,7 +82,7 @@ class HTTPTest extends TestCase
 
         $pingRequest = new \Afterpay\SDK\HTTP\Request\Ping();
 
-        $this->assertEquals('https://api.afterpay.com', $pingRequest->getApiEnvironmentUrl());
+        $this->assertEquals('https://global-api.afterpay.com', $pingRequest->getApiEnvironmentUrl());
 
         $merchant = new \Afterpay\SDK\MerchantAccount([
             'apiEnvironment' => 'Sandbox'
@@ -92,7 +92,7 @@ class HTTPTest extends TestCase
 
         $pingRequest->setMerchantAccount($merchant);
 
-        $this->assertEquals('https://api-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl()); # The Request will use the apiEnvironment of its MerchantAccount instance
+        $this->assertEquals('https://global-api-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl()); # The Request will use the apiEnvironment of its MerchantAccount instance
         $this->assertEquals('Production', $pingRequest::getApiEnvironment()); # Even though the static property on the parent class hasn't changed
     }
 
@@ -104,7 +104,7 @@ class HTTPTest extends TestCase
 
         $pingRequest = new \Afterpay\SDK\HTTP\Request\Ping();
 
-        $this->assertEquals('https://api.eu-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl());
+        $this->assertEquals('https://global-api-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl());
     }
 
     public function testNaRegionalApiEnvironmentSelection()
@@ -115,7 +115,7 @@ class HTTPTest extends TestCase
 
         $pingRequest = new \Afterpay\SDK\HTTP\Request\Ping();
 
-        $this->assertEquals('https://api.us-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl());
+        $this->assertEquals('https://global-api-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl());
     }
 
     public function testOcRegionalApiEnvironmentSelection()
@@ -126,6 +126,6 @@ class HTTPTest extends TestCase
 
         $pingRequest = new \Afterpay\SDK\HTTP\Request\Ping();
 
-        $this->assertEquals('https://api-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl());
+        $this->assertEquals('https://global-api-sandbox.afterpay.com', $pingRequest->getApiEnvironmentUrl());
     }
 }

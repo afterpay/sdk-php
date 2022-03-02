@@ -120,6 +120,3 @@ jobs:
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
         run: composer test-service
-
-      - name: Run network test suite
-        run: composer test-network
