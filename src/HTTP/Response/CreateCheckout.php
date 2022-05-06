@@ -18,7 +18,7 @@
 
 /**
  * This file needs to be here to avoid a debris issue
- * See #apt-im-01124
+ * See INC-1751; #apt-im-01124
  */
 
 namespace Afterpay\SDK\HTTP\Response;
