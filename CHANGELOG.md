@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.4.1
+
+_Fri 06 May 2022_
+
+- Add an empty class for PS upgrade compatibility (INC-1751)
+
 ## Version 1.4.0
 
 _Thu 24 Feb 2022_
