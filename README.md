@@ -249,7 +249,7 @@ echo $createCheckoutRequest->getRawLog();
 POST /v2/checkouts HTTP/2
 Host: global-api-sandbox.afterpay.com
 Authorization: Basic MzM******************************************************************************************************************************************************************************TA=
-User-Agent: afterpay-sdk-php/1.4.0 (PHP/8.1.1; cURL/7.77.0; Merchant/*****)
+User-Agent: afterpay-sdk-php/1.4.1 (PHP/8.1.1; cURL/7.77.0; Merchant/*****)
 Accept: */*
 Content-Type: application/json
 Content-Length: 1223
