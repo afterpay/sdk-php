@@ -306,10 +306,10 @@ class ConsumerSimulator
             $this->traceId = $responseObj->responseParsedBody->traceId;
             if (is_object($responseObj->responseParsedBody->preferredCard)) {
                 $this->preferredCardToken = $responseObj->responseParsedBody->preferredCard->token;
+            }
 
-                if ($responseObj->responseHttpStatusCode == 200) {
-                    return;
-                }
+            if ($responseObj->responseHttpStatusCode == 200) {
+                return;
             }
         }
 
@@ -330,7 +330,7 @@ class ConsumerSimulator
             'cardSecurityCode' => $csc,
             'traceId' => $this->traceId
         ];
-        if ($csc === '000') {
+        if ($csc === '000' && !is_null($this->preferredCardToken)) {
             $data['token'] = $this->preferredCardToken;
         } else {
             $data['cardHolderName'] = 'TEST TEST';
