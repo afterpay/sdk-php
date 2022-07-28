@@ -1,11 +1,11 @@
 # Copyright (c) 2020-2021 Afterpay Corporate Services Pty Ltd
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - main
       - 'release/**'
     paths-ignore:
       - 'README.md'
@@ -28,7 +28,7 @@ on:
       - '.gitignore'
   pull_request:
     branches:
-      - master
+      - main
       - 'release/**'
     paths-ignore:
       - 'README.md'
@@ -39,16 +39,15 @@ jobs:
   build:
 
     # Runner base image (Operating System).
-    # See https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+    # See https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        php: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0' ]
+        php: [ '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1' ]
         include:
           - php: '5.6'
             mysql: '5.6'
-            run-integration-tests: true
 
           - php: '7.0'
             mysql: '5.7'
@@ -67,9 +66,10 @@ jobs:
 
           - php: '8.0'
             mysql: '8.0'
-            run-integration-tests: true
+
+          - php: '8.1'
+            mysql: '8.0'
       fail-fast: false
-      max-parallel: 1
 
     name: PHP ${{ matrix.php }}
 
@@ -91,9 +91,6 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
       # Install multiple versions of PHP, each in its own independent build.
       # See https://github.com/marketplace/actions/setup-php-action
       - name: Install PHP ${{ matrix.php }}
@@ -103,16 +100,14 @@ jobs:
           extensions: curl, mysqli
           coverage: none
 
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
       # Test coding standards against the PSR-12 coding standard using PHPCS
       # See https://www.php-fig.org/psr/psr-12/
       # See https://github.com/squizlabs/PHP_CodeSniffer
       - name: Test against the PSR-12 coding standard
         run: composer lint
-
-      # Install the appropriate version of PHPUnit to work with each PHP build.
-      # See https://phpunit.de/index.html
-      - name: Install PHPUnit
-        run: /bin/bash ./bin/install-phpunit.sh
 
       - name: Run unit test suite
         run: composer test-unit
@@ -125,105 +120,3 @@ jobs:
           DB_USER: ${{ secrets.MYSQL_USER }}
           DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
         run: composer test-service
-
-      - name: Run network test suite
-        run: composer test-network
-
-      - name: Create a database for PersistentStorage
-        run: mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports[ 3306 ] }} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "CREATE DATABASE ${{ secrets.MYSQL_DATABASE }};"
-
-      - name: Run integration test suite in AU Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.AU_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.AU_SBOX_SKEY_1 }}
-          COUNTRY_CODE: AU
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.AU_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.AU_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in CA Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.CA_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.CA_SBOX_SKEY_1 }}
-          COUNTRY_CODE: CA
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.CA_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.CA_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in ES Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.ES_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.ES_SBOX_SKEY_1 }}
-          COUNTRY_CODE: ES
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.ES_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.ES_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in NZ Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.NZ_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.NZ_SBOX_SKEY_1 }}
-          COUNTRY_CODE: NZ
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.NZ_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.NZ_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in UK Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.UK_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.UK_SBOX_SKEY_1 }}
-          COUNTRY_CODE: GB
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.UK_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.UK_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration
-
-      - name: Run integration test suite in US Sandbox
-        if: ${{ matrix.run-integration-tests }}
-        env:
-          MERCHANT_ID: ${{ secrets.US_SBOX_MID_1 }}
-          SECRET_KEY: ${{ secrets.US_SBOX_SKEY_1 }}
-          COUNTRY_CODE: US
-          DB_API: mysqli
-          DB_HOST: 127.0.0.1
-          DB_PORT: ${{ job.services.mysql.ports[ 3306 ] }}
-          DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          DB_USER: ${{ secrets.MYSQL_USER }}
-          DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_CONSUMER_EMAIL: ${{ secrets.US_SBOX_CONSUMER_EMAIL_1 }}
-          TEST_CONSUMER_PASSWORD: ${{ secrets.US_SBOX_CONSUMER_PASSWORD_1 }}
-        run: composer test-integration

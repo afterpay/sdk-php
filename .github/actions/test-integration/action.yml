@@ -1,0 +1,51 @@
+name: 'Test Integration'
+description: 'Run the integration test suite for a single country in the Sandbox environment, given its country code.'
+inputs:
+  country-code:
+    description: 'ISO 2-character country code.'
+    required: true
+    default: 'AU'
+  merchant-id:
+    description: 'Merchant ID.'
+    required: true
+  secret-key:
+    description: 'Merchant Secret Key.'
+    required: true
+  consumer-email:
+    description: 'Consumer email address.'
+    required: true
+  consumer-password:
+    description: 'Consumer password.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Disable Xdebug
+      run: sudo phpdismod -s cli xdebug
+      shell: bash
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+      shell: bash
+
+    - name: Start MySQL service
+      run: sudo systemctl start mysql.service
+      shell: bash
+
+    - name: Create a database for PersistentStorage
+      run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
+      shell: bash
+
+    - name: Run integration test suite
+      env:
+        MERCHANT_ID: ${{ inputs.merchant-id }}
+        SECRET_KEY: ${{ inputs.secret-key }}
+        COUNTRY_CODE: ${{ inputs.country-code }}
+        DB_API: mysqli
+        DB_DATABASE: sdk_php
+        DB_USER: root
+        DB_PASS: root
+        TEST_CONSUMER_EMAIL: ${{ inputs.consumer-email }}
+        TEST_CONSUMER_PASSWORD: ${{ inputs.consumer-password }}
+      run: composer test-integration
+      shell: bash

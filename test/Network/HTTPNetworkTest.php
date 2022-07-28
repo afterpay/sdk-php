@@ -45,7 +45,7 @@ class HTTPNetworkTest extends TestCase
             $this->{ method_exists($this, 'assertMatchesRegularExpression') ? 'assertMatchesRegularExpression' : 'assertRegExp' }('/^(7|28)$/', (string) $e->getCode());
 
             if ($e->getCode() == 7) {
-                $this->{ method_exists($this, 'assertMatchesRegularExpression') ? 'assertMatchesRegularExpression' : 'assertRegExp' }('/^Failed to connect to api-sandbox\.afterpay\.com port 443: (Operation|Connection) timed out$/', $e->getMessage());
+                $this->{ method_exists($this, 'assertMatchesRegularExpression') ? 'assertMatchesRegularExpression' : 'assertRegExp' }('/^Failed to connect to global-api-sandbox\.afterpay\.com port 443: (Operation|Connection) timed out$/', $e->getMessage());
             } else {
                 $this->{ method_exists($this, 'assertMatchesRegularExpression') ? 'assertMatchesRegularExpression' : 'assertRegExp' }('/^((Connection|Resolving) timed out after \d+ milliseconds|remaining timeout of \d+ too small to resolve via SIGALRM method|Connection time-out)$/', $e->getMessage());
             }

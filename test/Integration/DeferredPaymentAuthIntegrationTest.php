@@ -76,9 +76,18 @@ class DeferredPaymentAuthIntegrationTest extends TestCase
         ;
 
         $deferredPaymentAuthResponse = $deferredPaymentAuthRequest->getResponse();
+        $deferredPaymentAuthResponseBody = $deferredPaymentAuthResponse->getParsedBody();
 
         $this->assertEquals(201, $deferredPaymentAuthResponse->getHttpStatusCode());
-        $this->assertEquals('APPROVED', $deferredPaymentAuthResponse->getParsedBody()->status);
+        $this->assertEquals('APPROVED', $deferredPaymentAuthResponseBody->status);
+
+        /**
+         * Also verify that the parsed response can be used to instantiate a Payment object.
+         *
+         * @since 1.3.7
+         */
+
+        $payment = new \Afterpay\SDK\Model\Payment($deferredPaymentAuthResponseBody);
     }
 
     public function testDeclined402()

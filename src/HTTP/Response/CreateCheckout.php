@@ -16,27 +16,19 @@
  * limitations under the License.
  */
 
-namespace Afterpay\SDK\Test\Integration;
+/**
+ * This file needs to be here to avoid a debris issue
+ * See INC-1751; #apt-im-01124
+ */
 
-require_once __DIR__ . '/../autoload.php';
+namespace Afterpay\SDK\HTTP\Response;
 
-use PHPUnit\Framework\TestCase;
+use Afterpay\SDK\HTTP\Response;
 
-class HTTPIntegrationTest extends TestCase
+class CreateCheckout extends Response
 {
     public function __construct()
     {
         parent::__construct();
-    }
-
-    public function test404()
-    {
-        $invalidRequest = new \Afterpay\SDK\HTTP\Request();
-        $invalidRequest
-            ->setUri('/')
-            ->configureBasicAuth()
-        ;
-        $this->assertFalse($invalidRequest->send());
-        $this->assertEquals(404, $invalidRequest->getResponse()->getHttpStatusCode());
     }
 }

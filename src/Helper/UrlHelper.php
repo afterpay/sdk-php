@@ -45,18 +45,27 @@ final class UrlHelper
             throw new InvalidArgumentException('String expected for $apiEnvironment; ' . gettype($apiEnvironment) . ' given');
         }
 
-        $prefix = 'portal.';
-        $tld = 'afterpay.com';
         $uriCountry = strtolower($countryCode);
 
-        if ($countryCode == 'GB') {
+        if (in_array($countryCode, ['ES', 'FR', 'IT'])) {
+            $prefix = 'merchant.';
+            $tld = 'clearpay.com';
+            $path = "/orders/details/{$orderId}";
+        } elseif (in_array($countryCode, ['GB', 'UK'])) {
+            $prefix = 'portal.';
             $tld = 'clearpay.co.uk';
             $uriCountry = 'uk';
+            $path = "/{$uriCountry}/merchant/order/{$orderId}";
+        } else {
+            $prefix = 'portal.';
+            $tld = 'afterpay.com';
+            $path = "/{$uriCountry}/merchant/order/{$orderId}";
         }
+
         if (strtolower($apiEnvironment) === 'sandbox') {
             $prefix .= 'sandbox.';
         }
 
-        return "https://{$prefix}{$tld}/{$uriCountry}/merchant/order/{$orderId}";
+        return "https://{$prefix}{$tld}{$path}";
     }
 }

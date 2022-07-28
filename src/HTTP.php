@@ -54,11 +54,24 @@ class HTTP
     private static $userAgentPlatformDetails = [];
 
     /**
+     * @var string $userAgentStoreUrl
+     */
+    private static $userAgentStoreUrl;
+
+    /**
      * @return bool
      */
     public static function getLogObfuscationEnabled()
     {
         return self::$logObfuscationEnabled;
+    }
+
+    /**
+     * @param bool $setting
+     */
+    public static function setLogObfuscationEnabled($setting)
+    {
+        self::$logObfuscationEnabled = $setting;
     }
 
     /**
@@ -106,6 +119,10 @@ class HTTP
      */
     public static function setCountryCode($countryCode)
     {
+        if ($countryCode == 'UK') {
+            $countryCode = 'GB';
+        }
+
         self::$countryCode = $countryCode;
     }
 
@@ -183,6 +200,47 @@ class HTTP
     public static function clearPlatformDetails()
     {
         self::$userAgentPlatformDetails = [];
+    }
+
+    /**
+     * @param string $url
+     * @throws \Afterpay\SDK\Exception\InvalidArgumentException
+     */
+    public static function addStoreUrl($url)
+    {
+        if (!is_string($url)) {
+            throw new InvalidArgumentException('Expected string; ' . gettype($url) . ' given');
+        } elseif (! preg_match('/^.+:\/\/.+$/i', $url)) {
+            throw new InvalidArgumentException("Expected a URL; '{$url}' given");
+        }
+
+        self::$userAgentStoreUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getStoreUrl()
+    {
+        if (is_null(self::$userAgentStoreUrl)) {
+            if (array_key_exists('REQUEST_SCHEME', $_SERVER) && array_key_exists('SERVER_NAME', $_SERVER)) {
+                $protocol = $_SERVER['REQUEST_SCHEME'];
+                $host = $_SERVER['SERVER_NAME'];
+                $port = '';
+
+                if (array_key_exists('SERVER_PORT', $_SERVER)) {
+                    $server_port = $_SERVER['SERVER_PORT'];
+
+                    if ((preg_match('/^http$/i', $protocol) && $server_port != 80) || (preg_match('/^https$/i', $protocol) && $server_port != 443)) {
+                        $port = ":{$server_port}";
+                    }
+                }
+
+                self::$userAgentStoreUrl = "{$protocol}://{$host}{$port}";
+            }
+        }
+
+        return self::$userAgentStoreUrl;
     }
 
     /**
@@ -387,7 +445,7 @@ class HTTP
 
     public function isJson()
     {
-        if (preg_match('/^application\/json/i', $this->content_type)) {
+        if (is_string($this->content_type) && preg_match('/^application\/json/i', $this->content_type)) {
             return true;
         }
 
@@ -399,6 +457,10 @@ class HTTP
      */
     public function parseRawHeaders()
     {
+        if (!is_string($this->raw_headers) || strlen($this->raw_headers) < 1) {
+            return;
+        }
+
         $headers_arr = explode("\n", $this->raw_headers);
         $matches = [];
 
@@ -433,6 +495,22 @@ class HTTP
                 if ($this->isJson() && is_null($this->parsed_body)) {
                     throw new ParsingException(json_last_error_msg(), json_last_error());
                 }
+            } else {
+                // e.g. Blocked by Cloudflare, and received a 403 page instead of a JSON response
+                $response = [
+                    "errorCode" => "non_json_response",
+                    "errorId" => null,
+                    "message" => implode(" ", [
+                        "Expected JSON response. Received:",
+                        ($this->getContentTypeSimplified() ?: "unknown") . ".",
+                        "Cloudflare Ray ID:",
+                        isset($this->getParsedHeaders()['cf-ray']) ? $this->getParsedHeaders()['cf-ray'] : "not found"
+                    ])
+                ];
+                if (method_exists($this, 'getHttpStatusCode')) {
+                    $response['httpStatusCode'] = $this->getHttpStatusCode();
+                }
+                $this->parsed_body = (object) $response;
             }
         }
     }

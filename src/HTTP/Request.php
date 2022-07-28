@@ -36,7 +36,7 @@ class Request extends HTTP
     private $merchant;
 
     /**
-     * @var resource $ch
+     * @var \CurlHandle|resource $ch
      */
     protected $ch;
 
@@ -115,12 +115,18 @@ class Request extends HTTP
         $curl_version_str = $curl_version_arr[ 'version' ];
         $ua_extra_b = '';
         $merchant_id = $this->getMerchantAccount()->getMerchantId();
+        $ua_extra_c = '';
+        $store_url = HTTP::getStoreUrl();
 
         if (! empty($merchant_id)) {
             $ua_extra_b .= "; Merchant/{$merchant_id}";
         }
 
-        curl_setopt($this->ch, CURLOPT_USERAGENT, "afterpay-sdk-php/{$composer_json->version} ({$ua_extra_a}PHP/{$php_version_str}; cURL/{$curl_version_str}{$ua_extra_b})");
+        if (! empty($store_url)) {
+            $ua_extra_c .= " {$store_url}";
+        }
+
+        curl_setopt($this->ch, CURLOPT_USERAGENT, "afterpay-sdk-php/{$composer_json->version} ({$ua_extra_a}PHP/{$php_version_str}; cURL/{$curl_version_str}{$ua_extra_b}){$ua_extra_c}");
 
         return $this;
     }
@@ -274,6 +280,9 @@ class Request extends HTTP
     }
 
     /**
+     * Note: As of version 1.4.0, the countryCode of the MerchantAccount is not used to construct the API URL, as all regions now use
+     *       the Afterpay Global API. The client implementation is no longer responsible for routing requests to the correct region.
+     *
      * @param string $uri
      * @return \Afterpay\SDK\HTTP\Request
      */
@@ -282,31 +291,12 @@ class Request extends HTTP
         $this->uri = $uri;
 
         $merchant = $this->getMerchantAccount();
-        $countryCode = $merchant->getCountryCode();
         $apiEnvironment = $merchant->getApiEnvironment();
 
-        # Use the Country Code to determine the geographic region
-        # Defaults to Oceania / Asia Pacific (AU/NZ)
-
-        $region_suffix = '';
-        $sandbox_suffix = '-sandbox';
-        $tld = 'afterpay.com';
-
-        if (strlen($countryCode) == 2) {
-            if (preg_match('/CA|US/', $countryCode)) {
-                $region_suffix = '.us'; # North America
-            } elseif (preg_match('/GB|UK/', $countryCode)) {
-                $region_suffix = '.eu'; # Europe
-            } elseif (preg_match('/ES|FR|IT|PT/', $countryCode)) {
-                $tld = 'clearpay.com'; # Southern Europe
-                $sandbox_suffix = '.sandbox';
-            }
-        }
-
         if (strtolower($apiEnvironment) == 'production') {
-            $this->apiEnvironmentUrl = "https://api{$region_suffix}.{$tld}";
+            $this->apiEnvironmentUrl = "https://global-api.afterpay.com";
         } else {
-            $this->apiEnvironmentUrl = "https://api{$region_suffix}{$sandbox_suffix}.{$tld}";
+            $this->apiEnvironmentUrl = "https://global-api-sandbox.afterpay.com";
         }
 
         curl_setopt($this->ch, CURLOPT_URL, $this->apiEnvironmentUrl . $this->uri);

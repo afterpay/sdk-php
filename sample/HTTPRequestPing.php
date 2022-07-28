@@ -42,8 +42,7 @@ function tryPing($pingRequest)
         } else {
             # A 3xx, 4xx, or 5xx series HTTP Response.
             # Please log the response code,
-            # errorCode, errorId and message from the body (if available),
-            # or the CF-Ray ID otherwise.
+            # errorCode, errorId and message from the body.
 
             $pingResponse = $pingRequest->getResponse();
             $responseCode = $pingResponse->getHttpStatusCode();
@@ -55,10 +54,6 @@ function tryPing($pingRequest)
                 $message = $body->message;
 
                 echo "ERROR: Received unexpected HTTP {$responseCode} {$contentType} response from Afterpay with errorCode: {$errorCode}; errorId: {$errorId}; message: {$message}\n";
-            } else {
-                $cfRayId = $pingResponse->getParsedHeaders()[ 'cf-ray' ];
-
-                echo "ERROR: Received unexpected HTTP {$responseCode} {$contentType} response from Afterpay with CF-Ray ID: {$cfRayId}\n";
             }
         }
     } catch (AfterpayNetworkException $e) {
@@ -125,7 +120,7 @@ tryPing($pingRequest);
 
 # Expected output (regular expression):
 /*~
-ERROR: Received unexpected HTTP 403 text\/html response from Afterpay with CF-Ray ID: [0-9a-f]{16}-[A-Z]{3}
+ERROR: Received unexpected HTTP 403 text\/html response from Afterpay with errorCode: non_json_response; errorId: ; message: Expected JSON response. Received: text\/html. Cloudflare Ray ID: [0-9a-f]{16}-[A-Z]{3}
 ~*/
 
 

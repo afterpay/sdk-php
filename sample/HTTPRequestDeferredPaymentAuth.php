@@ -83,7 +83,7 @@ if (! empty($_POST)) {
     }
 } elseif (! empty($_GET)) {
     $deferredPaymentAuthRequest = new AfterpayDeferredPaymentAuthRequest([
-        'token' => $_GET['orderToken']
+        'token' => urlencode($_GET['orderToken'])
     ]);
 
     if (!is_null($merchant)) {

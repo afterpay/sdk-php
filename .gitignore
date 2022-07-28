@@ -3,3 +3,4 @@
 /vendor/*
 /.env.php
 .DS_Store
+composer.lock

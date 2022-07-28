@@ -77,9 +77,9 @@ object\(stdClass\)#[0-9]+ \(4\) \{
   \["errorCode"\]=>
   string\(12\) "unauthorized"
   \["errorId"\]=>
-  string\(16\) "[0-9a-f]{16}"
+  string\(9\) "cf-worker"
   \["message"\]=>
-  string\(49\) "Credentials are required to access this resource\."
+  string\(55\) "unauthorized - Unable to route request from Cloudflare\."
   \["httpStatusCode"\]=>
   int\(401\)
 \}
