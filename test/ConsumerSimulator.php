@@ -334,7 +334,7 @@ class ConsumerSimulator
             $data['token'] = $this->preferredCardToken;
         } else {
             $data['cardHolderName'] = 'TEST TEST';
-            $data['cardNumber'] = '4111111111111111';
+            $data['cardNumber'] = '4000000000009979';
             $data['cardExpiryMonth'] = '01';
             $data['cardExpiryYear'] = date('y', strtotime('next year'));
         }
@@ -396,10 +396,25 @@ class ConsumerSimulator
                 $this->merchantCurrency = 'CAD';
                 break;
 
+            case 'ES':
+                $this->regionCode = 'EU';
+                $this->merchantCurrency = 'EUR';
+                break;
+
+            case 'FR':
+                $this->regionCode = 'EU';
+                $this->merchantCurrency = 'EUR';
+                break;
+
             case 'GB':
             case 'UK':
                 $this->regionCode = 'EU';
                 $this->merchantCurrency = 'GBP';
+                break;
+
+            case 'IT':
+                $this->regionCode = 'EU';
+                $this->merchantCurrency = 'EUR';
                 break;
 
             case 'NZ':
