@@ -35,7 +35,7 @@ final class MerchantAccount
                 $data[ 'line1' ] = '111 Wellington St';
                 $data[ 'area1' ] = 'Ottawa';
                 $data[ 'region' ] = 'ON';
-                $data[ 'postcode' ] = 'K1A 0A9';
+                $data[ 'postcode' ] = 'K1A0A9';
                 break;
 
             case 'ES':
@@ -63,7 +63,7 @@ final class MerchantAccount
                 $data[ 'phoneNumber' ] = '07123456789';
                 $data[ 'line1' ] = 'Town Hall';
                 $data[ 'area1' ] = 'Manchester';
-                $data[ 'postcode' ] = 'M60 2LA';
+                $data[ 'postcode' ] = 'M602LA';
                 break;
 
             case 'NZ':
