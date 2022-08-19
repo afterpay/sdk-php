@@ -401,10 +401,20 @@ class ConsumerSimulator
                 $this->merchantCurrency = 'EUR';
                 break;
 
+            case 'FR':
+                $this->regionCode = 'EU';
+                $this->merchantCurrency = 'EUR';
+                break;
+
             case 'GB':
             case 'UK':
                 $this->regionCode = 'EU';
                 $this->merchantCurrency = 'GBP';
+                break;
+
+            case 'IT':
+                $this->regionCode = 'EU';
+                $this->merchantCurrency = 'EUR';
                 break;
 
             case 'NZ':
