@@ -86,6 +86,9 @@ class CreateCheckout extends Request
         'purchaseCountry' => [
             'type' => 'string',
             'length' => 2
+        ],
+        'shippingOptionIdentifier' => [
+            'type' => 'string'
         ]
     ];
 
