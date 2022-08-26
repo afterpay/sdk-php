@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 1.5.0
+
+_Fri 26 Aug 2022_
+
+- Added support for preselected shipping options in Express Checkout with integrated shipping
+- Added Europe V2 integration tests
+- Fixed broken integration tests for UK where no preferred card is being returned
+- Fixed broken integration tests for AU and NZ regions when simulating a decline
+
 ## Version 1.4.1
 
 _Fri 06 May 2022_
