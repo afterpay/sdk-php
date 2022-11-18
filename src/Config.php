@@ -91,6 +91,41 @@ final class Config
             'src' => '.env.php'
         ],
         /**
+         * These are callback settings - used for persistance abstraction on e-commerce platforms.
+         */
+        'callback.active' => [
+            'type' => 'boolean',
+            'src' => '.env.php'
+        ],
+        'callback.getLastUpdateDate' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'callback.setLastUpdateDate' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'callback.getOrderMinimum' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'callback.setOrderMinimum' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'callback.getOrderMaximum' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'callback.setOrderMaximum' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        'callback.getCurrency' => [
+            'type' => 'string',
+            'src' => '.env.php'
+        ],
+        /**
          * These are test settings - used only by the Test classes for automated testing.
          */
         'test.consumerEmail' => [

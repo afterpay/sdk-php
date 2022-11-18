@@ -94,53 +94,62 @@ final class PersistentStorage
 
     public function __construct()
     {
-        //echo get_class( $this ) . "::__construct()\n";
-
         $this->db_api = Config::get('db.api');
-        $this->db_host = Config::get('db.host');
-        $this->db_port = Config::get('db.port');
-        $this->db_database = Config::get('db.database');
-        $this->db_tablePrefix = Config::get('db.tablePrefix');
-        $this->db_user = Config::get('db.user');
-        $this->db_pass = Config::get('db.pass');
+        $this->callback_active = Config::get('callback.active');
 
-        if ($this->db_api == 'mysqli') {
-            if (extension_loaded('mysqli')) {
-                /**
-                 * @see https://www.php.net/manual/en/mysqli.construct.php
-                 */
-
-                if (empty($this->db_host)) {
-                    $this->db_host = ini_get('mysqli.default_host');
-                }
-
-                if (empty($this->db_user)) {
-                    $this->db_user = ini_get('mysqli.default_user');
-                }
-
-                if (empty($this->db_pass)) {
-                    $this->db_pass = ini_get('mysqli.default_pw');
-                }
-
-                if (empty($this->db_port)) {
-                    $this->db_port = ini_get('mysqli.default_port');
-                }
-
-                # It's safe to suppress any errors/warnings/notices here because
-                # if we can't connect we'll throw an Exception anyway.
-                set_error_handler(function () {
-                });
-                $this->db_connection = new \mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_database, $this->db_port);
-                restore_error_handler();
-
-                if ($this->db_connection->connect_errno) {
-                    throw new Exception($this->db_connection->connect_error, $this->db_connection->connect_errno);
+        if (!empty($this->db_api)) {
+            $this->db_host = Config::get('db.host');
+            $this->db_port = Config::get('db.port');
+            $this->db_database = Config::get('db.database');
+            $this->db_tablePrefix = Config::get('db.tablePrefix');
+            $this->db_user = Config::get('db.user');
+            $this->db_pass = Config::get('db.pass');
+            if ($this->db_api == 'mysqli') {
+                if (extension_loaded('mysqli')) {
+                    /**
+                     * @see https://www.php.net/manual/en/mysqli.construct.php
+                     */
+    
+                    if (empty($this->db_host)) {
+                        $this->db_host = ini_get('mysqli.default_host');
+                    }
+    
+                    if (empty($this->db_user)) {
+                        $this->db_user = ini_get('mysqli.default_user');
+                    }
+    
+                    if (empty($this->db_pass)) {
+                        $this->db_pass = ini_get('mysqli.default_pw');
+                    }
+    
+                    if (empty($this->db_port)) {
+                        $this->db_port = ini_get('mysqli.default_port');
+                    }
+    
+                    # It's safe to suppress any errors/warnings/notices here because
+                    # if we can't connect we'll throw an Exception anyway.
+                    set_error_handler(function () {
+                    });
+                    $this->db_connection = new \mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_database, $this->db_port);
+                    restore_error_handler();
+    
+                    if ($this->db_connection->connect_errno) {
+                        throw new Exception($this->db_connection->connect_error, $this->db_connection->connect_errno);
+                    }
+                } else {
+                    throw new Exception("Required extension 'mysqli' not loaded");
                 }
             } else {
-                throw new Exception("Required extension 'mysqli' not loaded");
+                throw new Exception("No available database API");
             }
-        } else {
-            throw new Exception("No available database API");
+        } elseif (isset($this->callback_active ) && $this->callback_active === true) {
+            $this->callback_getLastUpdateDate = Config::get('callback.getLastUpdateDate');
+            $this->callback_setLastUpdateDate = Config::get('callback.setLastUpdateDate');
+            $this->callback_getOrderMinimum = Config::get('callback.getOrderMinimum');
+            $this->callback_setOrderMinimum = Config::get('callback.setOrderMinimum');
+            $this->callback_getOrderMaximum = Config::get('callback.getOrderMaximum');
+            $this->callback_setOrderMaximum = Config::get('callback.setOrderMaximum');
+            $this->callback_getCurrency = Config::get('callback.getCurrency');
         }
     }
 
@@ -160,14 +169,6 @@ final class PersistentStorage
     private function getProperty($property, $merchant)
     {
         if (array_key_exists($property, $this->data)) {
-            /**
-             * E.g. Given the default value of $this->db_tablePrefix ("afterpay_"):
-             *      "Afterpay\SDK\Money" --> "\Money" --> "Money" --> "afterpay_Money"
-             *
-             * @todo Create a method for converting UpperCamelCase to snake_case
-             *       because the mysqli driver may be case insensitive.
-             */
-            $table_name = preg_replace('/[^a-z0-9_]+/i', '', $this->db_tablePrefix . substr(strrchr($this->data[ $property ][ 'type' ], '\\'), 1));
             $need_to_get_fresh_data = false;
             $properties_to_update = [];
             $return = null;
@@ -180,6 +181,14 @@ final class PersistentStorage
             }
 
             if ($this->db_api == 'mysqli') {
+                /**
+                 * E.g. Given the default value of $this->db_tablePrefix ("afterpay_"):
+                 *      "Afterpay\SDK\Money" --> "\Money" --> "Money" --> "afterpay_Money"
+                 *
+                 * @todo Create a method for converting UpperCamelCase to snake_case
+                 *       because the mysqli driver may be case insensitive.
+                 */
+                $table_name = preg_replace('/[^a-z0-9_]+/i', '', $this->db_tablePrefix . substr(strrchr($this->data[ $property ][ 'type' ], '\\'), 1));
                 $escaped_table_name = $this->db_connection->real_escape_string($table_name);
 
                 if (in_array($property, [ 'orderMinimum', 'orderMaximum' ])) {
@@ -279,6 +288,33 @@ final class PersistentStorage
                         }
                     }
                 }
+            } elseif ($this->callback_active == true) {
+                $callbackGetFnName ='callback_get'.ucfirst($property);
+                $callbackSetFnName ='callback_set'.ucfirst($property);
+                $updatedAt = date ('Y-m-d H:i:s', strtotime('-1 year'));
+                if (is_callable($this->callback_getLastUpdateDate)) {
+                    $updatedAt = call_user_func($this->callback_getLastUpdateDate);
+                } else {
+                    throw new Exception("Function '{$this->callback_getLastUpdateDate}' is not callable or doesn't exsist");
+                }
+                if (time() - strtotime($updatedAt) > $this->data[ $property ][ 'lifespan' ]) {
+                    // update minimum and maximum values
+                    $properties_to_update[] = $property;
+                    $need_to_get_fresh_data = true;
+                } else {
+                    if (is_callable($this->{$callbackGetFnName})) {
+                        if (is_callable($this->callback_getCurrency)) {
+                            $return = new Money([
+                                'amount' => call_user_func($this->{$callbackGetFnName}),
+                                'currency' => call_user_func($this->callback_getCurrency),
+                            ]);
+                        } else {
+                            throw new Exception("Function '{$this->callback_getCurrency}' is not callable or doesn't exsist");
+                        }
+                    } else {
+                        throw new Exception("Function '{$this->{$callbackGetFnName}}' is not callable or doesn't exsist");
+                    }
+                }
             } else {
                 $need_to_get_fresh_data = true;
             }
@@ -334,6 +370,23 @@ final class PersistentStorage
                                         );
                                         $update_stmt->execute();
                                         $update_stmt->close();
+                                    } elseif ($this->callback_active == true) {
+                                        if (is_callable($this->callback_setOrderMinimum) && isset($responseBody->minimumAmount)) {
+                                            call_user_func($this->callback_setOrderMinimum, $responseBody->minimumAmount->amount);
+                                        } else {
+                                            throw new Exception("Function '{$this->callback_setOrderMinimum}' is not callable or doesn't exsist");
+                                        }
+                                        if (is_callable($this->callback_setOrderMaximum)  && isset($responseBody->maximumAmount)) {
+                                            call_user_func($this->callback_setOrderMaximum, $responseBody->maximumAmount->amount);
+                                        } else {
+                                            throw new Exception("Function '{$this->callback_setOrderMaximum}' is not callable or doesn't exsist");
+                                        }
+                                        if (is_callable($this->callback_setLastUpdateDate)) {
+                                            $now = date('Y-m-d H:i:s');
+                                            call_user_func($this->callback_setLastUpdateDate, $now);
+                                        } else {
+                                            throw new Exception("Function '{$this->callback_setLastUpdateDate}' is not callable or doesn't exsist");
+                                        }
                                     }
                                 } else {
                                     if ($this->db_api == 'mysqli') {
