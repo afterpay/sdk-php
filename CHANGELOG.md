@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.5.1
+
+_Fri 18 Nov 2022_
+
+- Added new Persistance option using callbacks from host (EIT-2275)
+
 ## Version 1.5.0
 
 _Fri 26 Aug 2022_
