@@ -109,30 +109,30 @@ final class PersistentStorage
                     /**
                      * @see https://www.php.net/manual/en/mysqli.construct.php
                      */
-    
+
                     if (empty($this->db_host)) {
                         $this->db_host = ini_get('mysqli.default_host');
                     }
-    
+
                     if (empty($this->db_user)) {
                         $this->db_user = ini_get('mysqli.default_user');
                     }
-    
+
                     if (empty($this->db_pass)) {
                         $this->db_pass = ini_get('mysqli.default_pw');
                     }
-    
+
                     if (empty($this->db_port)) {
                         $this->db_port = ini_get('mysqli.default_port');
                     }
-    
+
                     # It's safe to suppress any errors/warnings/notices here because
                     # if we can't connect we'll throw an Exception anyway.
                     set_error_handler(function () {
                     });
                     $this->db_connection = new \mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_database, $this->db_port);
                     restore_error_handler();
-    
+
                     if ($this->db_connection->connect_errno) {
                         throw new Exception($this->db_connection->connect_error, $this->db_connection->connect_errno);
                     }
@@ -142,7 +142,7 @@ final class PersistentStorage
             } else {
                 throw new Exception("No available database API");
             }
-        } elseif (isset($this->callback_active ) && $this->callback_active === true) {
+        } elseif (isset($this->callback_active) && $this->callback_active === true) {
             $this->callback_getLastUpdateDate = Config::get('callback.getLastUpdateDate');
             $this->callback_setLastUpdateDate = Config::get('callback.setLastUpdateDate');
             $this->callback_getOrderMinimum = Config::get('callback.getOrderMinimum');
@@ -289,9 +289,9 @@ final class PersistentStorage
                     }
                 }
             } elseif ($this->callback_active == true) {
-                $callbackGetFnName ='callback_get'.ucfirst($property);
-                $callbackSetFnName ='callback_set'.ucfirst($property);
-                $updatedAt = date ('Y-m-d H:i:s', strtotime('-1 year'));
+                $callbackGetFnName = 'callback_get' . ucfirst($property);
+                $callbackSetFnName = 'callback_set' . ucfirst($property);
+                $updatedAt = date('Y-m-d H:i:s', strtotime('-1 year'));
                 if (is_callable($this->callback_getLastUpdateDate)) {
                     $updatedAt = call_user_func($this->callback_getLastUpdateDate);
                 } else {
