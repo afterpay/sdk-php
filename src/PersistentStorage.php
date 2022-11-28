@@ -97,6 +97,15 @@ final class PersistentStorage
         $this->db_api = Config::get('db.api');
         $this->callback_active = Config::get('callback.active');
 
+        $lifespan = Config::get('persistence.lifespan');
+        if (!empty($lifespan)) {
+            foreach ($this->data as &$merchantProperty) {
+                if (isset($merchantProperty[ 'lifespan' ])) {
+                    $merchantProperty[ 'lifespan' ] = $lifespan;
+                }
+            }
+        }
+
         if (!empty($this->db_api)) {
             $this->db_host = Config::get('db.host');
             $this->db_port = Config::get('db.port');

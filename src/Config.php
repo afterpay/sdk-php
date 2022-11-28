@@ -117,6 +117,9 @@ final class Config
         'callback.getCurrency' => [
             'type' => 'string'
         ],
+        'persistence.lifespan' => [
+            'type' => 'integer'
+        ],
         /**
          * These are test settings - used only by the Test classes for automated testing.
          */
