@@ -91,7 +91,7 @@ final class Config
             'src' => '.env.php'
         ],
         /**
-         * These are callback settings - used for persistance abstraction on e-commerce platforms.
+         * These are callback settings - used for persistence abstraction on e-commerce platforms.
          */
         'callback.active' => [
             'type' => 'boolean'
