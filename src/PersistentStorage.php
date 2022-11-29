@@ -91,6 +91,14 @@ final class PersistentStorage
     private $db_user;
     private $db_pass;
     private $db_connection;
+    private $callback_active;
+    private $callback_getLastUpdateDate;
+    private $callback_setLastUpdateDate;
+    private $callback_getOrderMinimum;
+    private $callback_setOrderMinimum;
+    private $callback_getOrderMaximum;
+    private $callback_setOrderMaximum;
+    private $callback_getCurrency;
 
     public function __construct()
     {
@@ -321,7 +329,7 @@ final class PersistentStorage
                             throw new Exception("Function '{$this->callback_getCurrency}' is not callable or doesn't exist");
                         }
                     } else {
-                        throw new Exception("Function '{$this->{$callbackGetFnName}}' is not callable or doesn't exsist");
+                        throw new Exception("Function '{$this->{$callbackGetFnName}}' is not callable or doesn't exist");
                     }
                 }
             } else {
@@ -383,18 +391,18 @@ final class PersistentStorage
                                         if (is_callable($this->callback_setOrderMinimum) && isset($responseBody->minimumAmount)) {
                                             call_user_func($this->callback_setOrderMinimum, $responseBody->minimumAmount->amount);
                                         } else {
-                                            throw new Exception("Function '{$this->callback_setOrderMinimum}' is not callable or doesn't exsist");
+                                            throw new Exception("Function '{$this->callback_setOrderMinimum}' is not callable or doesn't exist");
                                         }
                                         if (is_callable($this->callback_setOrderMaximum)  && isset($responseBody->maximumAmount)) {
                                             call_user_func($this->callback_setOrderMaximum, $responseBody->maximumAmount->amount);
                                         } else {
-                                            throw new Exception("Function '{$this->callback_setOrderMaximum}' is not callable or doesn't exsist");
+                                            throw new Exception("Function '{$this->callback_setOrderMaximum}' is not callable or doesn't exist");
                                         }
                                         if (is_callable($this->callback_setLastUpdateDate)) {
                                             $now = date('Y-m-d H:i:s');
                                             call_user_func($this->callback_setLastUpdateDate, $now);
                                         } else {
-                                            throw new Exception("Function '{$this->callback_setLastUpdateDate}' is not callable or doesn't exsist");
+                                            throw new Exception("Function '{$this->callback_setLastUpdateDate}' is not callable or doesn't exist");
                                         }
                                     }
                                 } else {
