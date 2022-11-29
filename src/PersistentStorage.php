@@ -318,7 +318,7 @@ final class PersistentStorage
                                 'currency' => call_user_func($this->callback_getCurrency),
                             ]);
                         } else {
-                            throw new Exception("Function '{$this->callback_getCurrency}' is not callable or doesn't exsist");
+                            throw new Exception("Function '{$this->callback_getCurrency}' is not callable or doesn't exist");
                         }
                     } else {
                         throw new Exception("Function '{$this->{$callbackGetFnName}}' is not callable or doesn't exsist");
