@@ -304,7 +304,7 @@ final class PersistentStorage
                 if (is_callable($this->callback_getLastUpdateDate)) {
                     $updatedAt = call_user_func($this->callback_getLastUpdateDate);
                 } else {
-                    throw new Exception("Function '{$this->callback_getLastUpdateDate}' is not callable or doesn't exsist");
+                    throw new Exception("Function '{$this->callback_getLastUpdateDate}' is not callable or doesn't exist");
                 }
                 if (time() - strtotime($updatedAt) > $this->data[ $property ][ 'lifespan' ]) {
                     // update minimum and maximum values
