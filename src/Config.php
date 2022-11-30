@@ -91,6 +91,36 @@ final class Config
             'src' => '.env.php'
         ],
         /**
+         * These are callback settings - used for persistence abstraction on e-commerce platforms.
+         */
+        'callback.active' => [
+            'type' => 'boolean'
+        ],
+        'callback.getLastUpdateDate' => [
+            'type' => 'string'
+        ],
+        'callback.setLastUpdateDate' => [
+            'type' => 'string'
+        ],
+        'callback.getOrderMinimum' => [
+            'type' => 'string'
+        ],
+        'callback.setOrderMinimum' => [
+            'type' => 'string'
+        ],
+        'callback.getOrderMaximum' => [
+            'type' => 'string'
+        ],
+        'callback.setOrderMaximum' => [
+            'type' => 'string'
+        ],
+        'callback.getCurrency' => [
+            'type' => 'string'
+        ],
+        'persistence.lifespan' => [
+            'type' => 'integer'
+        ],
+        /**
          * These are test settings - used only by the Test classes for automated testing.
          */
         'test.consumerEmail' => [
@@ -189,7 +219,7 @@ final class Config
             }
         } else {
             foreach (self::$data as $property => $data) {
-                if ($data[ 'src' ] == '.env.php') {
+                if (isset($data[ 'src' ]) && $data[ 'src' ] == '.env.php') {
                     $value = getenv(self::lowerCamelDotNotationToAllcapSnakeCase($property));
 
                     if ($value !== false) {
@@ -264,13 +294,15 @@ final class Config
     public static function get($property)
     {
         if (array_key_exists($property, self::$data)) {
-            if (self::$data[ $property ][ 'src' ] == '.env.php') {
-                if (! self::$envConfigLoaded) {
-                    self::loadEnvConfig();
-                }
-            } elseif (self::$data[ $property ][ 'src' ] == 'composer.json') {
-                if (! self::$composerJsonLoaded) {
-                    self::loadComposerJson();
+            if (isset(self::$data[ $property ][ 'src' ])) {
+                if (self::$data[ $property ][ 'src' ] == '.env.php') {
+                    if (! self::$envConfigLoaded) {
+                        self::loadEnvConfig();
+                    }
+                } elseif (self::$data[ $property ][ 'src' ] == 'composer.json') {
+                    if (! self::$composerJsonLoaded) {
+                        self::loadComposerJson();
+                    }
                 }
             }
 
