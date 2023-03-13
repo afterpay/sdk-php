@@ -5,7 +5,7 @@
 _Thu 16 Mar 2023_
 
 - Added CBT getConfiguration Parameter (EIT-2354).
-- PHP 8.2 compatible, test suite included (EIT-2355).
+- Added support for PHP 8.2 (EIT-2355).
 
 ## Version 1.6.0
 
