@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.6.1
+
+_Thu 16 Mar 2023_
+
+- Added CBT getConfiguration Parameter (EIT-2354).
+- Added support for PHP 8.2 (EIT-2355).
+
 ## Version 1.6.0
 
 _Wed 30 Nov 2022_
