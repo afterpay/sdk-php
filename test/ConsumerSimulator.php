@@ -378,9 +378,12 @@ class ConsumerSimulator
         throw new \Exception('confirmConsumerCheckout did not complete as expected');
     }
 
-    public function __construct()
+    public function __construct($countryCode = null)
     {
-        $this->countryCode = HTTP::getCountryCode();
+        $this->countryCode = $countryCode;
+        if (is_null($countryCode)) {
+            $countryCode = HTTP::getCountryCode();
+        }
 
         /**
          * @todo Move this logic to somewhere more sensible.
@@ -428,11 +431,14 @@ class ConsumerSimulator
                 break;
         }
 
+        $lowerCountryCode = strtolower($this->countryCode);
+        $consumerEmail = "test.{$lowerCountryCode}.consumerEmail";
+        $consumerPassword = "test.{$lowerCountryCode}.consumerPassword";
         $this->portalBaseUrl = $this->globalBaseUrls[$this->regionCode]['portal'];
         $this->portalapiBaseUrl = $this->globalBaseUrls[$this->regionCode]['portalapi'];
         $this->payBaseUrl = $this->globalBaseUrls[$this->regionCode]['pay'];
-        $this->consumerEmail = Config::get('test.consumerEmail');
-        $this->consumerPassword = Config::get('test.consumerPassword');
+        $this->consumerEmail = Config::get($consumerEmail);
+        $this->consumerPassword = Config::get($consumerPassword);
         $this->storedCookies = [];
     }
 
@@ -446,7 +452,6 @@ class ConsumerSimulator
     {
         $lowerCountryCode = strtolower($this->countryCode);
         $url = "{$this->portalBaseUrl}/{$lowerCountryCode}/checkout/?token={$checkoutToken}";
-
         $responseObj = $this->sendAndLoad($url);
 
         try {

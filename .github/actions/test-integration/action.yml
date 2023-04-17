@@ -49,3 +49,17 @@ runs:
         TEST_CONSUMER_PASSWORD: ${{ inputs.consumer-password }}
       run: composer test-integration
       shell: bash
+
+    - name: Run CBT test suite
+      env:
+        MERCHANT_ID: ${{ inputs.merchant-id }}
+        SECRET_KEY: ${{ inputs.secret-key }}
+        COUNTRY_CODE: ${{ inputs.country-code }}
+        DB_API: mysqli
+        DB_DATABASE: sdk_php
+        DB_USER: root
+        DB_PASS: root
+        TEST_CONSUMER_EMAIL: ${{ inputs.consumer-email }}
+        TEST_CONSUMER_PASSWORD: ${{ inputs.consumer-password }}
+      run: composer test-cbt
+      shell: bash

@@ -36,6 +36,7 @@ final class MerchantAccount
                 $data[ 'area1' ] = 'Ottawa';
                 $data[ 'region' ] = 'ON';
                 $data[ 'postcode' ] = 'K1A0A9';
+                $data[ 'countryCode' ] = 'CA';
                 break;
 
             case 'ES':
@@ -46,6 +47,7 @@ final class MerchantAccount
                 $data[ 'area1' ] = 'Madrid';
                 $data[ 'region' ] = 'Comunidad de Madrid';
                 $data[ 'postcode' ] = '28009';
+                $data[ 'countryCode' ] = 'ES';
                 break;
 
             case 'FR':
@@ -55,6 +57,7 @@ final class MerchantAccount
                 $data[ 'area1' ] = 'Paris';
                 $data[ 'region' ] = 'Île-de-France';
                 $data[ 'postcode' ] = '75004';
+                $data[ 'countryCode' ] = 'FR';
                 break;
 
             case 'GB':
@@ -64,6 +67,7 @@ final class MerchantAccount
                 $data[ 'line1' ] = 'Town Hall';
                 $data[ 'area1' ] = 'Manchester';
                 $data[ 'postcode' ] = 'M602LA';
+                $data[ 'countryCode' ] = 'GB';
                 break;
 
             case 'NZ':
@@ -73,6 +77,7 @@ final class MerchantAccount
                 $data[ 'area1' ] = 'Ponsonby';
                 $data[ 'region' ] = 'Auckland';
                 $data[ 'postcode' ] = '1011';
+                $data[ 'countryCode' ] = 'NZ';
                 break;
 
             case 'IT':
@@ -83,6 +88,7 @@ final class MerchantAccount
                 $data[ 'area1' ] = 'Rome';
                 $data[ 'region' ] = 'Lazio';
                 $data[ 'postcode' ] = '00197';
+                $data[ 'countryCode' ] = 'IT';
                 break;
 
             case 'US':
@@ -92,6 +98,7 @@ final class MerchantAccount
                 $data[ 'area1' ] = 'San Francisco';
                 $data[ 'region' ] = 'CA';
                 $data[ 'postcode' ] = '94108-4509';
+                $data[ 'countryCode' ] = 'US';
                 break;
 
             case 'AU':
@@ -103,6 +110,7 @@ final class MerchantAccount
                 $data[ 'area1' ] = 'Southbank';
                 $data[ 'region' ] = 'VIC';
                 $data[ 'postcode' ] = '3006';
+                $data[ 'countryCode' ] = 'AU';
         }
 
         if (! is_null($field)) {

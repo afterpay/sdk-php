@@ -130,9 +130,12 @@ class CreateCheckout extends Request
     /**
      * @return \Afterpay\SDK\HTTP\CreateCheckout
      */
-    public function fillBodyWithMockData()
+    public function fillBodyWithMockData($countryCode = null)
     {
-        $mockData = MerchantAccount::generateMockData(HTTP::getCountryCode());
+        if (is_null($countryCode)) {
+            $countryCode = HTTP::getCountryCode();
+        }
+        $mockData = MerchantAccount::generateMockData($countryCode);
 
         $this
             ->setAmount('10.00', $mockData[ 'currency' ])
@@ -149,7 +152,7 @@ class CreateCheckout extends Request
                 'area1' => ArrayHelper::maybeGet('area1', $mockData),
                 'region' => ArrayHelper::maybeGet('region', $mockData),
                 'postcode' => ArrayHelper::maybeGet('postcode', $mockData),
-                'countryCode' => $this->getCountryCode(),
+                'countryCode' => ArrayHelper::maybeGet('countryCode', $mockData),
                 'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData)
             ])
             ->setShipping([
@@ -159,7 +162,7 @@ class CreateCheckout extends Request
                 'area1' => ArrayHelper::maybeGet('area1', $mockData),
                 'region' => ArrayHelper::maybeGet('region', $mockData),
                 'postcode' => ArrayHelper::maybeGet('postcode', $mockData),
-                'countryCode' => $this->getCountryCode(),
+                'countryCode' => ArrayHelper::maybeGet('countryCode', $mockData),
                 'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData)
             ])
             ->setItems([
