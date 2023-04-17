@@ -382,7 +382,7 @@ class ConsumerSimulator
     {
         $this->countryCode = $countryCode;
         if (is_null($countryCode)) {
-            $countryCode = HTTP::getCountryCode();
+            $this->countryCode = HTTP::getCountryCode();
         }
 
         /**
