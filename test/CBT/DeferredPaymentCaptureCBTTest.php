@@ -72,49 +72,51 @@ class DeferredPaymentCaptureCBTTest extends TestCase
                     $checkoutToken = $createCheckoutRequest->getResponse()->getParsedBody()->token;
 
                     # Step 2 of 4
-    
+
                     # Simulate a consumer completing the checkout and clicking the confirm button
                     # to commit to the payment schedule.
-    
+
                     $consumerSimulator = new ConsumerSimulator($countryCode);
-    
+
                     $consumerSimulator->confirmPaymentSchedule($checkoutToken, '000');
-    
+
                     # Step 3 of 4
-    
+
                     # Create a payment auth with an APPROVED status.
                     # This action converts the temporary checkout into a permanent order record.
-    
+
                     $deferredPaymentAuthRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentAuth();
-    
+
                     $deferredPaymentAuthRequest
                         ->setToken($checkoutToken)
                         ->send()
                     ;
-    
+
                     $orderId = $deferredPaymentAuthRequest->getResponse()->getParsedBody()->id;
-    
+
                     # Step 4 of 4
-    
+
                     # Capture a 10.00 payment for the order, completing the auth
-    
+
                     $mockData = \Afterpay\SDK\MerchantAccount::generateMockData($countryCode);
-    
+
                     $deferredPaymentCaptureRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentCapture();
-    
+
                     $deferredPaymentCaptureRequest
                         ->setOrderId($orderId)
                         ->setAmount('10.00', $mockData[ 'currency' ])
                         ->send()
                     ;
-    
+
                     $deferredPaymentCaptureResponse = $deferredPaymentCaptureRequest->getResponse();
-    
+
                     $this->assertEquals(201, $deferredPaymentCaptureResponse->getHttpStatusCode());
                     $this->assertEquals('0.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
                     $this->assertEquals('CAPTURED', $deferredPaymentCaptureResponse->getParsedBody()->paymentState);
                 } else {
-                    $this->assertEquals(201, $createCheckoutRequest->getResponse()->getHttpStatusCode(),
+                    $this->assertEquals(
+                        201,
+                        $createCheckoutRequest->getResponse()->getHttpStatusCode(),
                         $createCheckoutRequest->getMerchantAccountCountryCode() . ' Merchant with ' . $countryCode . ' Consumer in ' . $this->currencies[$countryCode] .
                         '. Error Message: ' . $createCheckoutRequest->getResponse()->getParsedBody()->message
                     );
