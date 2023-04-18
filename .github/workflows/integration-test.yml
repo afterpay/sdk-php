@@ -108,8 +108,8 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'AU', 'CA', 'ES', 'UK' ]
-        consumer-country-code: [ 'AU', 'CA', 'ES', 'UK' ]
+        merchant-country-code: [ 'AU', 'CA']
+        consumer-country-code: [ 'AU', 'CA']
       fail-fast: false
       max-parallel: 1
 

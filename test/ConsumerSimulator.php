@@ -236,7 +236,8 @@ class ConsumerSimulator
             } elseif ($responseObj->responseHttpStatusCode == 200 && $responseObj->responseParsedBody->status == 'success') {
                 return;
             } else {
-                throw new \Exception("login did not complete as expected. Received HTTP {$responseObj->responseHttpStatusCode} response with raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512));
+                throw new \Exception("login did not complete as expected. Received HTTP {$responseObj->responseHttpStatusCode} response with raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512) .
+                'consumerEmail:'. substr($username,0 , 25) . '... URL: ' . substr($username,0 , 40) . '...');
             }
         }
 
