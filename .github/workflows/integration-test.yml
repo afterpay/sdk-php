@@ -108,8 +108,8 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
-        consumer-country: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
       fail-fast: false
       max-parallel: 1
 
@@ -118,23 +118,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # First use the Merchant's countryCode. This will use the merchant's currency to generate the Create Checkout
-      # request. It will also use an address in the merchant's country, which won't match the consumer, but that
-      # should not prevent the transaction in Sandbox. This will test CBT without Currency Localisation.
       - uses: ./.github/actions/test-cbt
         with:
-          country-code: ${{ matrix.merchant-country }}
-          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country) ] }}
-          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country) ] }}
-          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.consumer-country) ] }}
-          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.consumer-country) ] }}
-
-      # Second, use the Consumer's countryCode. This will use the consumer's currency to generate the Create Checkout
-      # request. This will test CBT with Currency Localisation.
-      - uses: ./.github/actions/test-cbt
-        with:
-          country-code: ${{ matrix.consumer-country }}
-          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country) ] }}
-          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country) ] }}
-          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.consumer-country) ] }}
-          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.consumer-country) ] }}
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
