@@ -231,10 +231,12 @@ class ConsumerSimulator
         $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
 
         if ($responseObj->responseParsedBody) {
-            if ($responseObj->responseParsedBody->user->requires2fa) {
+            if (property_exists($responseObj->responseParsedBody, 'user') && $responseObj->responseParsedBody->user->requires2fa) {
                 throw new \Exception('user.requires2fa');
             } elseif ($responseObj->responseHttpStatusCode == 200 && $responseObj->responseParsedBody->status == 'success') {
                 return;
+            } else {
+                throw new \Exception("login did not complete as expected. Received HTTP {$responseObj->responseHttpStatusCode} response with raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512));
             }
         }
 
