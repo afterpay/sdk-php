@@ -431,14 +431,11 @@ class ConsumerSimulator
                 break;
         }
 
-        $lowerCountryCode = strtolower($this->countryCode);
-        $consumerEmail = "test.{$lowerCountryCode}.consumerEmail";
-        $consumerPassword = "test.{$lowerCountryCode}.consumerPassword";
         $this->portalBaseUrl = $this->globalBaseUrls[$this->regionCode]['portal'];
         $this->portalapiBaseUrl = $this->globalBaseUrls[$this->regionCode]['portalapi'];
         $this->payBaseUrl = $this->globalBaseUrls[$this->regionCode]['pay'];
-        $this->consumerEmail = Config::get($consumerEmail);
-        $this->consumerPassword = Config::get($consumerPassword);
+        $this->consumerEmail = Config::get('test.consumerEmail');
+        $this->consumerPassword = Config::get('test.consumerPassword');
         $this->storedCookies = [];
     }
 

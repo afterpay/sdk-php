@@ -123,67 +123,11 @@ final class Config
         /**
          * These are test settings - used only by the Test classes for automated testing.
          */
-        'test.au.consumerEmail' => [
+        'test.consumerEmail' => [
             'type' => 'string',
             'src' => '.env.php'
         ],
-        'test.au.consumerPassword' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.nz.consumerEmail' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.nz.consumerPassword' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.us.consumerEmail' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.us.consumerPassword' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.ca.consumerEmail' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.ca.consumerPassword' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.uk.consumerEmail' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.uk.consumerPassword' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.es.consumerEmail' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.es.consumerPassword' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.fr.consumerEmail' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.fr.consumerPassword' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.it.consumerEmail' => [
-            'type' => 'string',
-            'src' => '.env.php'
-        ],
-        'test.it.consumerPassword' => [
+        'test.consumerPassword' => [
             'type' => 'string',
             'src' => '.env.php'
         ],
