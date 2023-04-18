@@ -102,3 +102,25 @@ jobs:
           secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.country-code) ] }}
           consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.country-code) ] }}
           consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.country-code) ] }}
+  cross-border-trade:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        merchant-country: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        consumer-country: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: ${{ matrix.merchant-country }} <--> ${{ matrix.consumer-country }} Sandbox
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          country-code: ${{ matrix.merchant-country }}
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country) ] }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.consumer-country) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.consumer-country) ] }}
