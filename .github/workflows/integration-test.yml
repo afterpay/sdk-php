@@ -40,76 +40,13 @@ on:
 # https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-Readme.md
 
 jobs:
-  oceania:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        country-code: [ 'AU', 'NZ' ]
-      fail-fast: false
-      max-parallel: 1
-
-    name: ${{ matrix.country-code }} Sandbox
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: ./.github/actions/test-integration
-        with:
-          country-code: ${{ matrix.country-code }}
-          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.country-code) ] }}
-          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.country-code) ] }}
-          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.country-code) ] }}
-          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.country-code) ] }}
-  north-america:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        country-code: [ 'CA', 'US' ]
-      fail-fast: false
-      max-parallel: 1
-
-    name: ${{ matrix.country-code }} Sandbox
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: ./.github/actions/test-integration
-        with:
-          country-code: ${{ matrix.country-code }}
-          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.country-code) ] }}
-          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.country-code) ] }}
-          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.country-code) ] }}
-          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.country-code) ] }}
-  europe:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        country-code: [ 'ES', 'FR', 'IT', 'UK' ] # To-do: Replace UK secrets with GB secrets
-      fail-fast: false
-      max-parallel: 1
-
-    name: ${{ matrix.country-code }} Sandbox
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: ./.github/actions/test-integration
-        with:
-          country-code: ${{ matrix.country-code }}
-          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.country-code) ] }}
-          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.country-code) ] }}
-          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.country-code) ] }}
-          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.country-code) ] }}
   cross-border-trade:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        merchant-country-code: [ 'AU', 'CA']
-        consumer-country-code: [ 'AU', 'CA']
+        merchant-country-code: [ 'AU', 'US']
+        consumer-country-code: [ 'AU', 'US']
       fail-fast: false
       max-parallel: 1
 

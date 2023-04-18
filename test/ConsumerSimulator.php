@@ -237,7 +237,7 @@ class ConsumerSimulator
                 return;
             } else {
                 throw new \Exception("login did not complete as expected. Received HTTP {$responseObj->responseHttpStatusCode} response with raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512) .
-                'consumerEmail:'. substr($username,0 , 25) . '... URL: ' . substr($username,0 , 40) . '...');
+                'consumerEmail:'. substr($username,0 , 25) . '... URL: ' . substr($url,0 , 40) . '...');
             }
         }
 
