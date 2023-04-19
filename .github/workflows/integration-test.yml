@@ -108,13 +108,13 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         consumer-country-code: [ 'AU', 'NZ' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         exclude:
-          - merchant-country-code: AU
-            consumer-country-code: AU
-          - merchant-country-code: NZ
-            consumer-country-code: NZ
+          - consumer-country-code: AU
+            merchant-country-code: AU
+          - consumer-country-code: NZ
+            merchant-country-code: NZ
       fail-fast: false
       max-parallel: 1
 
@@ -136,13 +136,13 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         consumer-country-code: [ 'CA', 'US' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         exclude:
-          - merchant-country-code: CA
-            consumer-country-code: CA
-          - merchant-country-code: US
-            consumer-country-code: US
+          - consumer-country-code: CA
+            merchant-country-code: CA
+          - consumer-country-code: US
+            merchant-country-code: US
       fail-fast: false
       max-parallel: 1
 
@@ -164,17 +164,17 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         consumer-country-code: [ 'ES', 'FR', 'IT', 'UK' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         exclude:
-          - merchant-country-code: ES
-            consumer-country-code: ES
-          - merchant-country-code: FR
-            consumer-country-code: FR
-          - merchant-country-code: IT
-            consumer-country-code: IT
-          - merchant-country-code: UK
-            consumer-country-code: UK
+          - consumer-country-code: ES
+            merchant-country-code: ES
+          - consumer-country-code: FR
+            merchant-country-code: FR
+          - consumer-country-code: IT
+            merchant-country-code: IT
+          - consumer-country-code: UK
+            merchant-country-code: UK
       fail-fast: false
       max-parallel: 1
 
