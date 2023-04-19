@@ -411,6 +411,9 @@ class ConsumerSimulator
         $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
 
         if (property_exists($responseObj, 'responseParsedBody') && is_object($responseObj->responseParsedBody)) {
+            if (!property_exists($responseObj->responseParsedBody, 'traceId')) {
+                throw new \Exception("startConsumerCheckout response did not contain expected traceId. Actual properties: " . implode(', ', array_keys(get_object_vars($responseObj->responseParsedBody))));
+            }
             $this->traceId = $responseObj->responseParsedBody->traceId;
             if (is_object($responseObj->responseParsedBody->preferredCard)) {
                 $this->preferredCardToken = $responseObj->responseParsedBody->preferredCard->token;
