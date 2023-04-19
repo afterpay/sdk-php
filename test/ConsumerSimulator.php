@@ -412,6 +412,9 @@ class ConsumerSimulator
 
         if (property_exists($responseObj, 'responseParsedBody') && is_object($responseObj->responseParsedBody)) {
             if (!property_exists($responseObj->responseParsedBody, 'traceId')) {
+                if (property_exists($responseObj->responseParsedBody, 'errorId')) {
+                    throw new \Exception("startConsumerCheckout did not complete as expected. Received HTTP {$responseObj->responseHttpStatusCode} response with raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512));
+                }
                 throw new \Exception("startConsumerCheckout response did not contain expected traceId. Actual properties: " . implode(', ', array_keys(get_object_vars($responseObj->responseParsedBody))));
             }
             $this->traceId = $responseObj->responseParsedBody->traceId;
