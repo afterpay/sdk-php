@@ -108,17 +108,25 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'CA', 'ES', 'NZ', 'UK' ] #[ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
-        consumer-country-code: [ 'CA', 'ES', 'NZ', 'UK' ] #[ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         exclude:
+          - merchant-country-code: AU
+            consumer-country-code: AU
           - merchant-country-code: CA
             consumer-country-code: CA
           - merchant-country-code: ES
             consumer-country-code: ES
+          - merchant-country-code: FR
+            consumer-country-code: FR
+          - merchant-country-code: IT
+            consumer-country-code: IT
           - merchant-country-code: NZ
             consumer-country-code: NZ
           - merchant-country-code: UK
             consumer-country-code: UK
+          - merchant-country-code: US
+            consumer-country-code: US
       fail-fast: false
       max-parallel: 1
 
