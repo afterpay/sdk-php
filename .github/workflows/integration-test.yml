@@ -223,11 +223,8 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'FF' ]
+        merchant-country-code: [ 'FR' ]
         consumer-country-code: [ 'AU', 'NZ', 'US', 'CA', 'ES', 'IT', 'UK']
-        exclude:
-          - merchant-country-code: AU
-            consumer-country-code: AU
       fail-fast: false
       max-parallel: 1
 
