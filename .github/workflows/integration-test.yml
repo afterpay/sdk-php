@@ -103,30 +103,78 @@ jobs:
           secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.country-code) ] }}
           consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.country-code) ] }}
           consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.country-code) ] }}
-  cross-border-trade:
+  oceania-cbt:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        merchant-country-code: [ 'AU', 'NZ' ]
         consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
         exclude:
           - merchant-country-code: AU
             consumer-country-code: AU
+          - merchant-country-code: NZ
+            consumer-country-code: NZ
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  north-america-cbt:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        merchant-country-code: [ 'CA', 'US' ]
+        consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        exclude:
           - merchant-country-code: CA
             consumer-country-code: CA
+          - merchant-country-code: US
+            consumer-country-code: US
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  europe-cbt:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        merchant-country-code: [ 'ES', 'FR', 'IT', 'UK' ]
+        consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        exclude:
           - merchant-country-code: ES
             consumer-country-code: ES
           - merchant-country-code: FR
             consumer-country-code: FR
           - merchant-country-code: IT
             consumer-country-code: IT
-          - merchant-country-code: NZ
-            consumer-country-code: NZ
           - merchant-country-code: UK
             consumer-country-code: UK
-          - merchant-country-code: US
-            consumer-country-code: US
       fail-fast: false
       max-parallel: 1
 
