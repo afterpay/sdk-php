@@ -108,8 +108,8 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'AU', 'NZ' ]
-        consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        consumer-country-code: [ 'AU', 'NZ' ]
         exclude:
           - merchant-country-code: AU
             consumer-country-code: AU
@@ -118,7 +118,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
 
-    name: CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
 
     steps:
       - uses: actions/checkout@v2
@@ -136,8 +136,8 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'CA', 'US' ]
-        consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        consumer-country-code: [ 'CA', 'US' ]
         exclude:
           - merchant-country-code: CA
             consumer-country-code: CA
@@ -146,7 +146,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
 
-    name: CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
 
     steps:
       - uses: actions/checkout@v2
@@ -164,8 +164,8 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'ES', 'FR', 'IT', 'UK' ]
-        consumer-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        consumer-country-code: [ 'ES', 'FR', 'IT', 'UK' ]
         exclude:
           - merchant-country-code: ES
             consumer-country-code: ES
@@ -178,7 +178,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
 
-    name: CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
 
     steps:
       - uses: actions/checkout@v2
