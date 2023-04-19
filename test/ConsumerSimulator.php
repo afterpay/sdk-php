@@ -410,7 +410,7 @@ class ConsumerSimulator
 
         $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
 
-        if (is_object($responseObj->responseParsedBody)) {
+        if (property_exists($responseObj, 'responseParsedBody') && is_object($responseObj->responseParsedBody)) {
             $this->traceId = $responseObj->responseParsedBody->traceId;
             if (is_object($responseObj->responseParsedBody->preferredCard)) {
                 $this->preferredCardToken = $responseObj->responseParsedBody->preferredCard->token;
@@ -419,6 +419,8 @@ class ConsumerSimulator
             if ($responseObj->responseHttpStatusCode == 200) {
                 return;
             }
+        } elseif ($responseObj->curlErrno) {
+            throw new \Exception("startConsumerCheckout triggered cURL error #{$responseObj->curlErrno}: '{$responseObj->curlError}'");
         }
 
         throw new \Exception('startConsumerCheckout did not complete as expected');
