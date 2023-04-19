@@ -108,8 +108,8 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'AU', 'NZ' ]
         merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
+        consumer-country-code: [ 'AU', 'NZ' ]
         exclude:
           - merchant-country-code: AU
             consumer-country-code: AU
@@ -136,9 +136,8 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'CA', 'US' ]
         merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
-
+        consumer-country-code: [ 'CA', 'US' ]
         exclude:
           - merchant-country-code: CA
             consumer-country-code: CA
@@ -165,9 +164,8 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'ES', 'FR', 'IT', 'UK' ]
         merchant-country-code: [ 'AU', 'CA', 'ES', 'FR', 'IT', 'NZ', 'UK', 'US' ]
-
+        consumer-country-code: [ 'ES', 'FR', 'IT', 'UK' ]
         exclude:
           - merchant-country-code: ES
             consumer-country-code: ES
@@ -181,7 +179,7 @@ jobs:
       max-parallel: 1
 
     name: Europe CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
-
+    
     steps:
       - uses: actions/checkout@v2
 
