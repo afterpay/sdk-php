@@ -118,7 +118,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
 
-    name: Oceania CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+    name: Oceania CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
 
     steps:
       - uses: actions/checkout@v2
@@ -146,7 +146,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
 
-    name: America CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+    name: America CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
 
     steps:
       - uses: actions/checkout@v2
@@ -178,7 +178,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
 
-    name: Europe CBT - ${{ matrix.merchant-country-code }} merchant, ${{ matrix.consumer-country-code }} consumer
+    name: Europe CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
     
     steps:
       - uses: actions/checkout@v2
