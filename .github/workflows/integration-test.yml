@@ -108,9 +108,9 @@ jobs:
 
     strategy:
       matrix:
-        merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU']
-        consumer-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU']
-       exclude:
+        merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU' ]
+        consumer-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU' ]
+      exclude:
           - merchant-country-code: CA
             consumer-country-code: CA
           - merchant-country-code: US
