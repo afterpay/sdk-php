@@ -108,7 +108,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'UK']
+        consumer-country-code: [ 'UK' ]
         merchant-country-code: [ 'IT', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU' ]
       fail-fast: false
       max-parallel: 1
@@ -131,7 +131,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'IT']
+        consumer-country-code: [ 'IT' ]
         merchant-country-code: [ 'UK', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU' ]
       fail-fast: false
       max-parallel: 1
@@ -154,7 +154,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'FR']
+        consumer-country-code: [ 'FR' ]
         merchant-country-code: [ 'UK', 'IT', 'ES', 'US', 'CA', 'NZ', 'AU' ]
       fail-fast: false
       max-parallel: 1
@@ -177,7 +177,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'ES']
+        consumer-country-code: [ 'ES' ]
         merchant-country-code: [ 'UK', 'IT', 'FR', 'US', 'CA', 'NZ', 'AU' ]
       fail-fast: false
       max-parallel: 1
@@ -200,7 +200,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'US']
+        consumer-country-code: [ 'US ']
         merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'CA', 'NZ', 'AU' ]
       fail-fast: false
       max-parallel: 1
@@ -223,7 +223,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'CA']
+        consumer-country-code: [ 'CA' ]
         merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'NZ', 'AU' ]
       fail-fast: false
       max-parallel: 1
@@ -246,7 +246,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'NZ']
+        consumer-country-code: [ 'NZ' ]
         merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'AU' ]
       fail-fast: false
       max-parallel: 1
@@ -269,7 +269,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'UK']
+        consumer-country-code: [ 'AU' ]
         merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'NZ' ]
       fail-fast: false
       max-parallel: 1
