@@ -480,7 +480,7 @@ class ConsumerSimulator
         $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
 
         if ($responseObj->responseHttpStatusCode != 200) {
-            throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during confirmConsumerCheckout");
+            throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during confirmConsumerCheckout. Raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512));
         } elseif (is_object($responseObj->responseParsedBody)) {
             if ($responseObj->responseParsedBody->status != 'SUCCESS') {
                 throw new \Exception("Encountered a status of '{$responseObj->responseParsedBody->status}' during confirmConsumerCheckout");
