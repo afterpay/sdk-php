@@ -19,6 +19,7 @@
 namespace Afterpay\SDK\Test;
 
 use Afterpay\SDK\Config;
+use Afterpay\SDK\MerchantAccount;
 use Afterpay\SDK\HTTP;
 
 class ConsumerSimulator
@@ -337,6 +338,15 @@ class ConsumerSimulator
             $data['cardNumber'] = '4000000000009979';
             $data['cardExpiryMonth'] = '01';
             $data['cardExpiryYear'] = date('y', strtotime('next year'));
+            $countryCode = HTTP::getCountryCode();
+            $mockData = MerchantAccount::generateMockData($countryCode);
+            $data['address'] = [
+                'city' => $mockData['area1'],
+                'country' => $countryCode,
+                'postcode' => $mockData['postcode'],
+                'state' => $mockData['region'],
+                'street1' => $mockData['line1']
+            ];
         }
         $postbody = json_encode($data);
 
