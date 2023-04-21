@@ -41,7 +41,7 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
         \Afterpay\SDK\HTTP::setMerchantId(null);
         \Afterpay\SDK\HTTP::setSecretKey(null);
 
-        # Step 1 of 4
+        # Step 1 of 5
 
         # Create a checkout for 10.00 in the currency of the merchant account.
 
@@ -54,7 +54,7 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
 
         $checkoutToken = $createCheckoutRequest->getResponse()->getParsedBody()->token;
 
-        # Step 2 of 4
+        # Step 2 of 5
 
         # Simulate a consumer completing the checkout and clicking the confirm button
         # to commit to the payment schedule.
@@ -64,7 +64,7 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
 
         $consumerSimulator->confirmPaymentSchedule($checkoutToken, '000');
 
-        # Step 3 of 4
+        # Step 3 of 5
 
         # Capture payment to convert the temporary checkout into a permanent order record.
 
@@ -81,7 +81,7 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
 
         $orderId = $immediatePaymentCaptureResponseBody->id;
 
-        # Step 4 of 4
+        # Step 4 of 5
 
         # Call GetPaymentByOrderId using the order ID returned by the API in the previous step.
         # The expectation is that the same Payment object will be returned again.
@@ -108,5 +108,21 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
 
         $this->assertEquals(200, $getPaymentByOrderIdResponse->getHttpStatusCode());
         $this->assertEquals($immediatePaymentCaptureResponseBody, $getPaymentByOrderIdResponse->getParsedBody());
+
+        ## Step 5 of 5
+
+        # Refund the order using the orderId previously generated and captured
+
+        $createRefundRequest = new \Afterpay\SDK\HTTP\Request\CreateRefund([
+            'amount' => [
+                'amount' => $createCheckoutRequest->getAmount()->getAmount(),
+                'currency' => $createCheckoutRequest->getAmount()->getCurrency()
+            ]
+        ]);
+
+        $createRefundRequest->setOrderId($orderId);
+        $createRefundRequest->send();
+
+        $this->assertEquals(201, $createRefundRequest->getResponse()->getHttpStatusCode());
     }
 }
