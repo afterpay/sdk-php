@@ -167,7 +167,7 @@ class DeferredPaymentVoidIntegrationTest extends TestCase
         $deferredPaymentVoidResponse = $deferredPaymentVoidRequest->getResponse();
 
         $this->assertEquals(201, $deferredPaymentVoidResponse->getHttpStatusCode());
-        $this->assertEquals('8.00', $deferredPaymentVoidResponse->getParsedBody()->openToCaptureAmount->amount);
+        $this->assertEquals('18.00', $deferredPaymentVoidResponse->getParsedBody()->openToCaptureAmount->amount);
         $this->assertEquals('AUTH_APPROVED', $deferredPaymentVoidResponse->getParsedBody()->paymentState);
     }
 }

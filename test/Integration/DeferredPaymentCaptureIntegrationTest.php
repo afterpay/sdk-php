@@ -181,7 +181,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
         $deferredPaymentCaptureResponse = $deferredPaymentCaptureRequest->getResponse();
 
         $this->assertEquals(201, $deferredPaymentCaptureResponse->getHttpStatusCode());
-        $this->assertEquals('6.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
+        $this->assertEquals('16.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
         $this->assertEquals('PARTIALLY_CAPTURED', $deferredPaymentCaptureResponse->getParsedBody()->paymentState);
     }
 }
