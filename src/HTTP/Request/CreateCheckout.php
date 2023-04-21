@@ -138,7 +138,7 @@ class CreateCheckout extends Request
         $mockData = MerchantAccount::generateMockData($countryCode);
 
         $this
-            ->setAmount('10.00', $mockData[ 'currency' ])
+            ->setAmount('20.00', $mockData[ 'currency' ])
             ->setConsumer([
                 'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData),
                 'givenNames' => 'Test',
@@ -172,7 +172,7 @@ class CreateCheckout extends Request
                     'quantity' => 10,
                     'pageUrl' => 'https://www.example.com/page.html',
                     'imageUrl' => 'https://www.example.com/image.jpg',
-                    'price' => [ '10.00', $mockData[ 'currency' ] ],
+                    'price' => [ '20.00', $mockData[ 'currency' ] ],
                     'categories' => [
                         [ 'Clothing', 'T-Shirts', 'Under 25.00' ],
                         [ 'Sale', 'Clothing' ]

@@ -50,7 +50,7 @@ class UpdateShippingCourierIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create a checkout for 10.00 in the currency of the merchant account.
+        # Create a checkout for 20.00 in the currency of the merchant account.
 
         $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
 

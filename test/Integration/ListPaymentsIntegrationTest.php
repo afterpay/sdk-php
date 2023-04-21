@@ -43,7 +43,7 @@ class ListPaymentsIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create two checkouts, each for 10.00 in the currency of the merchant account.
+        # Create two checkouts, each for 20.00 in the currency of the merchant account.
 
         $tokens = [];
 
@@ -140,7 +140,7 @@ class ListPaymentsIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create two checkouts, each for 10.00 in the currency of the merchant account.
+        # Create two checkouts, each for 20.00 in the currency of the merchant account.
 
         $tokens = [];
 
