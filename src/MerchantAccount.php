@@ -97,7 +97,7 @@ final class MerchantAccount
                 $data[ 'line1' ] = '222 Kearny Street';
                 $data[ 'area1' ] = 'San Francisco';
                 $data[ 'region' ] = 'CA';
-                $data[ 'postcode' ] = '94108-4509';
+                $data[ 'postcode' ] = '94108';
                 $data[ 'countryCode' ] = 'US';
                 break;
 
