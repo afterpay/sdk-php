@@ -1,0 +1,74 @@
+name: 'Test Cross Border Trade (CBT)'
+description: 'Run a subset of the integration test suite for a single merchant and single consumer in the Sandbox environment, given their country codes.'
+inputs:
+  merchant-country-code:
+    description: 'ISO 2-character country code of the merchant.'
+    required: true
+    default: 'AU'
+  consumer-country-code:
+    description: 'ISO 2-character country code of the consumer.'
+    required: true
+    default: 'AU'
+  merchant-id:
+    description: 'Merchant ID.'
+    required: true
+  secret-key:
+    description: 'Merchant Secret Key.'
+    required: true
+  consumer-email:
+    description: 'Consumer email address.'
+    required: true
+  consumer-password:
+    description: 'Consumer password.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Disable Xdebug
+      run: sudo phpdismod -s cli xdebug
+      shell: bash
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+      shell: bash
+
+    - name: Start MySQL service
+      run: sudo systemctl start mysql.service
+      shell: bash
+
+    - name: Create a database for PersistentStorage
+      run: mysql -u root -proot -e "CREATE DATABASE sdk_php;"
+      shell: bash
+
+    # First use the Merchant's countryCode. This will use the merchant's currency to generate the Create Checkout
+    # request. It will also use an address in the merchant's country, which won't match the consumer, but that
+    # should not prevent the transaction in Sandbox. This will test CBT without Currency Localisation.
+    - name: Run CBT test suite in the merchant's currency
+      env:
+        MERCHANT_ID: ${{ inputs.merchant-id }}
+        SECRET_KEY: ${{ inputs.secret-key }}
+        COUNTRY_CODE: ${{ inputs.merchant-country-code }}
+        DB_API: mysqli
+        DB_DATABASE: sdk_php
+        DB_USER: root
+        DB_PASS: root
+        TEST_CONSUMER_EMAIL: ${{ inputs.consumer-email }}
+        TEST_CONSUMER_PASSWORD: ${{ inputs.consumer-password }}
+      run: composer test-cbt
+      shell: bash
+
+    # Second, use the Consumer's countryCode. This will use the consumer's currency to generate the Create Checkout
+    # request. This will test CBT with Currency Localisation.
+    - name: Run CBT test suite in the consumer's currency
+      env:
+        MERCHANT_ID: ${{ inputs.merchant-id }}
+        SECRET_KEY: ${{ inputs.secret-key }}
+        COUNTRY_CODE: ${{ inputs.consumer-country-code }}
+        DB_API: mysqli
+        DB_DATABASE: sdk_php
+        DB_USER: root
+        DB_PASS: root
+        TEST_CONSUMER_EMAIL: ${{ inputs.consumer-email }}
+        TEST_CONSUMER_PASSWORD: ${{ inputs.consumer-password }}
+      run: composer test-cbt
+      shell: bash

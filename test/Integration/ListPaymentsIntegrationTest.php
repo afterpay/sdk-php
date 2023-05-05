@@ -43,7 +43,7 @@ class ListPaymentsIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create two checkouts, each for 10.00 in the currency of the merchant account.
+        # Create two checkouts, each for 20.00 in the currency of the merchant account.
 
         $tokens = [];
 
@@ -127,6 +127,14 @@ class ListPaymentsIntegrationTest extends TestCase
         $this->assertEquals(array_reverse($immediatePaymentCaptureResponseBodies), $listPaymentsResponseBody->results);
     }
 
+    /**
+     * @group exclude-from-ci
+     *
+     * Note: This test is excluded from the GitHub workflow, because parallel tests
+     *       can interfere with the results of this test. This test requires that no
+     *       other orders are created in the same merchant account while this test is
+     *       running.
+     */
     public function testListPaymentsByStatusArray()
     {
         # Reset the credentials to null to make sure they get automatically loaded
@@ -140,7 +148,7 @@ class ListPaymentsIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create two checkouts, each for 10.00 in the currency of the merchant account.
+        # Create two checkouts, each for 20.00 in the currency of the merchant account.
 
         $tokens = [];
 

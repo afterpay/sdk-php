@@ -86,6 +86,7 @@ final class PersistentStorage
 
     private $db_api;
     private $db_host;
+    private $db_port;
     private $db_database;
     private $db_tablePrefix;
     private $db_user;
