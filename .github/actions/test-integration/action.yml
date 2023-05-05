@@ -47,5 +47,5 @@ runs:
         DB_PASS: root
         TEST_CONSUMER_EMAIL: ${{ inputs.consumer-email }}
         TEST_CONSUMER_PASSWORD: ${{ inputs.consumer-password }}
-      run: composer test-integration
+      run: composer test-integration -- --exclude-group exclude-from-ci
       shell: bash
