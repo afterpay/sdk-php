@@ -200,7 +200,7 @@ jobs:
 
     strategy:
       matrix:
-        consumer-country-code: [ 'US ']
+        consumer-country-code: [ 'US' ]
         merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'CA', 'NZ', 'AU' ]
       fail-fast: false
       max-parallel: 1
