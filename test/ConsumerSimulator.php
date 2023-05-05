@@ -303,16 +303,10 @@ class ConsumerSimulator
             if (preg_match('/^3/', $responseObj->responseHttpStatusCode)) {
                 throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} redirect to '{$responseObj->responseHeaders['location']}' during lookup");
             }
-            $extra = '';
             if (is_object($responseObj->responseParsedBody) && property_exists($responseObj->responseParsedBody, 'errorId')) {
-                $extra .= " (errorId: \"{$responseObj->responseParsedBody->errorId}\")";
+                throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during lookup (errorId: \"{$responseObj->responseParsedBody->errorId}\")");
             }
-            if (is_string($consumerEmail)) {
-                $extra .= ' (email: string(' . strlen($consumerEmail) . '))';
-            } else {
-                $extra .= ' (email: ' . gettype($consumerEmail) . ')';
-            }
-            throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during lookup{$extra}");
+            throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during lookup");
         } elseif (is_object($responseObj->responseParsedBody) && property_exists($responseObj->responseParsedBody, 'countryCode')) {
             if (strtoupper($responseObj->responseParsedBody->countryCode) == $this->countryCode) {
                 # Consumer countryCode matches the Merchant countryCode.
