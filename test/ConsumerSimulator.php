@@ -303,6 +303,9 @@ class ConsumerSimulator
             if (preg_match('/^3/', $responseObj->responseHttpStatusCode)) {
                 throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} redirect to '{$responseObj->responseHeaders['location']}' during lookup");
             }
+            if (is_object($responseObj->responseParsedBody) && property_exists($responseObj->responseParsedBody, 'errorId')) {
+                throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during lookup (errorId: \"{$responseObj->responseParsedBody->errorId}\")");
+            }
             throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during lookup");
         } elseif (is_object($responseObj->responseParsedBody) && property_exists($responseObj->responseParsedBody, 'countryCode')) {
             if (strtoupper($responseObj->responseParsedBody->countryCode) == $this->countryCode) {
