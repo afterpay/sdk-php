@@ -130,12 +130,9 @@ class CreateCheckout extends Request
     /**
      * @return \Afterpay\SDK\HTTP\CreateCheckout
      */
-    public function fillBodyWithMockData($countryCode = null)
+    public function fillBodyWithMockData()
     {
-        if (is_null($countryCode)) {
-            $countryCode = HTTP::getCountryCode();
-        }
-        $mockData = MerchantAccount::generateMockData($countryCode);
+        $mockData = MerchantAccount::generateMockData(HTTP::getCountryCode());
 
         $this
             ->setAmount('20.00', $mockData[ 'currency' ])
