@@ -23,7 +23,7 @@ require_once __DIR__ . '/../autoload.php';
 use PHPUnit\Framework\TestCase;
 use Afterpay\SDK\Test\ConsumerSimulator;
 
-class GetPaymentByOrderIdIntegrationTest extends TestCase
+class RefundPaymentByOrderIdIntegrationTest extends TestCase
 {
     public function __construct()
     {
@@ -81,32 +81,20 @@ class GetPaymentByOrderIdIntegrationTest extends TestCase
 
         $orderId = $immediatePaymentCaptureResponseBody->id;
 
-        # Step 4 of 4
+        ## Step 4 of 4
 
-        # Call GetPaymentByOrderId using the order ID returned by the API in the previous step.
-        # The expectation is that the same Payment object will be returned again.
-        # Note: Since we modified the response for Immediate Payment Capture to include an extra
-        # property, we will need to remove that property before comparing with the Get Payment
-        # response.
+        # Refund the order using the orderId previously generated and captured
 
-        # Note: There is a delay between the order being created and indexed by the search
-        # service in a correct state. A wait time of 3 seconds is added to account for this.
+        $createRefundRequest = new \Afterpay\SDK\HTTP\Request\CreateRefund([
+            'amount' => [
+                'amount' => $createCheckoutRequest->getAmount()->getAmount(),
+                'currency' => $createCheckoutRequest->getAmount()->getCurrency()
+            ]
+        ]);
 
-        sleep(3);
+        $createRefundRequest->setOrderId($orderId);
+        $createRefundRequest->send();
 
-        $getPaymentByOrderIdRequest = new \Afterpay\SDK\HTTP\Request\GetPaymentByOrderId();
-
-        $getPaymentByOrderIdRequest
-            ->setOrderId($orderId)
-            ->send()
-        ;
-
-        $getPaymentByOrderIdResponse = $getPaymentByOrderIdRequest->getResponse();
-        $getPaymentByOrderIdResponse->removeEventCreationTimestamps();
-
-        unset($immediatePaymentCaptureResponseBody->merchantPortalOrderUrl);
-
-        $this->assertEquals(200, $getPaymentByOrderIdResponse->getHttpStatusCode());
-        $this->assertEquals($immediatePaymentCaptureResponseBody, $getPaymentByOrderIdResponse->getParsedBody());
+        $this->assertEquals(201, $createRefundRequest->getResponse()->getHttpStatusCode());
     }
 }

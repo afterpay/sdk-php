@@ -135,7 +135,7 @@ class CreateCheckout extends Request
         $mockData = MerchantAccount::generateMockData(HTTP::getCountryCode());
 
         $this
-            ->setAmount('10.00', $mockData[ 'currency' ])
+            ->setAmount('20.00', $mockData[ 'currency' ])
             ->setConsumer([
                 'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData),
                 'givenNames' => 'Test',
@@ -149,7 +149,7 @@ class CreateCheckout extends Request
                 'area1' => ArrayHelper::maybeGet('area1', $mockData),
                 'region' => ArrayHelper::maybeGet('region', $mockData),
                 'postcode' => ArrayHelper::maybeGet('postcode', $mockData),
-                'countryCode' => $this->getCountryCode(),
+                'countryCode' => ArrayHelper::maybeGet('countryCode', $mockData),
                 'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData)
             ])
             ->setShipping([
@@ -159,7 +159,7 @@ class CreateCheckout extends Request
                 'area1' => ArrayHelper::maybeGet('area1', $mockData),
                 'region' => ArrayHelper::maybeGet('region', $mockData),
                 'postcode' => ArrayHelper::maybeGet('postcode', $mockData),
-                'countryCode' => $this->getCountryCode(),
+                'countryCode' => ArrayHelper::maybeGet('countryCode', $mockData),
                 'phoneNumber' => ArrayHelper::maybeGet('phoneNumber', $mockData)
             ])
             ->setItems([
@@ -169,7 +169,7 @@ class CreateCheckout extends Request
                     'quantity' => 10,
                     'pageUrl' => 'https://www.example.com/page.html',
                     'imageUrl' => 'https://www.example.com/image.jpg',
-                    'price' => [ '10.00', $mockData[ 'currency' ] ],
+                    'price' => [ '20.00', $mockData[ 'currency' ] ],
                     'categories' => [
                         [ 'Clothing', 'T-Shirts', 'Under 25.00' ],
                         [ 'Sale', 'Clothing' ]

@@ -214,6 +214,115 @@ class ConsumerSimulator
         return $responseObj;
     }
 
+    private function parseCountryCode($updateMerchantCurrency = false)
+    {
+        switch ($this->countryCode) {
+            case 'AU':
+                $this->regionCode = 'OC';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'AUD';
+                }
+                break;
+
+            case 'CA':
+                $this->regionCode = 'NA';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'CAD';
+                }
+                break;
+
+            case 'ES':
+                $this->regionCode = 'EU';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'EUR';
+                }
+                break;
+
+            case 'FR':
+                $this->regionCode = 'EU';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'EUR';
+                }
+                break;
+
+            case 'GB':
+            case 'UK':
+                $this->regionCode = 'EU';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'GBP';
+                }
+                break;
+
+            case 'IT':
+                $this->regionCode = 'EU';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'EUR';
+                }
+                break;
+
+            case 'NZ':
+                $this->regionCode = 'OC';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'NZD';
+                }
+                break;
+
+            case 'US':
+                $this->regionCode = 'NA';
+                if ($updateMerchantCurrency) {
+                    $this->merchantCurrency = 'USD';
+                }
+                break;
+        }
+
+        $this->portalBaseUrl = $this->globalBaseUrls[$this->regionCode]['portal'];
+        $this->portalapiBaseUrl = $this->globalBaseUrls[$this->regionCode]['portalapi'];
+        $this->payBaseUrl = $this->globalBaseUrls[$this->regionCode]['pay'];
+    }
+
+    /**
+     * During this step, the consumer may be redirected from the merchant's region to their own.
+     */
+    private function lookup($consumerEmail, $checkoutToken)
+    {
+        $url = "{$this->portalapiBaseUrl}/portal/consumers/emails/lookup";
+
+        $postheaders = [
+            'Content-Type: application/json'
+        ];
+
+        $data = [
+            'email' => $consumerEmail,
+            'transactionToken' => $checkoutToken
+        ];
+        $postbody = json_encode($data);
+
+        $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
+
+        if ($responseObj->responseHttpStatusCode != 200) {
+            if (preg_match('/^3/', $responseObj->responseHttpStatusCode)) {
+                throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} redirect to '{$responseObj->responseHeaders['location']}' during lookup");
+            }
+            if (is_object($responseObj->responseParsedBody) && property_exists($responseObj->responseParsedBody, 'errorId')) {
+                throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during lookup (errorId: \"{$responseObj->responseParsedBody->errorId}\")");
+            }
+            throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during lookup");
+        } elseif (is_object($responseObj->responseParsedBody) && property_exists($responseObj->responseParsedBody, 'countryCode')) {
+            if (strtoupper($responseObj->responseParsedBody->countryCode) == $this->countryCode) {
+                # Consumer countryCode matches the Merchant countryCode.
+                return;
+            }
+
+            $this->countryCode = strtoupper($responseObj->responseParsedBody->countryCode);
+
+            $this->parseCountryCode(false);
+
+            return;
+        }
+
+        throw new \Exception('lookup did not complete as expected');
+    }
+
     /**
      * @param string $username
      * @param string $password
@@ -233,10 +342,12 @@ class ConsumerSimulator
         $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
 
         if ($responseObj->responseParsedBody) {
-            if ($responseObj->responseParsedBody->user->requires2fa) {
+            if (property_exists($responseObj->responseParsedBody, 'user') && $responseObj->responseParsedBody->user->requires2fa) {
                 throw new \Exception('user.requires2fa');
             } elseif ($responseObj->responseHttpStatusCode == 200 && $responseObj->responseParsedBody->status == 'success') {
                 return;
+            } else {
+                throw new \Exception("login did not complete as expected. Received HTTP {$responseObj->responseHttpStatusCode} response with raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512));
             }
         }
 
@@ -304,7 +415,13 @@ class ConsumerSimulator
 
         $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
 
-        if (is_object($responseObj->responseParsedBody)) {
+        if (property_exists($responseObj, 'responseParsedBody') && is_object($responseObj->responseParsedBody)) {
+            if (!property_exists($responseObj->responseParsedBody, 'traceId')) {
+                if (property_exists($responseObj->responseParsedBody, 'errorId')) {
+                    throw new \Exception("startConsumerCheckout did not complete as expected. Received HTTP {$responseObj->responseHttpStatusCode} response with raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512));
+                }
+                throw new \Exception("startConsumerCheckout response did not contain expected traceId. Actual properties: " . implode(', ', array_keys(get_object_vars($responseObj->responseParsedBody))));
+            }
             $this->traceId = $responseObj->responseParsedBody->traceId;
             if (is_object($responseObj->responseParsedBody->preferredCard)) {
                 $this->preferredCardToken = $responseObj->responseParsedBody->preferredCard->token;
@@ -313,6 +430,8 @@ class ConsumerSimulator
             if ($responseObj->responseHttpStatusCode == 200) {
                 return;
             }
+        } elseif ($responseObj->curlErrno) {
+            throw new \Exception("startConsumerCheckout triggered cURL error #{$responseObj->curlErrno}: '{$responseObj->curlError}'");
         }
 
         throw new \Exception('startConsumerCheckout did not complete as expected');
@@ -375,7 +494,7 @@ class ConsumerSimulator
         $responseObj = $this->sendAndLoad($url, $postheaders, $postbody);
 
         if ($responseObj->responseHttpStatusCode != 200) {
-            throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during confirmConsumerCheckout");
+            throw new \Exception("Received an HTTP {$responseObj->responseHttpStatusCode} response during confirmConsumerCheckout. Raw body (truncated to 512 characters): " . substr($responseObj->responseRawBody, 0, 512));
         } elseif (is_object($responseObj->responseParsedBody)) {
             if ($responseObj->responseParsedBody->status != 'SUCCESS') {
                 throw new \Exception("Encountered a status of '{$responseObj->responseParsedBody->status}' during confirmConsumerCheckout");
@@ -389,59 +508,20 @@ class ConsumerSimulator
         throw new \Exception('confirmConsumerCheckout did not complete as expected');
     }
 
-    public function __construct()
+    /**
+     * Note: When the ConsumerSimulator is first instantiated, it will configure itself to align with the merchant's region.
+     *       As the "consumer" traverses the checkout screenflow, they may be identified as belonging to a different region,
+     *       and the API URLs will be reconfigured accordingly.
+     */
+    public function __construct($countryCode = null)
     {
-        $this->countryCode = HTTP::getCountryCode();
-
-        /**
-         * @todo Move this logic to somewhere more sensible.
-         */
-        switch ($this->countryCode) {
-            case 'AU':
-                $this->regionCode = 'OC';
-                $this->merchantCurrency = 'AUD';
-                break;
-
-            case 'CA':
-                $this->regionCode = 'NA';
-                $this->merchantCurrency = 'CAD';
-                break;
-
-            case 'ES':
-                $this->regionCode = 'EU';
-                $this->merchantCurrency = 'EUR';
-                break;
-
-            case 'FR':
-                $this->regionCode = 'EU';
-                $this->merchantCurrency = 'EUR';
-                break;
-
-            case 'GB':
-            case 'UK':
-                $this->regionCode = 'EU';
-                $this->merchantCurrency = 'GBP';
-                break;
-
-            case 'IT':
-                $this->regionCode = 'EU';
-                $this->merchantCurrency = 'EUR';
-                break;
-
-            case 'NZ':
-                $this->regionCode = 'OC';
-                $this->merchantCurrency = 'NZD';
-                break;
-
-            case 'US':
-                $this->regionCode = 'NA';
-                $this->merchantCurrency = 'USD';
-                break;
+        $this->countryCode = $countryCode;
+        if (is_null($countryCode)) {
+            $this->countryCode = HTTP::getCountryCode();
         }
 
-        $this->portalBaseUrl = $this->globalBaseUrls[$this->regionCode]['portal'];
-        $this->portalapiBaseUrl = $this->globalBaseUrls[$this->regionCode]['portalapi'];
-        $this->payBaseUrl = $this->globalBaseUrls[$this->regionCode]['pay'];
+        $this->parseCountryCode(true);
+
         $this->consumerEmail = Config::get('test.consumerEmail');
         $this->consumerPassword = Config::get('test.consumerPassword');
         $this->storedCookies = [];
@@ -457,8 +537,9 @@ class ConsumerSimulator
     {
         $lowerCountryCode = strtolower($this->countryCode);
         $url = "{$this->portalBaseUrl}/{$lowerCountryCode}/checkout/?token={$checkoutToken}";
-
         $responseObj = $this->sendAndLoad($url);
+
+        $this->lookup($this->consumerEmail, $checkoutToken);
 
         try {
             $this->login($this->consumerEmail, $this->consumerPassword);

@@ -47,7 +47,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create a checkout for 10.00 in the currency of the merchant account.
+        # Create a checkout for 20.00 in the currency of the merchant account.
 
         $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
 
@@ -83,7 +83,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         # Step 4 of 4
 
-        # Capture a 10.00 payment for the order, completing the auth
+        # Capture a 20.00 payment for the order, completing the auth
 
         $mockData = \Afterpay\SDK\MerchantAccount::generateMockData(\Afterpay\SDK\HTTP::getCountryCode());
 
@@ -91,7 +91,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         $deferredPaymentCaptureRequest
             ->setOrderId($orderId)
-            ->setAmount('10.00', $mockData[ 'currency' ])
+            ->setAmount('20.00', $mockData[ 'currency' ])
             ->send()
         ;
 
@@ -118,7 +118,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
 
         # Step 1 of 5
 
-        # Create a checkout for 10.00 in the currency of the merchant account.
+        # Create a checkout for 20.00 in the currency of the merchant account.
 
         $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
 
@@ -181,7 +181,7 @@ class DeferredPaymentCaptureIntegrationTest extends TestCase
         $deferredPaymentCaptureResponse = $deferredPaymentCaptureRequest->getResponse();
 
         $this->assertEquals(201, $deferredPaymentCaptureResponse->getHttpStatusCode());
-        $this->assertEquals('6.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
+        $this->assertEquals('16.00', $deferredPaymentCaptureResponse->getParsedBody()->openToCaptureAmount->amount);
         $this->assertEquals('PARTIALLY_CAPTURED', $deferredPaymentCaptureResponse->getParsedBody()->paymentState);
     }
 }

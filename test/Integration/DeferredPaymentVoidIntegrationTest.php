@@ -47,7 +47,7 @@ class DeferredPaymentVoidIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create a checkout for 10.00 in the currency of the merchant account.
+        # Create a checkout for 20.00 in the currency of the merchant account.
 
         $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
 
@@ -83,7 +83,7 @@ class DeferredPaymentVoidIntegrationTest extends TestCase
 
         # Step 4 of 4
 
-        # Void the original amount of 10.00, completing the auth
+        # Void the original amount of 20.00, completing the auth
 
         $deferredPaymentVoidRequest = new \Afterpay\SDK\HTTP\Request\DeferredPaymentVoid();
 
@@ -116,7 +116,7 @@ class DeferredPaymentVoidIntegrationTest extends TestCase
 
         # Step 1 of 4
 
-        # Create a checkout for 10.00 in the currency of the merchant account.
+        # Create a checkout for 20.00 in the currency of the merchant account.
 
         $createCheckoutRequest = new \Afterpay\SDK\HTTP\Request\CreateCheckout();
 
@@ -167,7 +167,7 @@ class DeferredPaymentVoidIntegrationTest extends TestCase
         $deferredPaymentVoidResponse = $deferredPaymentVoidRequest->getResponse();
 
         $this->assertEquals(201, $deferredPaymentVoidResponse->getHttpStatusCode());
-        $this->assertEquals('8.00', $deferredPaymentVoidResponse->getParsedBody()->openToCaptureAmount->amount);
+        $this->assertEquals('18.00', $deferredPaymentVoidResponse->getParsedBody()->openToCaptureAmount->amount);
         $this->assertEquals('AUTH_APPROVED', $deferredPaymentVoidResponse->getParsedBody()->paymentState);
     }
 }

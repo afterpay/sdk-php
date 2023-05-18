@@ -102,3 +102,187 @@ jobs:
           secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.country-code) ] }}
           consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_1', matrix.country-code) ] }}
           consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_1', matrix.country-code) ] }}
+  cross-border-trade-uk:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'UK' ]
+        merchant-country-code: [ 'IT', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  cross-border-trade-it:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'IT' ]
+        merchant-country-code: [ 'UK', 'FR', 'ES', 'US', 'CA', 'NZ', 'AU' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  cross-border-trade-fr:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'FR' ]
+        merchant-country-code: [ 'UK', 'IT', 'ES', 'US', 'CA', 'NZ', 'AU' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  cross-border-trade-es:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'ES' ]
+        merchant-country-code: [ 'UK', 'IT', 'FR', 'US', 'CA', 'NZ', 'AU' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  cross-border-trade-us:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'US' ]
+        merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'CA', 'NZ', 'AU' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  cross-border-trade-ca:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'CA' ]
+        merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'NZ', 'AU' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  cross-border-trade-nz:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'NZ' ]
+        merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'AU' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
+  cross-border-trade-au:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        consumer-country-code: [ 'AU' ]
+        merchant-country-code: [ 'UK', 'IT', 'FR', 'ES', 'US', 'CA', 'NZ' ]
+      fail-fast: false
+      max-parallel: 1
+
+    name: CBT - ${{ matrix.consumer-country-code }} consumer, ${{ matrix.merchant-country-code }} merchant
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/test-cbt
+        with:
+          merchant-id: ${{ secrets[ format('{0}_SBOX_MID_1', matrix.merchant-country-code) ] }}
+          secret-key: ${{ secrets[ format('{0}_SBOX_SKEY_1', matrix.merchant-country-code) ] }}
+          merchant-country-code: ${{ matrix.merchant-country-code }}
+          consumer-email: ${{ secrets[ format('{0}_SBOX_CONSUMER_EMAIL_CBT', matrix.consumer-country-code) ] }}
+          consumer-password: ${{ secrets[ format('{0}_SBOX_CONSUMER_PASSWORD_CBT', matrix.consumer-country-code) ] }}
+          consumer-country-code: ${{ matrix.consumer-country-code }}
