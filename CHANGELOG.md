@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.6.2
+
+_Wed 19 Jul 2023_
+
+- Updated the Get Configuration call to include MPID (EIT-3011).
+
 ## Version 1.6.1
 
 _Thu 16 Mar 2023_
