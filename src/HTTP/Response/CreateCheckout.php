@@ -31,4 +31,41 @@ class CreateCheckout extends Response
     {
         parent::__construct();
     }
+
+    /**
+     * This method is called immediately after the HTTP response is received.
+     *
+     * Updates the redirectCheckoutUrl to include the deviceId from iQ Pixel.
+     *
+     * WARNING: This method manipulates the raw HTTP response!
+     *
+     * @return \Afterpay\SDK\HTTP\Response\CreateCheckout
+     */
+    public function afterReceive()
+    {
+        if ($this->isSuccessful()) {
+            $bodyObj = $this->getParsedBody();
+
+            if (!is_null($bodyObj)) {
+                // Append iQ Pixel device ID
+                $cookieName = "apt_pixel";
+
+                if (isset($_COOKIE[$cookieName])) {
+                    $decodedCookie = base64_decode($_COOKIE[$cookieName], true);
+
+                    if ($decodedCookie) {
+                        $cookieObj = json_decode($decodedCookie, false);
+
+                        if (isset($cookieObj->deviceId)) {
+                            $bodyObj->redirectCheckoutUrl .= "&deviceId={$cookieObj->deviceId}";
+
+                            $this->setRawBody(json_encode($bodyObj, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this;
+    }
 }
