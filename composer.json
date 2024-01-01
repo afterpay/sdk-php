@@ -2,7 +2,7 @@
     "name": "afterpay-global/afterpay-sdk-php",
     "license": "Apache-2.0",
     "description": "Official Afterpay SDK for PHP",
-    "version": "1.6.2",
+    "version": "1.7.0",
     "authors": [
         {
             "name": "Afterpay",
