@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.7.0
+
+_Tue 02 Jan 2024_
+
+- Updated Create Checkout response with device id if available (EIT-3456).
+
 ## Version 1.6.2
 
 _Wed 19 Jul 2023_
