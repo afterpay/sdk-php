@@ -55,10 +55,23 @@ class CreateCheckout extends Response
 
                     if ($decodedCookie) {
                         $cookieObj = json_decode($decodedCookie, false);
+                        $urlChanged = false;
 
-                        if (isset($cookieObj->deviceId)) {
-                            $bodyObj->redirectCheckoutUrl .= "&deviceId={$cookieObj->deviceId}";
+                        if (isset($cookieObj->deviceId) && preg_match('/^[0-9a-z-]*$/i', $cookieObj->deviceId)) {
+                            $bodyObj->redirectCheckoutUrl .= "&device_id={$cookieObj->deviceId}";
+                            $urlChanged = true;
+                        }
 
+                        if (isset($cookieObj->checkout) && is_object($cookieObj->checkout)) {
+                            foreach ($cookieObj->checkout as $prop => $val) {
+                                if (preg_match('/^[0-9a-z]+$/i', $prop) && preg_match('/^[0-9a-z-]*$/i', $val)) {
+                                    $bodyObj->redirectCheckoutUrl .= "&{$prop}={$val}";
+                                    $urlChanged = true;
+                                }
+                            }
+                        }
+
+                        if ($urlChanged) {
                             $this->setRawBody(json_encode($bodyObj, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
                         }
                     }
