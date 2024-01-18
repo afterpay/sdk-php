@@ -1,10 +1,16 @@
 # Changelog
 
+## Version 1.8.0
+
+_Fri 19 Jan 2024_
+
+- Updated Create Checkout response to include custom checkout properties from DM if available (EIT-3646).
+
 ## Version 1.7.0
 
 _Tue 02 Jan 2024_
 
-- Updated Create Checkout response with device id if available (EIT-3456).
+- Updated Create Checkout response with Device ID if available (EIT-3456).
 
 ## Version 1.6.2
 
